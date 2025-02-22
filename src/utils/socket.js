@@ -1,7 +1,7 @@
 import { io } from "socket.io-client";
 
 // Cambia a la URL de tu backend si estás en producción
-const socket = io("http://192.168.0.103:4001", {
+const socket = io(process.env.NEXT_PUBLIC_BACKEND_SOCKET, {
     transports: ["websocket", "polling"], // Opciones de transporte
 });
 
