@@ -31,16 +31,25 @@ export default function FormularioInvitado() {
         }
     }, [invitado, guestId]);
 
+    // 🔹 Iniciar música después de una interacción del usuario
     const startMusic = () => {
         if (evento?.songUrl && !isPlaying) {
             const audioElement = new Audio(evento.songUrl);
             audioElement.loop = true;
-            audioElement.play();
+
+            // Manejar errores de reproducción automática en iOS
+            audioElement.play().then(() => {
+                console.log("Música reproducida correctamente");
+            }).catch((error) => {
+                console.warn("Autoplay bloqueado en iOS. Se necesita interacción del usuario.", error);
+            });
+
             audioRef.current = audioElement;
             setIsPlaying(true);
         }
     };
 
+    // 🔹 Detener música si el componente se desmonta
     useEffect(() => {
         return () => {
             if (audioRef.current) {
@@ -119,13 +128,14 @@ export default function FormularioInvitado() {
                 </div>
             </div>
 
-            {evento?.songUrl && (
-                <audio
-                    id="song-player"
-                    src={evento?.songUrl}
-                    style={{ display: "none", width: "0", height: "0", border: "none" }}
-                    loop
-                />
+            {/* 🔹 Botón para iniciar la música manualmente */}
+            {!isPlaying && evento?.songUrl && (
+                <button
+                    onClick={startMusic}
+                    className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+                >
+                    🎵 Reproducir Música
+                </button>
             )}
         </div>
     );
