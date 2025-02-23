@@ -1,9 +1,9 @@
-import { Dancing_Script } from "@next/font/google";
+import { Dancing_Script } from 'next/font/google';
 
 const dancingScript = Dancing_Script({
-    weight: ['400'],
-    subsets: ['latin'],
-    display: 'swap',
+    weight: "400", // Si solo usas un peso, pásalo como string
+    subsets: ["latin"],
+    display: "swap",
 });
 
 export default dancingScript;
