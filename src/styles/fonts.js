@@ -1,9 +1,13 @@
+"use client";
+
 import { Dancing_Script } from 'next/font/google';
 
+// Configura la fuente
 const dancingScript = Dancing_Script({
-    weight: "400", // Si solo usas un peso, pásalo como string
-    subsets: ["latin"],
-    display: "swap",
+    weight: "400", // Peso de la fuente
+    subsets: ["latin"], // Subconjunto de caracteres
+    display: "swap", // Comportamiento de visualización
 });
 
-export default dancingScript;
+// Exporta la configuración de la fuente
+export { dancingScript };
