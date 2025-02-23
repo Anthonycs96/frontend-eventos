@@ -10,7 +10,6 @@ import ConfirmacionEspecial from "@/components/ConfirmacionEspecial";
 import TarjetaMatrimonio from "@/components/TarjetaMatrimonio";
 import { ImprovedCarousel } from "@/components/ui/SimpleCarousel";
 import ContadorRegresivo from "@/components/ContadorRegresivo";
-import dancingScript from "@/styles/fonts";
 
 export default function FormularioInvitado() {
     const params = useParams();
@@ -21,14 +20,13 @@ export default function FormularioInvitado() {
     const [isPlaying, setIsPlaying] = useState(false);
     const audioRef = useRef(null);
 
-    // Verificar si el componente ConfirmacionEspecial ya se ha mostrado
     useEffect(() => {
         if (invitado && invitado.status === "confirmed") {
             const hasShownConfirmation = localStorage.getItem(`confirmationShown_${guestId}`);
             if (!hasShownConfirmation) {
                 setShowConfirmation(true);
-                localStorage.setItem(`confirmationShown_${guestId}`, "true"); // Marcar como mostrado
-                setTimeout(() => setShowConfirmation(false), 5000); // Ocultar después de 5 segundos
+                localStorage.setItem(`confirmationShown_${guestId}`, "true");
+                setTimeout(() => setShowConfirmation(false), 5000);
             }
         }
     }, [invitado, guestId]);
@@ -59,7 +57,6 @@ export default function FormularioInvitado() {
         ? "https://via.placeholder.com/1200x800?text=Evento"
         : evento.imageUrl;
 
-    // 📌 Obtener el número de acompañantes del invitado
     const numberOfGuests = invitado?.numberOfGuests ?? 0;
 
     return (
@@ -76,16 +73,13 @@ export default function FormularioInvitado() {
 
             <div className="relative z-10 w-full max-w-5xl text-white text-center">
                 <HeaderInvitacionTitulo evento={evento} />
-                <div className={`hidden sm:block top-0 left-0 right-0 z-20 ${dancingScript.className}`}>
+                <div className="hidden sm:block top-0 left-0 right-0 z-20">
                     <HeaderInvitacion invitado={invitado} />
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-6">
-                        <div className={dancingScript.className}>
-                            {/* 📌 Ahora TarjetaMatrimonio recibe numberOfGuests como prop */}
-                            <TarjetaMatrimonio evento={evento} numberOfGuests={numberOfGuests} />
-                        </div>
+                        <TarjetaMatrimonio evento={evento} numberOfGuests={numberOfGuests} />
                         <ContadorRegresivo fecha={evento?.date} />
                         <div className="block sm:hidden">
                             <HeaderInvitacion invitado={invitado} />
@@ -115,8 +109,8 @@ export default function FormularioInvitado() {
                                 eventDetails={{ invitado, evento }}
                                 onConfirmSuccess={() => {
                                     setShowConfirmation(true);
-                                    localStorage.setItem(`confirmationShown_${guestId}`, "true"); // Marcar como mostrado
-                                    setTimeout(() => setShowConfirmation(false), 5000); // Ocultar después de 5 segundos
+                                    localStorage.setItem(`confirmationShown_${guestId}`, "true");
+                                    setTimeout(() => setShowConfirmation(false), 5000);
                                 }}
                             />
                         )}
