@@ -1,13 +1,9 @@
-"use client";
+"use client"; // Esto es obligatorio en Next.js 15 con `app/`
 
 import { Dancing_Script } from 'next/font/google';
 
-// Configura la fuente
-const dancingScript = Dancing_Script({
-    weight: "400", // Peso de la fuente
-    subsets: ["latin"], // Subconjunto de caracteres
-    display: "swap", // Comportamiento de visualización
+export const dancingScript = Dancing_Script({
+    weight: "400",
+    subsets: ["latin"],
+    display: "swap",
 });
-
-// Exporta la configuración de la fuente
-export { dancingScript };
