@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useState } from "react"
-import { Dancing_Script } from "@next/font/google"
 import { MapPin, Clock, Calendar, Music } from "lucide-react"
 
 
