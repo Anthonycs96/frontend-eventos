@@ -95,7 +95,7 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
 
     if (isSubmitted) {
         return (
-            <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-md mx-auto text-center transform transition-all duration-300 hover:scale-105">
+            <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w mx-auto text-center transform transition-all duration-300 hover:scale-105">
                 {willAttendStatus === "confirmed" ? (
                     <>
                         <h2 className="text-4xl font-bold text-green-600 mb-6 animate-pulse">
