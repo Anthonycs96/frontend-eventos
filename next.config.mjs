@@ -1,3 +1,4 @@
+/** @type {import('next').NextConfig} */
 const nextConfig = {
     reactStrictMode: true,
     images: {
@@ -5,11 +6,19 @@ const nextConfig = {
             "i.pinimg.com",
             "pinimg.com",
             "youtu.be",
-            "instagram.flim23-1.fna.fbcdn.net",
             "photos.fife.usercontent.google.com",
             "photos.google.com",
-            "instagram.flim18-1.fna.fbcdn.net",
             "es.pinterest.com"
+        ],
+        remotePatterns: [
+            {
+                protocol: "https",
+                hostname: "**.fbcdn.net",
+            },
+            {
+                protocol: "https",
+                hostname: "**.cdninstagram.com",
+            },
         ],
     },
 };
