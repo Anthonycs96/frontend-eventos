@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 // Función para usar un proxy en imágenes de Instagram
 const getImageUrl = (url) => {
+    if (!url) return "/placeholder.svg"; // Evita errores si la URL es undefined
     if (url.includes("instagram") || url.includes("fbcdn.net")) {
         return `/api/proxy?url=${encodeURIComponent(url)}`;
     }
@@ -37,8 +38,10 @@ export function ImprovedCarousel({ images = [] }) {
         return () => clearInterval(intervalRef.current);
     }, [isAutoPlaying, nextSlide]);
 
-    if (images.length === 0)
+    // Evita errores si el array de imágenes está vacío
+    if (!images || images.length === 0) {
         return <div className="text-center text-gray-500">No hay imágenes disponibles</div>;
+    }
 
     return (
         <div className="relative w-full h-64 md:h-96 overflow-hidden rounded-xl shadow-lg">
@@ -58,6 +61,7 @@ export function ImprovedCarousel({ images = [] }) {
                         style={{ objectFit: "cover" }}
                         className="transition-transform duration-500 ease-in-out hover:scale-105"
                         unoptimized // Evita bloqueos de optimización
+                        onError={(e) => (e.target.src = "/placeholder.svg")} // Si falla, carga una imagen alternativa
                     />
                 </motion.div>
             </AnimatePresence>
