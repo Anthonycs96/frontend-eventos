@@ -61,7 +61,9 @@ export function ImprovedCarousel({ images = [] }) {
                         style={{ objectFit: "cover" }}
                         className="transition-transform duration-500 ease-in-out hover:scale-105"
                         unoptimized // Evita bloqueos de optimización
-                        onError={(e) => (e.target.src = "/placeholder.svg")} // Si falla, carga una imagen alternativa
+                        onError={(e) => {
+                            e.target.src = "/placeholder.svg"; // Si falla, carga una imagen alternativa
+                        }}
                     />
                 </motion.div>
             </AnimatePresence>
