@@ -1,44 +1,48 @@
-"use client"
+"use client";
 
-import { useState, useCallback, useEffect } from "react"
-import { ChevronLeft, ChevronRight } from "lucide-react"
-import Image from "next/image"
-import { motion, AnimatePresence } from "framer-motion"
+import { useState, useCallback, useEffect, useRef } from "react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import Image from "next/image";
+import { motion, AnimatePresence } from "framer-motion";
 
-export function ImprovedCarousel({ images }) {
-    const [currentIndex, setCurrentIndex] = useState(0)
-    const [isAutoPlaying, setIsAutoPlaying] = useState(true)
+// Función para usar un proxy en imágenes de Instagram
+const getImageUrl = (url) => {
+    if (url.includes("instagram") || url.includes("fbcdn.net")) {
+        return `/api/proxy?url=${encodeURIComponent(url)}`;
+    }
+    return url;
+};
 
-    const prevSlide = useCallback(
-        (e) => {
-            e?.preventDefault()
-            e?.stopPropagation()
-            setCurrentIndex((prevIndex) => (prevIndex === 0 ? images.length - 1 : prevIndex - 1))
-        },
-        [images.length],
-    )
+export function ImprovedCarousel({ images = [] }) {
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+    const intervalRef = useRef(null);
 
-    const nextSlide = useCallback(
-        (e) => {
-            e?.preventDefault()
-            e?.stopPropagation()
-            setCurrentIndex((prevIndex) => (prevIndex === images.length - 1 ? 0 : prevIndex + 1))
-        },
-        [images.length],
-    )
+    const prevSlide = useCallback(() => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === 0 ? images.length - 1 : prevIndex - 1
+        );
+    }, [images.length]);
+
+    const nextSlide = useCallback(() => {
+        setCurrentIndex((prevIndex) =>
+            prevIndex === images.length - 1 ? 0 : prevIndex + 1
+        );
+    }, [images.length]);
 
     useEffect(() => {
         if (isAutoPlaying) {
-            const interval = setInterval(nextSlide, 5000)
-            return () => clearInterval(interval)
+            intervalRef.current = setInterval(nextSlide, 5000);
         }
-    }, [isAutoPlaying, nextSlide])
+        return () => clearInterval(intervalRef.current);
+    }, [isAutoPlaying, nextSlide]);
 
-    if (images.length === 0) return null
+    if (images.length === 0)
+        return <div className="text-center text-gray-500">No hay imágenes disponibles</div>;
 
     return (
         <div className="relative w-full h-64 md:h-96 overflow-hidden rounded-xl shadow-lg">
-            <AnimatePresence initial={false}>
+            <AnimatePresence mode="wait">
                 <motion.div
                     key={currentIndex}
                     initial={{ opacity: 0 }}
@@ -48,11 +52,12 @@ export function ImprovedCarousel({ images }) {
                     className="absolute inset-0"
                 >
                     <Image
-                        src={images[currentIndex] || "/placeholder.svg"}
+                        src={getImageUrl(images[currentIndex])}
                         alt={`Slide ${currentIndex + 1}`}
                         fill
                         style={{ objectFit: "cover" }}
                         className="transition-transform duration-500 ease-in-out hover:scale-105"
+                        unoptimized // Evita bloqueos de optimización
                     />
                 </motion.div>
             </AnimatePresence>
@@ -84,13 +89,12 @@ export function ImprovedCarousel({ images }) {
                 ))}
             </div>
             <button
-                onClick={() => setIsAutoPlaying(!isAutoPlaying)}
+                onClick={() => setIsAutoPlaying((prev) => !prev)}
                 className="absolute top-4 right-4 p-2 rounded-full bg-white/30 text-white hover:bg-white/50 focus:outline-none transition-all duration-300 backdrop-blur-sm"
                 aria-label={isAutoPlaying ? "Pause autoplay" : "Start autoplay"}
             >
                 {isAutoPlaying ? "❚❚" : "▶"}
             </button>
         </div>
-    )
+    );
 }
-
