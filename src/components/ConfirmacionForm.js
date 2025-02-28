@@ -95,20 +95,38 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
 
     if (isSubmitted) {
         return (
-            <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w mx-auto text-center">
+            <div className="bg-white shadow-2xl rounded-3xl p-10 w-full max-w-md mx-auto text-center transform transition-all duration-300 hover:scale-105">
                 {willAttendStatus === "confirmed" ? (
                     <>
-                        <h2 className="text-3xl font-bold text-green-600 mb-4">¡Gracias por Confirmar!</h2>
-                        <p className="text-gray-700 text-lg mb-6">
+                        <h2 className="text-4xl font-bold text-green-600 mb-6 animate-pulse">
+                            ¡Gracias por Confirmar!
+                        </h2>
+                        <p className="text-gray-700 text-xl mb-8">
                             Estamos felices de contar con tu respuesta para nuestro día especial. 🎉
                         </p>
+                        <div className="flex justify-center">
+                            <img
+                                src="https://cdn-icons-png.flaticon.com/512/3062/3062634.png" // Icono de celebración
+                                alt="Celebración"
+                                className="w-16 h-16"
+                            />
+                        </div>
                     </>
                 ) : (
                     <>
-                        <h2 className="text-3xl font-bold text-red-600 mb-4">Lamentamos que no puedas asistir</h2>
-                        <p className="text-gray-700 text-lg mb-6">
+                        <h2 className="text-4xl font-bold text-red-600 mb-6">
+                            Lamentamos que no puedas asistir
+                        </h2>
+                        <p className="text-gray-700 text-xl mb-8">
                             Agradecemos tu respuesta. ¡Esperamos verte en otra ocasión!
                         </p>
+                        <div className="flex justify-center">
+                            <img
+                                src="https://cdn-icons-png.flaticon.com/512/979/979585.png" // Icono de despedida
+                                alt="Despedida"
+                                className="w-16 h-16"
+                            />
+                        </div>
                     </>
                 )}
             </div>
@@ -145,9 +163,12 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                 </div>
 
                 {/* Acompañantes (solo si elige "Sí, asistiré") */}
-                {willAttend === "true" && (
+                {/* Acompañantes (solo si elige "Sí, asistiré" y tiene pase para acompañantes) */}
+                {willAttend === "true" && numberOfGuests > 0 && (
                     <div>
-                        <label className="block text-sm font-medium text-black mb-2">Pase para {numberOfGuests} Acompañantes</label>
+                        <label className="block text-sm font-medium text-black mb-2">
+                            Pase para {numberOfGuests} Acompañantes
+                        </label>
                         {companionFields.map((field, index) => (
                             <div key={field.id} className="flex items-center space-x-2 mb-2">
                                 <Input
@@ -172,6 +193,7 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                         )}
                     </div>
                 )}
+
 
                 {/* Canciones Favoritas (solo si elige "Sí, asistiré") */}
                 {willAttend === "true" && (
