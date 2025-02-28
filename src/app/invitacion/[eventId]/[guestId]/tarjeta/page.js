@@ -10,6 +10,8 @@ import ConfirmacionEspecial from "@/components/ConfirmacionEspecial";
 import TarjetaMatrimonio from "@/components/TarjetaMatrimonio";
 import { ImprovedCarousel } from "@/components/ui/SimpleCarousel";
 import ContadorRegresivo from "@/components/ContadorRegresivo";
+import { dancingScript } from "@/styles/fonts";
+
 
 export default function FormularioInvitado() {
     const params = useParams();
@@ -89,14 +91,14 @@ export default function FormularioInvitado() {
             </div>
 
             <div className="relative z-10 w-full max-w-5xl text-white text-center">
-                <HeaderInvitacionTitulo evento={evento} />
+                <HeaderInvitacionTitulo evento={evento} fontClass={dancingScript.className} />
                 <div className="hidden sm:block top-0 left-0 right-0 z-20">
-                    <HeaderInvitacion invitado={invitado} />
+                    <HeaderInvitacion invitado={invitado} fontClass={dancingScript.className} />
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-6">
-                        <TarjetaMatrimonio evento={evento} numberOfGuests={numberOfGuests} />
+                        <TarjetaMatrimonio evento={evento} numberOfGuests={numberOfGuests} fontClass={dancingScript.className} />
                         <ContadorRegresivo fecha={evento?.date} />
                         <div className="block sm:hidden">
                             <HeaderInvitacion invitado={invitado} />

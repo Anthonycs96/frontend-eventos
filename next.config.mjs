@@ -9,6 +9,7 @@ const nextConfig = {
             "photos.fife.usercontent.google.com",
             "photos.google.com",
             "instagram.flim18-1.fna.fbcdn.net",
+            "es.pinterest.com"
         ],
     },
 };

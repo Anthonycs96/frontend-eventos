@@ -5,7 +5,7 @@ import { MapPin, Clock, Calendar, Music } from "lucide-react"
 
 
 
-export default function TarjetaMatrimonio({ evento, numberOfGuests }) {
+export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass }) {
     const [isPlaying, setIsPlaying] = useState(false)
     const [startY, setStartY] = useState(null)
     const [endY, setEndY] = useState(null)
@@ -88,7 +88,7 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests }) {
 
     return (
         <div
-            className={`relative shadow-2xl rounded-3xl overflow-hidden max-w mx-auto transform transition duration-500 hover:scale-105`}
+            className={`relative shadow-2xl rounded-3xl overflow-hidden max-w mx-auto transform transition duration-500 hover:scale-105 ${fontClass}`}
         >
             <div
                 className="absolute inset-0 bg-cover bg-center z-0"
@@ -116,7 +116,12 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests }) {
                         <p className="text-3xl font-bold">{time || "Sin hora"}</p>
                     </div>
                 </div>
-                <p className="text-xl mt-2 cursor-pointer transition-all flex items-center justify-center">Número de acompañantes: {numberOfGuests}</p>
+                <p className="text-xl mt-2 cursor-pointer transition-all flex items-center justify-center">
+                    {numberOfGuests > 0
+                        ? `¡Puedes asistir con ${numberOfGuests} acompañante${numberOfGuests > 1 ? 's' : ''}!`
+                        : "Te esperamos con mucha alegría, disfruta este gran día con nosotros 💖"}
+                </p>
+
                 <div className="border-t border-gray-300 pt-6 mb-6">
                     <h3 className="text-2xl font-semibold mb-2">Ubicación</h3>
                     <p
