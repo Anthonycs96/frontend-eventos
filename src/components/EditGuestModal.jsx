@@ -13,7 +13,6 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
     countryCode: "+51", // Código de país de Perú
     type: "",
     numberOfGuests: "",
-    comments: "",
   });
 
   const [countries, setCountries] = useState([]);
@@ -255,23 +254,6 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
               onChange={handleChange}
               min="0"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="comments"
-              className="block text-gray-700 text-sm font-bold mb-1"
-            >
-              Comentarios
-            </label>
-            <textarea
-              id="comments"
-              name="comments"
-              value={editedGuest.comments || ""}
-              onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
-              rows={3}
             />
           </div>
 
