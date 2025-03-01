@@ -73,7 +73,8 @@ export default function FormularioInvitado() {
     const numberOfGuests = invitado?.numberOfGuests ?? 0;
 
     return (
-        <div className="relative min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
+        <div className="relative min-h-screen flex flex-col justify-center items-center sm:py-12 sm:px-4 sm:px-6 lg:px-8 overflow-hidden">
+
             {/* Contenido principal */}
             <div className="relative z-10 w-full max-w-5xl text-center">
                 {/* 🔹 Ocultar HeaderInvitacionTitulo en modo móvil */}

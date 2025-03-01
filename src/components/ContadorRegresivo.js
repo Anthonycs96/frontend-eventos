@@ -36,7 +36,7 @@ export default function ContadorRegresivo({ fecha, theme, imageUrl }) {
     }
 
     return (
-        <div className="relative shadow-2xl rounded-lg p-4 text-center overflow-hidden w-full max-w-xs sm:max-w-md mx-auto">
+        <div className="relative shadow-2xl rounded-lg p-4 text-center overflow-hidden w-full max-w-xs sm:max-w-md mx-auto py-12 px-4">
             {/* Imagen de fondo dinámica */}
             <div
                 className="absolute inset-0 bg-cover bg-center z-0"
@@ -49,7 +49,7 @@ export default function ContadorRegresivo({ fecha, theme, imageUrl }) {
             ></div>
 
             {/* Contenido del contador */}
-            <div className="relative z-10 text-white">
+            <div className="relative z-10 text-black ">
                 <h2 className="text-xl sm:text-2xl font-bold mb-4 flex items-center justify-center gap-2">
                     <Clock className="w-5 h-5 sm:w-6 sm:h-6 animate-pulse" /> Tiempo Restante
                 </h2>

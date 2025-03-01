@@ -4,7 +4,7 @@ export default function HeaderInvitacion({ invitado, fontClass }) {
     // Verificar si invitado está cargado
     if (!invitado) {
         return (
-            <div className={`text-center mb-5  ${fontClass}`}>
+            <div className={`text-center mb-5 py-4 px-4 ${fontClass}`}>
                 <h1 className={`text-4xl sm:text-5xl font-bold text-black drop-shadow-lg mb-2`}>
                     ¡Te Invitamos!
                 </h1>
@@ -16,7 +16,7 @@ export default function HeaderInvitacion({ invitado, fontClass }) {
     }
 
     return (
-        <div className={`text-center mb-5  ${fontClass}`}> {/* Se agregó margen inferior */}
+        <div className={`text-center mb-5 py-12 px-4 ${fontClass}`}> {/* Se agregó margen inferior */}
             <h1 className="text-4xl sm:text-5xl font-bold text-black drop-shadow-lg mb-2">
                 ¡Te Invitamos!
             </h1>

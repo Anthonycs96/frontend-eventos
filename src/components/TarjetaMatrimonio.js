@@ -89,7 +89,7 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
 
     return (
         <div
-            className={`relative shadow-2xl rounded-3xl overflow-hidden max-w mx-auto transform transition duration-500 ${fontClass}`}
+            className={`relative shadow-2xl  overflow-hidden max-w mx-auto transform transition duration-500 ${fontClass}`}
         >
             {/* Imagen de fondo con brillo reducido */}
             <div className="absolute inset-0 w-full h-full z-0">
