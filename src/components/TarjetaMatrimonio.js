@@ -90,15 +90,13 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
         <div
             className={`relative shadow-2xl rounded-3xl overflow-hidden max-w mx-auto transform transition duration-500 ${fontClass}`}
         >
-            {/* Imagen de fondo sin transiciones */}
             <div
-                className="absolute inset-0 bg-cover bg-center z-0"
+                className="absolute inset-0 bg-cover bg-center z-0 hidden md:block"
                 style={{
                     backgroundImage: `url(${imageUrl})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     filter: "brightness(0.6)",
-                    transition: "none", // Deshabilitar transiciones
                 }}
             ></div>
 

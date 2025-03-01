@@ -4,8 +4,8 @@ export default function RootLayout({ children }) {
   return (
     <html lang="es">
       <body>
-        <div className="flex h-screen bg-gray-50">
-          <main className="flex-1 overflow-y-auto">
+        <div className="flex min-h-screen bg-gray-50">
+          <main className="flex-1">
             {children}
           </main>
         </div>
@@ -13,4 +13,3 @@ export default function RootLayout({ children }) {
     </html>
   )
 }
-

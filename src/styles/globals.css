@@ -12,17 +12,37 @@
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
-
-/* Evitar la transición de fondo al cargar la página */
-html {
-  transition: none !important;
-}
-
-/* Ahora se puede añadir la transición de fondo solo después de haber detectado el tema */
+/* Eliminar transiciones en el body */
 body {
-  transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out !important;
+  transition: none !important; /* Eliminar transiciones no deseadas */
 }
 
+/* Reset básico para eliminar márgenes y paddings no deseados */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Asegurar que el body y html ocupen el 100% de la altura */
+body, html {
+  width: 100%;
+  height: 100%;
+  overflow-x: hidden; /* Evitar desbordamiento horizontal */
+}
+
+/* Asegurar que el contenedor principal no tenga espacios no deseados */
+.flex {
+  display: flex;
+}
+
+.min-h-screen {
+  min-height: 100vh; /* Usar min-height en lugar de height */
+}
+
+.overflow-hidden {
+  overflow: hidden; /* Evitar desbordamiento vertical */
+}
 
 @layer base {
   :root {

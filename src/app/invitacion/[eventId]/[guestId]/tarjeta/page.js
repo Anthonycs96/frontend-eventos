@@ -78,7 +78,7 @@ export default function FormularioInvitado() {
     const numberOfGuests = invitado?.numberOfGuests ?? 0;
 
     return (
-        <div className="relative min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+        <div className="relative min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
             {/* Imagen de fondo sin transiciones */}
             <div className="absolute inset-0 w-full h-full">
                 <img
@@ -112,6 +112,9 @@ export default function FormularioInvitado() {
                         <div className="hidden sm:block">
                             <ContadorRegresivo fecha={evento?.date} />
                         </div>
+                        <div className="block sm:hidden">
+                            <HeaderInvitacion invitado={invitado} />
+                        </div>
                     </div>
                     <div className="space-y-6">
                         {showConfirmation ? (
@@ -120,6 +123,7 @@ export default function FormularioInvitado() {
                                 theme="green"
                                 invitadoNombre={invitado?.name}
                             />
+
                         ) : (
                             <ConfirmacionForm
                                 invitationUrl={invitado?.invitationUrl}
