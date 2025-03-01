@@ -46,11 +46,91 @@ export default function GuestManagement() {
     const [isWhatsAppConnected, setIsWhatsAppConnected] = useState(false);
     const [showWhatsAppConfig, setShowWhatsAppConfig] = useState(false);
 
+    // Función para verificar si un invitado ya existe en la lista
+    const guestExists = useCallback((guestList, guestId) => {
+        return guestList.some((guest) => guest.id === guestId);
+    }, []);
+
+    // Función para agregar un nuevo invitado
+    const handleAddGuest = useCallback(
+        (newGuest) => {
+            setGuests((prevGuests) => {
+                if (!guestExists(prevGuests, newGuest.id)) {
+                    return [...prevGuests, { ...newGuest, status: "pending" }];
+                }
+                return prevGuests;
+            });
+            setIsModalOpen(false);
+        },
+        [guestExists]
+    );
+
+    // Función para editar un invitado
+    const handleEditGuest = useCallback((guest) => {
+        setSelectedGuest(guest);
+        setIsEditModalOpen(true);
+    }, []);
+
+    // Función para eliminar un invitado
+    const handleDeleteGuest = useCallback(async (guestId) => {
+        try {
+            await API.delete(`/guest/delete/${guestId}`);
+            setGuests((prevGuests) => prevGuests.filter((guest) => guest.id !== guestId));
+        } catch (error) {
+            console.error("Error al eliminar el invitado:", error);
+        }
+    }, []);
+
+    // Función para reemplazar un invitado
+    const handleReplaceGuest = useCallback((oldGuestId, newGuest) => {
+        setGuests((prevGuests) =>
+            prevGuests.map((guest) =>
+                guest.id === oldGuestId ? { ...newGuest, id: oldGuestId, status: "pending" } : guest
+            )
+        );
+        setIsReplaceModalOpen(false);
+    }, []);
+
+    // Función para guardar el contenido de la invitación
+    const handleSaveInvitationContent = useCallback((content) => {
+        setInvitationContent(content);
+        setIsCreateContentModalOpen(false);
+    }, []);
+
+    // Función para enviar un mensaje personalizado
+    const handleSendCustomMessage = useCallback(async (guest, text) => {
+        try {
+            const userId = localStorage.getItem("userId");
+            if (!userId) {
+                console.error("No se encontró el userId en localStorage.");
+                return;
+            }
+            const formattedPhone = guest.phone.replace(/^\+/, "");
+            await API.post(`/whatsapp/send`, {
+                userId,
+                phone: formattedPhone,
+                text: text,
+            });
+            console.log("Mensaje enviado correctamente");
+            setIsSendCustomMessageModalOpen(false);
+        } catch (error) {
+            console.error("Error al enviar el mensaje:", error);
+        }
+    }, []);
+
+    // Función para actualizar un invitado
+    const handleUpdateGuest = useCallback((updatedGuest) => {
+        setGuests((prevGuests) =>
+            prevGuests.map((guest) =>
+                guest.id === updatedGuest.id ? { ...guest, ...updatedGuest } : guest
+            )
+        );
+        setIsEditModalOpen(false);
+    }, []);
+
     // useEffect se ejecuta al montar el componente o cuando cambia el ID del evento
     useEffect(() => {
-        // Verificar si el usuario está autenticado
         const userId = localStorage.getItem("userId");
-
         if (!userId) {
             console.error("No se encontró el userId en localStorage.");
             return;
@@ -59,18 +139,14 @@ export default function GuestManagement() {
         // Función para cargar detalles del evento
         const fetchEventDetails = async () => {
             try {
-                // Petición a la API para obtener el nombre del evento
                 const response = await API.get(`/events/${id}`);
                 setEventName(response.data.name);
             } catch (err) {
                 console.error("Error al cargar el nombre del evento:", err);
                 setError("No se pudo cargar el nombre del evento.");
-                // Si el error es un 500, redirige a /dashboard
-                if (err.response && err.response.status === 500) {
+                if (err.response?.status === 500) {
                     router.push("/dashboard");
                 }
-            } finally {
-                setLoading(false);
             }
         };
 
@@ -78,9 +154,7 @@ export default function GuestManagement() {
         const fetchGuests = async () => {
             try {
                 setLoading(true);
-                // Petición a la API para obtener la lista de invitados
                 const response = await API.get(`/guest/${id}`);
-                // Actualizamos el estado con la lista de invitados
                 setGuests(response.data.map((guest) => ({ ...guest, status: guest.status || "pending" })));
             } catch (err) {
                 console.error("No se pudieron cargar los invitados:", err);
@@ -90,23 +164,10 @@ export default function GuestManagement() {
             }
         };
 
-        // Función para verificar la conexión de WhatsApp con el backend
+        // Función para verificar la conexión de WhatsApp
         const checkWhatsAppConnection = async () => {
             try {
-                const userId = localStorage.getItem("userId"); // Captura el userId desde localStorage
-                if (!userId) {
-                    console.log('hey:' + userId)
-                    console.error("No se encontró el userId en localStorage.");
-                    setIsWhatsAppConnected(false);
-                    return;
-                }
-
-                // Envía el userId como parámetro en la solicitud
-                const response = await API.get("/whatsapp/status", {
-                    params: { userId }, // Envía el userId como query parameter
-                });
-
-                // Actualiza el estado de conexión
+                const response = await API.get("/whatsapp/status", { params: { userId } });
                 setIsWhatsAppConnected(response.data.isConnected);
             } catch (err) {
                 console.error("Error al verificar la conexión de WhatsApp:", err);
@@ -114,104 +175,41 @@ export default function GuestManagement() {
             }
         };
 
-        // Llamamos a las funciones para obtener los datos iniciales
-        fetchEventDetails();
-        fetchGuests();
-        checkWhatsAppConnection(); // Verificar la conexión de WhatsApp
-    }, [id, router]);
-
-    // Función para agregar un nuevo invitado
-    const handleAddGuest = useCallback((newGuest) => {
-        // Actualizamos el estado de invitados con el nuevo invitado
-        setGuests((prevGuests) => [...prevGuests, { ...newGuest, status: "pending" }]);
-        // Cerramos el modal de agregar invitado
-        setIsModalOpen(false);
-    }, []);
-
-    // Función para editar un invitado
-    const handleEditGuest = (guest) => {
-        // Seleccionamos al invitado que se va a editar y abrimos el modal de edición
-        setSelectedGuest(guest);
-        setIsEditModalOpen(true);
-    };
-
-    // Función para eliminar un invitado
-    const handleDeleteGuest = async (guestId) => {
-        try {
-            // Petición a la API para eliminar un invitado por su ID
-            await API.delete(`/guest/delete/${guestId}`);
-            // Actualizamos el estado eliminando al invitado de la lista
-            setGuests((prevGuests) => prevGuests.filter((guest) => guest.id !== guestId));
-        } catch (error) {
-            console.error("Error al eliminar el invitado:", error);
-        }
-    };
-
-    // Función para reemplazar un invitado
-    const handleReplaceGuest = (oldGuestId, newGuest) => {
-        // Actualizamos la lista de invitados, reemplazando al invitado antiguo con el nuevo
-        setGuests((prevGuests) =>
-            prevGuests.map((guest) => (guest.id === oldGuestId ? { ...newGuest, id: oldGuestId, status: "pending" } : guest))
-        );
-        setIsReplaceModalOpen(false);
-    };
-
-    // Función para guardar el contenido de la invitación
-    const handleSaveInvitationContent = (content) => {
-        setInvitationContent(content);
-        setIsCreateContentModalOpen(false);
-    };
-
-    // Función para enviar un mensaje personalizado
-    const handleSendCustomMessage = async (guest, text) => {
-        try {
-            // Obtener el userId desde localStorage
-            const userId = localStorage.getItem("userId");
-
-            if (!userId) {
-                console.error("No se encontró el userId en localStorage.");
-                return;
-            }
-            // Remover el símbolo "+" del número de teléfono
-            const formattedPhone = guest.phone.replace(/^\+/, "");
-
-            // Realizar la petición POST al endpoint de tu API
-            const response = await API.post(`/whatsapp/send`, {
-                userId,
-                phone: formattedPhone,
-                text: text,
-            });
-
-            // Puedes manejar la respuesta aquí si es necesario
-            console.log("Mensaje enviado correctamente:", response.data);
-
-            // Cerrar el modal después de enviar el mensaje
-            setIsSendCustomMessageModalOpen(false);
-        } catch (error) {
-            console.error("Error al enviar el mensaje:", error);
-            // Opcional: manejar el error, por ejemplo, mostrar un mensaje de error
-        }
-    };
-
-    // Función para manejar la edición/actualización de un invitado
-    const handleUpdateGuest = async (updatedGuest) => {
-        try {
-            // Petición PUT para actualizar el invitado en el backend
-            await API.put(`/guest/guest/${updatedGuest.id}`, updatedGuest);
-
-            // Actualizar la lista de invitados en el estado local
+        // Escuchar eventos de actualización de invitados en tiempo real
+        const handleSocketUpdateGuest = (updatedGuest) => {
+            console.log("🔄 Recibida actualización desde el socket:", updatedGuest);
             setGuests((prevGuests) =>
                 prevGuests.map((guest) =>
-                    guest.id === updatedGuest.id ? updatedGuest : guest
+                    guest.id === updatedGuest.id ? { ...guest, ...updatedGuest } : guest
                 )
             );
+        };
 
-            // Cerrar el modal de edición
-            setIsEditModalOpen(false);
-        } catch (error) {
-            console.error("Error al actualizar el invitado:", error);
-        }
-    };
+        const handleSocketNewGuest = (newGuest) => {
+            console.log("🆕 Nuevo invitado recibido desde el socket:", newGuest);
+            setGuests((prevGuests) => {
+                if (!guestExists(prevGuests, newGuest.id)) {
+                    return [...prevGuests, { ...newGuest, status: "pending" }];
+                }
+                return prevGuests;
+            });
+        };
+
+        // Suscribirse a los eventos del socket
+        socket.on("update_Guest", handleSocketUpdateGuest);
+        socket.on("new_Guest", handleSocketNewGuest);
+
+        // Llamar a las funciones para obtener los datos iniciales
+        fetchEventDetails();
+        fetchGuests();
+        checkWhatsAppConnection();
+
+        // Cleanup: eliminar la suscripción al desmontar el componente
+        return () => {
+            socket.off("update_Guest", handleSocketUpdateGuest);
+            socket.off("new_Guest", handleSocketNewGuest);
+        };
+    }, [id, router, guestExists]);
 
     // Muestra un indicador de carga mientras se obtienen los datos
     if (loading) return <div>Cargando...</div>;
@@ -249,7 +247,7 @@ export default function GuestManagement() {
             {/* Lista de invitados */}
             <GuestList
                 guests={guests}
-                onEdit={(guest) => handleEditGuest(guest)}
+                onEdit={handleEditGuest}
                 onDelete={handleDeleteGuest}
                 onReplace={(guest) => {
                     setSelectedGuest(guest);
@@ -275,7 +273,6 @@ export default function GuestManagement() {
                 />
             )}
 
-            {/* Modal de edición */}
             {isEditModalOpen && selectedGuest && (
                 <EditGuestModal
                     guest={selectedGuest}
@@ -289,14 +286,6 @@ export default function GuestManagement() {
                     guest={selectedGuest}
                     onClose={() => setIsReplaceModalOpen(false)}
                     onReplaceGuest={handleReplaceGuest}
-                />
-            )}
-
-            {isSendInvitationModalOpen && (
-                <SendInvitationModal
-                    onClose={() => setIsSendInvitationModalOpen(false)}
-                    eventId={id}
-                    guest={selectedGuest}
                 />
             )}
 
@@ -322,10 +311,9 @@ export default function GuestManagement() {
                     onClose={() => setShowWhatsAppConfig(false)}
                     isConnected={isWhatsAppConnected}
                     onConnectionChange={setIsWhatsAppConnected}
-                    userId={localStorage.getItem("userId")} // Pasamos el userId
+                    userId={localStorage.getItem("userId")}
                 />
             )}
-
         </div>
     );
 }

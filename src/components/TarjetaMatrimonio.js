@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react"
 import { MapPin, Clock, Calendar, Music } from "lucide-react"
-
-
+import ContadorRegresivo from "@/components/ContadorRegresivo"
+import HeaderInvitacionTitulo from "@/components/HeaderInvitacionTitulo"
 
 export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass }) {
     const [isPlaying, setIsPlaying] = useState(false)
@@ -60,7 +60,7 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
             document.removeEventListener("touchmove", handleTouchMove)
             document.removeEventListener("touchend", handleTouchEnd)
         }
-    }, [isPlaying]) // Removed unnecessary dependencies
+    }, [isPlaying])
 
     if (!evento) {
         return (
@@ -88,8 +88,9 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
 
     return (
         <div
-            className={`relative shadow-2xl rounded-3xl overflow-hidden max-w mx-auto transform transition duration-500 hover:scale-105 ${fontClass}`}
+            className={`relative shadow-2xl rounded-3xl overflow-hidden max-w mx-auto transform transition duration-500 ${fontClass}`}
         >
+            {/* Imagen de fondo sin transiciones */}
             <div
                 className="absolute inset-0 bg-cover bg-center z-0"
                 style={{
@@ -97,10 +98,16 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                     filter: "brightness(0.6)",
+                    transition: "none", // Deshabilitar transiciones
                 }}
             ></div>
 
             <div className="relative z-10 p-8 text-center text-white">
+                {/* 🔹 Ocultar HeaderInvitacionTitulo en modo escritorio */}
+                <div className="md:hidden">
+                    <HeaderInvitacionTitulo evento={evento} />
+                </div>
+
                 <h1 className="text-5xl font-bold mb-6 text-orange-200">{name || "Evento Especial"}</h1>
 
                 <div className="flex justify-center items-center gap-8 mb-8">
@@ -125,7 +132,7 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
                 <div className="border-t border-gray-300 pt-6 mb-6">
                     <h3 className="text-2xl font-semibold mb-2">Ubicación</h3>
                     <p
-                        className="text-xl mt-2 cursor-pointer  transition-all flex items-center justify-center"
+                        className="text-xl mt-2 cursor-pointer transition-all flex items-center justify-center"
                         onClick={abrirGoogleMaps}
                     >
                         <MapPin className="w-6 h-6 mr-2" />
@@ -147,6 +154,11 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
                         <span>Música sonando</span>
                     </div>
                 )}
+
+                {/* 🔹 Ocultar ContadorRegresivo en modo escritorio */}
+                <div className="md:hidden mt-4 items-center justify-center text-yellow-300">
+                    <ContadorRegresivo fecha={evento?.date} />
+                </div>
             </div>
 
             {evento?.songUrl && (
@@ -168,4 +180,3 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
         </div>
     )
 }
-

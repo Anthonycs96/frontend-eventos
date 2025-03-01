@@ -16,7 +16,7 @@ export function useEventData(eventId, guestId) {
 
             try {
                 setIsLoading(true);
-                const responseInvitado = await API.get(`/guest/guest/${guestId}`);
+                const responseInvitado = await API.get(`/guest/consultar/${guestId}`);
                 const responseEvento = await API.get(`/events/${eventId}`);
 
                 setInvitado(responseInvitado.data);
@@ -32,6 +32,7 @@ export function useEventData(eventId, guestId) {
 
     // Obtener el número de acompañantes (puede ser null o 0 si no tiene)
     const numberOfGuests = invitado?.numberOfGuests ?? 0;
+    console.log(invitado)
 
     return { invitado, evento, isLoading, error, numberOfGuests };
 }

@@ -5,35 +5,21 @@ import Button from "@/components/ui/Button";
 import API from "@/utils/api";
 import socket from "@/utils/socket";
 
-export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
-  const [editedGuest, setEditedGuest] = useState({
-    name: "",
-    email: "",
-    phone: "",
-    countryCode: "+51", // Código de país de Perú
-    type: "",
-    numberOfGuests: "",
+export default function EditGuestModal({ guest, onClose, onSave }) {
+  // Estado inicial basado en el guest proporcionado
+  const [guestData, setGuestData] = useState({
+    name: guest?.name || "",
+    email: guest?.email || "",
+    phone: guest?.phone ? guest.phone.substring(3) : "", // Extraer el número sin el código de país
+    countryCode: guest?.phone?.substring(0, 3) || "+51", // Código de país de Perú por defecto
+    type: guest?.type || "",
+    numberOfGuests: guest?.numberOfGuests ?? "", // Evita valores null
   });
 
   const [countries, setCountries] = useState([]);
-  const [includeEmail, setIncludeEmail] = useState(true);
-  const [errors, setErrors] = useState({});
+  const [includeEmail, setIncludeEmail] = useState(!!guest?.email); // Incluir email si ya existe
 
-  useEffect(() => {
-    if (guest) {
-      // Separar el código de país y el número de teléfono
-      const phone = guest.phone || "";
-      const countryCode = phone.substring(0, 3); // Asume que el código de país tiene 3 dígitos
-      const phoneNumber = phone.substring(3);
-
-      setEditedGuest({
-        ...guest,
-        countryCode: countryCode || "+51",
-        phone: phoneNumber,
-      });
-    }
-  }, [guest]);
-
+  // Obtener la lista de países al montar el componente
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -50,7 +36,7 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
 
         // Ordenar los países para que Perú aparezca primero
         const sortedCountries = countryList.sort((a, b) => {
-          if (a.code === "+51") return -1; // Perú primero
+          if (a.code === "+51") return -1;
           if (b.code === "+51") return 1;
           return a.name.localeCompare(b.name);
         });
@@ -64,42 +50,35 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
     fetchCountries();
   }, []);
 
+  // Manejar cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setEditedGuest((prev) => ({
-      ...prev,
+    setGuestData((prevData) => ({
+      ...prevData,
       [name]: name === "numberOfGuests" && value !== "" ? Number(value) : value,
     }));
   };
 
+  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación de campos obligatorios
-    const newErrors = {};
-    if (!editedGuest.name) newErrors.name = "El nombre es obligatorio";
-    if (!editedGuest.phone) newErrors.phone = "El teléfono es obligatorio";
-    if (!editedGuest.type)
-      newErrors.type = "El tipo de invitado es obligatorio";
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
+    if (!guestData.name || !guestData.phone || !guestData.type) {
+      alert("Por favor, completa todos los campos obligatorios.");
       return;
     }
 
-    setErrors({});
-
-    const fullPhone = editedGuest.countryCode + editedGuest.phone;
+    const fullPhone = guestData.countryCode + guestData.phone;
 
     try {
       const guestDataToSubmit = {
-        ...editedGuest,
+        ...guestData,
         phone: fullPhone,
         numberOfGuests:
-          editedGuest.numberOfGuests !== ""
-            ? Number(editedGuest.numberOfGuests)
+          guestData.numberOfGuests !== ""
+            ? Number(guestData.numberOfGuests)
             : null,
-        type: editedGuest.type !== "" ? editedGuest.type : null,
+        type: guestData.type !== "" ? guestData.type : null,
       };
 
       if (!includeEmail) {
@@ -107,7 +86,6 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
       }
 
       const response = await API.put(`/guest/${guest.id}`, guestDataToSubmit);
-
       socket.emit("update_Guest", response.data);
 
       onSave(response.data);
@@ -133,14 +111,11 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
               type="text"
               id="name"
               name="name"
-              value={editedGuest.name}
+              value={guestData.name}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            {errors.name && (
-              <p className="text-red-500 text-xs italic">{errors.name}</p>
-            )}
           </div>
 
           <div className="flex items-center mb-4">
@@ -171,7 +146,7 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
                 type="email"
                 id="email"
                 name="email"
-                value={editedGuest.email}
+                value={guestData.email}
                 onChange={handleChange}
                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
@@ -188,7 +163,7 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
             <div className="grid grid-cols-3 gap-2">
               <select
                 name="countryCode"
-                value={editedGuest.countryCode}
+                value={guestData.countryCode}
                 onChange={handleChange}
                 className="col-span-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               >
@@ -202,15 +177,12 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
                 type="tel"
                 id="phone"
                 name="phone"
-                value={editedGuest.phone}
+                value={guestData.phone}
                 onChange={handleChange}
-                className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
                 required
+                className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
               />
             </div>
-            {errors.phone && (
-              <p className="text-red-500 text-xs italic">{errors.phone}</p>
-            )}
           </div>
 
           <div>
@@ -223,7 +195,7 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
             <select
               id="type"
               name="type"
-              value={editedGuest.type}
+              value={guestData.type}
               onChange={handleChange}
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
@@ -234,9 +206,6 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
               <option value="amigo">Amigo</option>
               <option value="proveedor">Proveedor</option>
             </select>
-            {errors.type && (
-              <p className="text-red-500 text-xs italic">{errors.type}</p>
-            )}
           </div>
 
           <div>
@@ -250,7 +219,7 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
               type="number"
               id="numberOfGuests"
               name="numberOfGuests"
-              value={editedGuest.numberOfGuests}
+              value={guestData.numberOfGuests}
               onChange={handleChange}
               min="0"
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
@@ -260,14 +229,14 @@ export default function EditGuestModal({ guest, onClose, onSave, eventId }) {
           <div className="flex justify-between">
             <Button
               type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
             >
               Guardar cambios
             </Button>
             <Button
               type="button"
               onClick={onClose}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
             >
               Cancelar
             </Button>

@@ -12,7 +12,6 @@ import { ImprovedCarousel } from "@/components/ui/SimpleCarousel";
 import ContadorRegresivo from "@/components/ContadorRegresivo";
 import { dancingScript } from "@/styles/fonts";
 
-
 export default function FormularioInvitado() {
     const params = useParams();
     const { eventId, guestId } = params;
@@ -80,18 +79,27 @@ export default function FormularioInvitado() {
 
     return (
         <div className="relative min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8">
+            {/* Imagen de fondo sin transiciones */}
             <div className="absolute inset-0 w-full h-full">
                 <img
                     src={imageUrl}
                     alt="Fondo del Evento"
                     className="w-full h-full object-cover"
                     onError={() => setImgError(true)}
+                    style={{
+                        transition: "none", // Deshabilitar transiciones
+                    }}
                 />
                 <div className="absolute inset-0 bg-black opacity-50"></div>
             </div>
 
             <div className="relative z-10 w-full max-w-5xl text-white text-center">
-                <HeaderInvitacionTitulo evento={evento} fontClass={dancingScript.className} />
+                {/* 🔹 Ocultar HeaderInvitacionTitulo en modo móvil */}
+                <div className="hidden sm:block">
+                    <HeaderInvitacionTitulo evento={evento} fontClass={dancingScript.className} />
+                </div>
+
+                {/* 🔹 Ocultar HeaderInvitacion en modo móvil */}
                 <div className="hidden sm:block top-0 left-0 right-0 z-20">
                     <HeaderInvitacion invitado={invitado} fontClass={dancingScript.className} />
                 </div>
@@ -99,9 +107,10 @@ export default function FormularioInvitado() {
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="space-y-6">
                         <TarjetaMatrimonio evento={evento} numberOfGuests={numberOfGuests} fontClass={dancingScript.className} />
-                        <ContadorRegresivo fecha={evento?.date} />
-                        <div className="block sm:hidden">
-                            <HeaderInvitacion invitado={invitado} />
+
+                        {/* 🔹 Ocultar ContadorRegresivo en modo móvil */}
+                        <div className="hidden sm:block">
+                            <ContadorRegresivo fecha={evento?.date} />
                         </div>
                     </div>
                     <div className="space-y-6">

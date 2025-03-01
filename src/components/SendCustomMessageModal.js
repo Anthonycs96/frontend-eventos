@@ -5,7 +5,7 @@ import { Textarea } from "@/components/ui/Textarea";
 
 export default function SendCustomMessageModal({ guest, onClose, onSend }) {
     const [message, setMessage] = useState(
-        `Hola ${guest.name},\n\nTe invitamos cordialmente a nuestro evento. Será un placer contar con tu presencia. Por favor, confirma tu asistencia haciendo clic en el siguiente enlace:\n\n${guest.invitationUrl}\n\n¡Esperamos verte pronto!`
+        `Hola ${guest.name},\n\nCon mucha alegría, Alexandra y yo queremos invitarte a nuestro matrimonio. Será un placer contar con tu presencia. Por favor, confirma tu asistencia haciendo clic en el siguiente enlace:\n\n${guest.invitationUrl}\n\n¡Esperamos verte pronto!`
     );
 
     const handleSend = () => {
