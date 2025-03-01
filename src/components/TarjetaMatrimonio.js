@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import { MapPin, Clock, Calendar, Music } from "lucide-react"
 import ContadorRegresivo from "@/components/ContadorRegresivo"
 import HeaderInvitacionTitulo from "@/components/HeaderInvitacionTitulo"
+import Image from "next/image" // Importar el componente Image de Next.js
 
 export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass }) {
     const [isPlaying, setIsPlaying] = useState(false)
@@ -90,18 +91,19 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
         <div
             className={`relative shadow-2xl rounded-3xl overflow-hidden max-w mx-auto transform transition duration-500 ${fontClass}`}
         >
-            {/* Imagen de fondo con brillo reducido y overlay más oscuro */}
-            <div
-                className="absolute inset-0 bg-cover bg-center z-0 hidden md:block"
-                style={{
-                    backgroundImage: `url(${imageUrl})`,
-                    backgroundSize: "cover",
-                    backgroundPosition: "center",
-                    filter: "brightness(0.5)", // Reducir brillo de la imagen
-                }}
-            ></div>
-            {/* Overlay más oscuro para mejorar el contraste */}
-            <div className="absolute inset-0 bg-black opacity-60 z-0 hidden md:block"></div>
+            {/* Imagen de fondo con brillo reducido */}
+            <div className="absolute inset-0 w-full h-full z-0">
+                <Image
+                    src={imageUrl}
+                    alt="Fondo del Evento"
+                    fill
+                    className="object-cover brightness-20" // Reducir brillo de la imagen
+                    onError={() => setImgError(true)}
+                    priority // Priorizar la carga de la imagen
+                />
+                {/* Overlay oscuro para mejorar el contraste */}
+                <div className="absolute inset-0 bg-black opacity-20"></div>
+            </div>
 
             <div className="relative z-10 p-8 text-center text-white">
                 {/* 🔹 Ocultar HeaderInvitacionTitulo en modo escritorio */}

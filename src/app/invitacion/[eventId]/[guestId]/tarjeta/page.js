@@ -11,13 +11,11 @@ import TarjetaMatrimonio from "@/components/TarjetaMatrimonio";
 import { ImprovedCarousel } from "@/components/ui/SimpleCarousel";
 import ContadorRegresivo from "@/components/ContadorRegresivo";
 import { dancingScript } from "@/styles/fonts";
-import Image from "next/image"; // Importar el componente Image de Next.js
 
 export default function FormularioInvitado() {
     const params = useParams();
     const { eventId, guestId } = params;
     const { invitado, evento, isLoading, error } = useEventData(eventId, guestId);
-    const [imgError, setImgError] = useState(false);
     const [showConfirmation, setShowConfirmation] = useState(false);
     const [isPlaying, setIsPlaying] = useState(false);
     const audioRef = useRef(null);
@@ -72,30 +70,12 @@ export default function FormularioInvitado() {
     if (isLoading) return <p>Loading...</p>;
     if (error) return <p>Error: {error}</p>;
 
-    const imageUrl = imgError || !evento?.imageUrl?.startsWith("http")
-        ? "https://via.placeholder.com/1200x800?text=Evento"
-        : evento.imageUrl;
-
     const numberOfGuests = invitado?.numberOfGuests ?? 0;
 
     return (
         <div className="relative min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
-            {/* Imagen de fondo */}
-            <div className="absolute inset-0 w-full h-full z-0">
-                <Image
-                    src={imageUrl}
-                    alt="Fondo del Evento"
-                    fill
-                    className="object-cover"
-                    onError={() => setImgError(true)}
-                    priority // Priorizar la carga de la imagen
-                />
-                {/* Overlay oscuro para mejorar la legibilidad */}
-                <div className="absolute inset-0 bg-black opacity-20"></div>
-            </div>
-
             {/* Contenido principal */}
-            <div className="relative z-10 w-full max-w-5xl text-white text-center">
+            <div className="relative z-10 w-full max-w-5xl text-center">
                 {/* 🔹 Ocultar HeaderInvitacionTitulo en modo móvil */}
                 <div className="hidden sm:block">
                     <HeaderInvitacionTitulo evento={evento} fontClass={dancingScript.className} />
@@ -107,7 +87,7 @@ export default function FormularioInvitado() {
                 </div>
 
                 <div className="grid md:grid-cols-2 gap-8">
-                    <div className="space-y-6">
+                    <div className="">
                         <TarjetaMatrimonio evento={evento} numberOfGuests={numberOfGuests} fontClass={dancingScript.className} />
 
                         {/* 🔹 Ocultar ContadorRegresivo en modo móvil */}
