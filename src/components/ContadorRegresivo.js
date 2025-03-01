@@ -57,7 +57,7 @@ export default function ContadorRegresivo({ fecha, theme, imageUrl }) {
                     {Object.entries(tiempoRestante).map(([unidad, valor]) => (
                         <div
                             key={unidad}
-                            className="flex flex-col items-center bg-black bg-opacity-30 p-2 sm:p-3 rounded-lg shadow-lg transform transition-transform hover:scale-105 border-2 border-white/20"
+                            className="flex flex-col items-center bg-black bg-opacity-50 p-2 sm:p-3 rounded-lg shadow-lg transform transition-transform hover:scale-105 border-2 border-white/20"
                         >
                             <span className="text-2xl sm:text-4xl font-bold animate-bounce text-white/90">
                                 {valor}
