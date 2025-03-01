@@ -11,6 +11,7 @@ import TarjetaMatrimonio from "@/components/TarjetaMatrimonio";
 import { ImprovedCarousel } from "@/components/ui/SimpleCarousel";
 import ContadorRegresivo from "@/components/ContadorRegresivo";
 import { dancingScript } from "@/styles/fonts";
+import Image from "next/image"; // Importar el componente Image de Next.js
 
 export default function FormularioInvitado() {
     const params = useParams();
@@ -79,20 +80,21 @@ export default function FormularioInvitado() {
 
     return (
         <div className="relative min-h-screen flex flex-col justify-center items-center py-12 px-4 sm:px-6 lg:px-8 overflow-hidden">
-            {/* Imagen de fondo sin transiciones */}
-            <div className="absolute inset-0 w-full h-full">
-                <img
+            {/* Imagen de fondo */}
+            <div className="absolute inset-0 w-full h-full z-0">
+                <Image
                     src={imageUrl}
                     alt="Fondo del Evento"
-                    className="w-full h-full object-cover"
+                    fill
+                    className="object-cover"
                     onError={() => setImgError(true)}
-                    style={{
-                        transition: "none", // Deshabilitar transiciones
-                    }}
+                    priority // Priorizar la carga de la imagen
                 />
-                <div className="absolute inset-0 bg-black opacity-50"></div>
+                {/* Overlay oscuro para mejorar la legibilidad */}
+                <div className="absolute inset-0 bg-black opacity-20"></div>
             </div>
 
+            {/* Contenido principal */}
             <div className="relative z-10 w-full max-w-5xl text-white text-center">
                 {/* 🔹 Ocultar HeaderInvitacionTitulo en modo móvil */}
                 <div className="hidden sm:block">
@@ -123,7 +125,6 @@ export default function FormularioInvitado() {
                                 theme="green"
                                 invitadoNombre={invitado?.name}
                             />
-
                         ) : (
                             <ConfirmacionForm
                                 invitationUrl={invitado?.invitationUrl}
