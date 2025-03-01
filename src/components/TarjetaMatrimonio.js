@@ -90,15 +90,18 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
         <div
             className={`relative shadow-2xl rounded-3xl overflow-hidden max-w mx-auto transform transition duration-500 ${fontClass}`}
         >
+            {/* Imagen de fondo con brillo reducido y overlay más oscuro */}
             <div
                 className="absolute inset-0 bg-cover bg-center z-0 hidden md:block"
                 style={{
                     backgroundImage: `url(${imageUrl})`,
                     backgroundSize: "cover",
                     backgroundPosition: "center",
-                    filter: "brightness(0.6)",
+                    filter: "brightness(0.5)", // Reducir brillo de la imagen
                 }}
             ></div>
+            {/* Overlay más oscuro para mejorar el contraste */}
+            <div className="absolute inset-0 bg-black opacity-60 z-0 hidden md:block"></div>
 
             <div className="relative z-10 p-8 text-center text-white">
                 {/* 🔹 Ocultar HeaderInvitacionTitulo en modo escritorio */}
@@ -106,31 +109,38 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
                     <HeaderInvitacionTitulo evento={evento} />
                 </div>
 
-                <h1 className="text-5xl font-bold mb-6 text-orange-200">{name || "Evento Especial"}</h1>
+                {/* Título con sombra para mejorar legibilidad */}
+                <h1 className="text-5xl font-bold mb-6 text-orange-200 drop-shadow-lg">
+                    {name || "Evento Especial"}
+                </h1>
 
                 <div className="flex justify-center items-center gap-8 mb-8">
-                    <div className="text-center bg-black bg-opacity-50 p-4 rounded-lg">
+                    <div className="text-center bg-black bg-opacity-70 p-4 rounded-lg">
                         <Calendar className="w-8 h-8 mx-auto mb-2" />
                         <p className="text-5xl font-bold">{dia}</p>
                         <p className="text-xl font-medium">{mes}</p>
                         <p className="text-lg">{anio}</p>
                     </div>
-                    <div className="text-center bg-black bg-opacity-50 p-4 rounded-lg">
+                    <div className="text-center bg-black bg-opacity-70 p-4 rounded-lg">
                         <Clock className="w-8 h-8 mx-auto mb-2" />
                         <p className="text-xl font-medium">Hora</p>
                         <p className="text-3xl font-bold">{time || "Sin hora"}</p>
                     </div>
                 </div>
-                <p className="text-xl mt-2 cursor-pointer transition-all flex items-center justify-center">
-                    {numberOfGuests > 0
-                        ? `¡Puedes asistir con ${numberOfGuests} acompañante${numberOfGuests > 1 ? 's' : ''}!`
-                        : "Te esperamos con mucha alegría, disfruta este gran día con nosotros 💖"}
-                </p>
+
+                {/* Texto con sombra y fondo semitransparente */}
+                <div className="bg-black bg-opacity-50 p-4 rounded-lg mb-6">
+                    <p className="text-xl mt-2 cursor-pointer transition-all flex items-center justify-center drop-shadow-md">
+                        {numberOfGuests > 0
+                            ? `¡Puedes asistir con ${numberOfGuests} acompañante${numberOfGuests > 1 ? 's' : ''}!`
+                            : "Te esperamos con mucha alegría, disfruta este gran día con nosotros 💖"}
+                    </p>
+                </div>
 
                 <div className="border-t border-gray-300 pt-6 mb-6">
                     <h3 className="text-2xl font-semibold mb-2">Ubicación</h3>
                     <p
-                        className="text-xl mt-2 cursor-pointer transition-all flex items-center justify-center"
+                        className="text-xl mt-2 cursor-pointer transition-all flex items-center justify-center drop-shadow-md"
                         onClick={abrirGoogleMaps}
                     >
                         <MapPin className="w-6 h-6 mr-2" />
@@ -139,7 +149,7 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
                 </div>
 
                 <button
-                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-110 flex items-center justify-center mx-auto"
+                    className="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-110 flex items-center justify-center mx-auto drop-shadow-md"
                     onClick={abrirGoogleMaps}
                 >
                     <MapPin className="w-5 h-5 mr-2" />
@@ -147,14 +157,14 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
                 </button>
 
                 {isPlaying && (
-                    <div className="mt-4 flex items-center justify-center text-yellow-300">
+                    <div className="mt-4 flex items-center justify-center text-yellow-300 drop-shadow-md">
                         <Music className="w-6 h-6 mr-2 animate-pulse" />
                         <span>Música sonando</span>
                     </div>
                 )}
 
                 {/* 🔹 Ocultar ContadorRegresivo en modo escritorio */}
-                <div className="md:hidden mt-4 items-center justify-center text-yellow-300">
+                <div className="md:hidden mt-4 items-center justify-center text-yellow-300 drop-shadow-md">
                     <ContadorRegresivo fecha={evento?.date} />
                 </div>
             </div>
