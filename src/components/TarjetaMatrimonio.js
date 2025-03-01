@@ -128,7 +128,7 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
 
                     <div className="mb-6 flex flex-col items-center">
                         <div className="w-16 h-1 bg-amber-300 mb-4 rounded-full"></div>
-                        <h1 className="text-5xl font-serif font-bold mb-2 text-amber-400 drop-shadow-lg tracking-wide"> {/* Cambiar text-amber-100 a text-gray-800 */}
+                        <h1 className="text-5xl  font-bold mb-2 text-amber-400 drop-shadow-lg tracking-wide"> {/* Cambiar text-amber-100 a text-gray-800 */}
                             {name || "Evento Especial"}
                         </h1>
                         <div className="w-16 h-1 bg-amber-300 mt-4 rounded-full"></div>

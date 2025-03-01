@@ -36,7 +36,7 @@ export default function ContadorRegresivo({ fecha, theme, imageUrl }) {
     }
 
     return (
-        <div className="relative shadow-2xl rounded-lg p-4 text-center overflow-hidden w-full max-w-xs sm:max-w-md mx-auto py-12 px-4">
+        <div className="relative shadow-2xl rounded-lg p-4 text-center overflow-hidden w-full max-w sm:max-w-md mx-auto py-12 px-4">
             {/* Imagen de fondo dinámica */}
             <div
                 className="absolute inset-0 bg-cover bg-center z-0"
