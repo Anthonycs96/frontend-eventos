@@ -105,21 +105,30 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
     }
 
     return (
-        <div className={`relative overflow-hidden max-w-lg mx-auto transform transition duration-500 ${fontClass}`}>
+        <div className={`relative overflow-hidden max-w-lg mx-auto transform transition duration-500 from-black/0 via-black/20 to-black/0 ${fontClass}`}>
             {/* Background image with gradient overlay */}
-            <div className="absolute inset-0 w-full h-full z-0">
+            <div className="absolute top-0 right-0 w-56 h-56 z-0 scale-x-[-1] scale-y-[-1]"> {/* Cambia el tamaño según lo necesites */}
                 <Image
                     src={imageUrl || "/placeholder.svg"}
                     alt="Fondo del Evento"
                     fill
-                    className="object-cover"
+                    className="object-cover rounded-lg" // Añade rounded-lg para bordes redondeados
                     onError={() => setImgError(true)}
                     priority
                 />
-                <div className="absolute inset-0 bg-gradient-to-b from-black/0 via-black/20 to-black/0"></div> {/* Overlay más claro */}
+            </div>
+            <div className="absolute top-0 left-0 w-48 h-48 z-0 scale-y-[-1]"> {/* Pegado a la izquierda y superior */}
+                <Image
+                    src={imageUrl || "/placeholder.svg"}
+                    alt="Fondo del Evento"
+                    fill
+                    className="object-cover rounded-lg" // Bordes redondeados
+                    onError={() => setImgError(true)}
+                    priority
+                />
             </div>
 
-            <div className="relative z-10 p-8 text-center text-black min-h-screen flex flex-col justify-between"> {/* Cambiar text-white a text-black */}
+            <div className="relative z-10 p-8 text-center text-black min-h-screen flex flex-col justify-between "> {/* Cambiar text-white a text-black */}
                 {/* Header section */}
                 <div className="pt-8">
                     <div className="md:hidden">
@@ -230,6 +239,29 @@ export default function TarjetaMatrimonio({ evento, numberOfGuests, fontClass })
                     allowFullScreen
                 ></iframe>
             )}
+
+            {/* Imagen en la esquina inferior izquierda (invertida horizontal y verticalmente) */}
+            <div className="absolute bottom-0 left-0 w-56 h-56 z-0 transform">
+                <Image
+                    src={imageUrl || "/placeholder.svg"}
+                    alt="Fondo del Evento"
+                    fill
+                    className="object-cover rounded-lg"
+                    onError={() => setImgError(true)}
+                    priority
+                />
+            </div>
+
+            <div className="absolute bottom-0 right-0 w-56 h-56 z-0 transform scale-x-[-1]"> {/* Pegado a la derecha e invertido */}
+                <Image
+                    src={imageUrl || "/placeholder.svg"}
+                    alt="Fondo del Evento"
+                    fill
+                    className="object-cover rounded-lg"
+                    onError={() => setImgError(true)}
+                    priority
+                />
+            </div>
         </div>
     )
 }
