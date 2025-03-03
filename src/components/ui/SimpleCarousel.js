@@ -2,15 +2,20 @@
 
 import { useState, useCallback, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 
-// Función para usar un proxy en imágenes de Instagram
+// Función corregida para usar un proxy en imágenes de Instagram
 const getImageUrl = (url) => {
-    if (!url) return "/placeholder.svg"; // Evita errores si la URL es undefined
-    if (url.includes("instagram") || url.includes("fbcdn.net")) {
-        return `/api/proxy?url=${encodeURIComponent(url)}`;
+    if (!url) {
+        console.warn("URL de imagen no proporcionada. Usando placeholder.");
+        return "/placeholder.svg";
     }
+    if (url.includes("instagram") || url.includes("fbcdn.net")) {
+        const proxyUrl = `/api/proxy?url=${encodeURIComponent(url)}`;
+        console.log("URL generada por el proxy:", proxyUrl);
+        return proxyUrl;
+    }
+    console.log("URL directa:", url);
     return url;
 };
 
@@ -38,13 +43,18 @@ export function ImprovedCarousel({ images = [] }) {
         return () => clearInterval(intervalRef.current);
     }, [isAutoPlaying, nextSlide]);
 
+    // Depuración: Verificar las URLs de las imágenes
+    useEffect(() => {
+        console.log("URLs de las imágenes:", images);
+    }, [images]);
+
     // Evita errores si el array de imágenes está vacío
     if (!images || images.length === 0) {
         return <div className="text-center text-gray-500">No hay imágenes disponibles</div>;
     }
 
     return (
-        <div className="relative w-full h-64 md:h-96 overflow-hidden rounded-xl shadow-lg">
+        <div className="relative w-full h-64 md:h-96 overflow-hidden ">
             <AnimatePresence mode="wait">
                 <motion.div
                     key={currentIndex}
@@ -54,17 +64,16 @@ export function ImprovedCarousel({ images = [] }) {
                     transition={{ duration: 0.5 }}
                     className="absolute inset-0"
                 >
-                    <Image
-                        src={getImageUrl(images[currentIndex])}
-                        alt={`Slide ${currentIndex + 1}`}
-                        fill
-                        style={{ objectFit: "cover" }}
-                        className="transition-transform duration-500 ease-in-out hover:scale-105"
-                        unoptimized // Evita bloqueos de optimización
-                        onError={(e) => {
-                            e.target.src = "/placeholder.svg"; // Si falla, carga una imagen alternativa
-                        }}
-                    />
+                    <div className="w-full h-full p-2 "> {/* Contenedor con padding para el borde */}
+                        <img
+                            src={images[currentIndex]} // Asegúrate de que `images[currentIndex]` sea una URL válida
+                            alt={`Slide ${currentIndex + 1}`}
+                            className="w-full h-full object-cover border-4 border-transparent rounded-xl shadow-lg" // Borde transparente
+                            onError={(e) => {
+                                e.target.src = "/placeholder.svg"; // Si falla, carga una imagen alternativa
+                            }}
+                        />
+                    </div>
                 </motion.div>
             </AnimatePresence>
             <div className="absolute inset-0 flex items-center justify-between p-4">

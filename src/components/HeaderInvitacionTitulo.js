@@ -6,7 +6,7 @@ export default function HeaderInvitacionTitulo({ evento, fontClass }) {
 
     return (
         <div className="text-center mb-5"> {/* Se agregó margen inferior */}
-            <h1 className={`text-6xl sm:text-7xl lg:text-8xl font-bold text-black drop-shadow-lg mb-2 ${fontClass}
+            <h1 className={`text-5xl sm:text-7xl lg:text-8xl font-bold text-black drop-shadow-lg mb-2 ${fontClass}
                
                 
                 `}>

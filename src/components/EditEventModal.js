@@ -39,7 +39,7 @@ export default function EditEventModal({ event, onClose, onSave }) {
                 isActive: event.isActive ?? true,
                 songUrl: event.songUrl || "",
                 imageUrl: event.imageUrl || "",
-                secondaryImages: event.secondaryImages || [],
+                secondaryImages: event?.secondaryImages || [],
             });
         }
     }, [event]);
