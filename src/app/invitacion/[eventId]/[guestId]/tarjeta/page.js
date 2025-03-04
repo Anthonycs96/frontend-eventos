@@ -1,63 +1,66 @@
-"use client";
+"use client"
 
-import { useParams } from "next/navigation";
-import { useState, useEffect, useRef } from "react";
-import { useEventData } from "@/components/hooks/useEventData";
-import HeaderInvitacion from "@/components/HeaderInvitacion";
-import HeaderInvitacionTitulo from "@/components/HeaderInvitacionTitulo";
-import ConfirmacionForm from "@/components/ConfirmacionForm";
-import { ImprovedCarousel } from "@/components/ui/SimpleCarousel";
-import ContadorRegresivo from "@/components/ContadorRegresivo";
-import TarjetaInvitation from "@/components/TarjetaInvitation";
-import { dancingScript } from "@/styles/fonts";
+import { useParams } from "next/navigation"
+import { useState, useEffect, useRef, useCallback } from "react"
+import { useEventData } from "@/components/hooks/useEventData"
+import HeaderInvitacion from "@/components/HeaderInvitacion"
+import HeaderInvitacionTitulo from "@/components/HeaderInvitacionTitulo"
+import ConfirmacionForm from "@/components/ConfirmacionForm"
+import { ImprovedCarousel } from "@/components/ui/SimpleCarousel"
+import ContadorRegresivo from "@/components/ContadorRegresivo"
+import TarjetaInvitation from "@/components/TarjetaInvitation"
+import { dancingScript } from "@/styles/fonts"
+import ElegantLoader from "@/components/ElegantLoader"
 
 export default function FormularioInvitado() {
-    const params = useParams();
-    const { eventId, guestId } = params;
-    const { invitado, evento, isLoading, error } = useEventData(eventId, guestId);
-    const [isPlaying, setIsPlaying] = useState(false);
-    const audioRef = useRef(null);
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent); // Detectar si el usuario está en iOS
-    console.log(invitado);
+    const params = useParams()
+    const { eventId, guestId } = params
+    const { invitado, evento, isLoading, error } = useEventData(eventId, guestId)
+    const [isPlaying, setIsPlaying] = useState(false)
+    const audioRef = useRef(null)
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) // Detectar si el usuario está en iOS
 
     // Iniciar música (Autoplay en Android, botón en iOS)
-    const startMusic = () => {
+    const startMusic = useCallback(() => {
         if (evento?.songUrl && !isPlaying) {
-            const audioElement = new Audio(evento.songUrl);
-            audioElement.loop = true;
+            const audioElement = new Audio(evento.songUrl)
+            audioElement.loop = true
 
-            audioElement.play().then(() => {
-                console.log("Música reproducida correctamente");
-                setIsPlaying(true);
-            }).catch((error) => {
-                console.warn("Autoplay bloqueado en iOS. Se necesita interacción del usuario.", error);
-            });
+            audioElement
+                .play()
+                .then(() => {
+                    console.log("Música reproducida correctamente")
+                    setIsPlaying(true)
+                })
+                .catch((error) => {
+                    console.warn("Autoplay bloqueado en iOS. Se necesita interacción del usuario.", error)
+                })
 
-            audioRef.current = audioElement;
+            audioRef.current = audioElement
         }
-    };
+    }, [evento?.songUrl, isPlaying])
 
     // En Android, iniciar la música automáticamente
     useEffect(() => {
         if (!isIOS) {
-            startMusic();
+            startMusic()
         }
-    }, [evento]);
+    }, [isIOS, startMusic])
 
     // Detener música si el componente se desmonta
     useEffect(() => {
         return () => {
             if (audioRef.current) {
-                audioRef.current.pause();
-                audioRef.current.currentTime = 0;
+                audioRef.current.pause()
+                audioRef.current.currentTime = 0
             }
-        };
-    }, []);
+        }
+    }, [])
 
-    if (isLoading) return <p>Loading...</p>;
-    if (error) return <p>Error: {error}</p>;
+    if (isLoading) return <ElegantLoader />
+    if (error) return <ElegantLoader error={error} />
 
-    const numberOfGuests = invitado?.numberOfGuests ?? 0;
+    const numberOfGuests = invitado?.numberOfGuests ?? 0
 
     return (
         <div className="relative min-h-screen flex flex-col justify-center items-center sm:py-12 sm:px-4 sm:px-6 lg:px-8 overflow-hidden">
@@ -75,7 +78,12 @@ export default function FormularioInvitado() {
 
                 <div className="grid md:grid-cols-2 gap-8">
                     <div className="">
-                        <TarjetaInvitation evento={evento} invitado={invitado} numberOfGuests={numberOfGuests} fontClass={dancingScript.className} />
+                        <TarjetaInvitation
+                            evento={evento}
+                            invitado={invitado}
+                            numberOfGuests={numberOfGuests}
+                            fontClass={dancingScript.className}
+                        />
                     </div>
                     <div className="hidden sm:block space-y-6">
                         {/* Ocultar ContadorRegresivo en modo móvil */}
@@ -100,7 +108,7 @@ export default function FormularioInvitado() {
                             eventDetails={{ invitado, evento }}
                             onConfirmSuccess={() => {
                                 // Aquí puedes agregar lógica adicional si es necesario
-                                console.log("Confirmación exitosa");
+                                console.log("Confirmación exitosa")
                             }}
                         />
 
@@ -109,5 +117,6 @@ export default function FormularioInvitado() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
+

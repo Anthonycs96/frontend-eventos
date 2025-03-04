@@ -18,6 +18,8 @@ export default function TarjetaInvitation({ evento, numberOfGuests, invitado, fo
     const [player, setPlayer] = useState(null) // Estado para el reproductor de YouTube
     const [modalAbierto, setModalAbierto] = useState(false);
 
+    console.log('hey aca:', invitado.status)
+
     const abrirModal = () => setModalAbierto(true);
     const cerrarModal = () => setModalAbierto(false);
 
@@ -166,7 +168,7 @@ export default function TarjetaInvitation({ evento, numberOfGuests, invitado, fo
                     }}
                 >
                     {/* Overlay para mejor contraste */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-black/5 to-black/20 pointer-events-none md:hidden"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/10 via-black/5 to-black/10 pointer-events-none md:hidden"></div>
 
 
 

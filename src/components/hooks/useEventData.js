@@ -32,7 +32,6 @@ export function useEventData(eventId, guestId) {
 
     // Obtener el número de acompañantes (puede ser null o 0 si no tiene)
     const numberOfGuests = invitado?.numberOfGuests ?? 0;
-    console.log(invitado)
 
     return { invitado, evento, isLoading, error, numberOfGuests };
 }
