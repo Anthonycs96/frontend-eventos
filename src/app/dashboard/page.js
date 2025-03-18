@@ -21,7 +21,7 @@ export default function Dashboard() {
 
     const router = useRouter();
 
-    // 📌 Verifica autenticación
+    // Verifica autenticación
     useEffect(() => {
         const token = localStorage.getItem("token");
 
@@ -45,7 +45,7 @@ export default function Dashboard() {
         }
     }, [router]);
 
-    // 📌 Obtiene solo los eventos creados por el usuario autenticado
+    // Obtiene solo los eventos creados por el usuario autenticado
     const fetchEvents = useCallback(async () => {
         try {
             setLoading(true);
@@ -60,7 +60,7 @@ export default function Dashboard() {
                 uniqueKey: event.id || index,
             })));
         } catch (err) {
-            console.error("❌ Error al obtener eventos:", err.response?.data || err.message);
+            console.error("Error al obtener eventos:", err.response?.data || err.message);
 
             // Si el error es 401 (token inválido), redirigir al inicio
             if (err.response && err.response.status === 401) {
@@ -80,11 +80,11 @@ export default function Dashboard() {
         }
     }, [router]);
 
-    // 📌 Carga eventos una vez autenticado
     useEffect(() => {
         if (!isAuthenticating) {
             fetchEvents();
-
+    
+            // Manejar evento nuevo
             const handleNewEvent = (newEvent) => {
                 setEvents((prevEvents) => {
                     const existingEvent = prevEvents.find((event) => event.id === newEvent.id);
@@ -93,16 +93,39 @@ export default function Dashboard() {
                         : [...prevEvents, { ...newEvent, uniqueKey: newEvent.id || prevEvents.length }];
                 });
             };
-
+    
+            // Manejar actualización de evento
+            const handleEventUpdate = (updatedEvent) => {
+                setEvents((prevEvents) =>
+                    prevEvents.map((event) =>
+                        event.id === updatedEvent.id
+                            ? { ...updatedEvent, uniqueKey: event.uniqueKey }
+                            : event
+                    )
+                );
+            };
+    
+            // Configurar listeners del socket
             socket.on("new_event", handleNewEvent);
-
+            socket.on("update_Guest", handleEventUpdate);
+    
+            // Verificar conexión del socket
+            console.log("Socket connected:", socket.connected);
+            socket.on("connect", () => {
+                console.log("Socket connected:", socket.connected);
+            });
+            socket.on("disconnect", () => {
+                console.log("Socket disconnected");
+            });
+    
             return () => {
                 socket.off("new_event", handleNewEvent);
+                socket.off("update_Guest", handleEventUpdate);
             };
         }
     }, [fetchEvents, isAuthenticating]);
 
-    // 📌 Calcula estadísticas de eventos
+    // Calcula estadísticas de eventos
     const { totalInvitations, confirmedInvitations } = useMemo(() => {
         return events.reduce(
             (acc, event) => {
@@ -115,7 +138,7 @@ export default function Dashboard() {
         );
     }, [events]);
 
-    // 📌 Elimina un evento
+    // Elimina un evento
     const deleteEvent = useCallback(async (eventId) => {
         try {
             const token = localStorage.getItem("token");
@@ -124,31 +147,13 @@ export default function Dashboard() {
             });
             setEvents((prevEvents) => prevEvents.filter((event) => event.id !== eventId));
         } catch (err) {
-            console.error("❌ Error al eliminar el evento:", err.response?.data || err.message);
+            console.error("Error al eliminar el evento:", err.response?.data || err.message);
         }
     }, []);
 
-    // 📌 Editar un evento
+    // Editar un evento
     const handleEditEvent = (event) => {
         setEditEvent(event);
-    };
-
-    // 📌 Guardar actualización de evento
-    const updateEvent = async (updatedEvent) => {
-        try {
-            const token = localStorage.getItem("token");
-            await API.put(`/events/${updatedEvent.id}`, updatedEvent, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-
-            setEvents((prevEvents) =>
-                prevEvents.map((event) => (event.id === updatedEvent.id ? updatedEvent : event))
-            );
-
-            setEditEvent(null);
-        } catch (err) {
-            console.error("❌ Error al actualizar el evento:", err.response?.data || err.message);
-        }
     };
 
     return (
@@ -181,7 +186,7 @@ export default function Dashboard() {
             </Button>
 
             {isModalOpen && <CreateEventModal onClose={() => setIsModalOpen(false)} onCreateEvent={fetchEvents} />}
-            {editEvent && <EditEventModal event={editEvent} onClose={() => setEditEvent(null)} onSave={updateEvent} />}
+            {editEvent && <EditEventModal event={editEvent} onClose={() => setEditEvent(null)} />}
         </div>
     );
 }

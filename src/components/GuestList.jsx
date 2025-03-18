@@ -20,6 +20,7 @@ import {
   Users,
   Home,
   Briefcase,
+  Search,
 } from "lucide-react";
 
 export default function GuestList({
@@ -29,6 +30,7 @@ export default function GuestList({
   onSendCustomMessage,
 }) {
   const [expandedGuest, setExpandedGuest] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const toggleExpand = (guestId) => {
     setExpandedGuest(expandedGuest === guestId ? null : guestId);
@@ -54,8 +56,30 @@ export default function GuestList({
     proveedores: "bg-orange-100 text-orange-800",
   };
 
+  const filteredGuests = guests.filter((guest) => {
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      guest.name?.toLowerCase().includes(searchLower) ||
+      guest.email?.toLowerCase().includes(searchLower) ||
+      guest.phone?.toLowerCase().includes(searchLower) ||
+      guest.type?.toLowerCase().includes(searchLower)
+    );
+  });
+
   return (
     <div className="space-y-6">
+      {/* Buscador */}
+      <div className="relative">
+        <input
+          type="text"
+          placeholder="Buscar por nombre, email, teléfono o tipo..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+        />
+        <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+      </div>
+
       {/* Tabla para pantallas grandes */}
       <div className="hidden md:block overflow-x-auto rounded-lg shadow-md">
         <Table>
@@ -71,8 +95,8 @@ export default function GuestList({
             </TableRow>
           </TableHeader>
           <TableBody>
-            {guests.length > 0 ? (
-              guests.map((guest) => (
+            {filteredGuests.length > 0 ? (
+              filteredGuests.map((guest) => (
                 <TableRow
                   key={guest.id}
                   className="hover:bg-gray-50 transition-colors"
@@ -144,8 +168,9 @@ export default function GuestList({
                   colSpan={7}
                   className="text-center py-8 text-gray-500 italic"
                 >
-                  No se han agregado invitados aún. ¡Invita a alguien para
-                  comenzar!
+                  {searchTerm
+                    ? "No se encontraron invitados que coincidan con la búsqueda"
+                    : "No se han agregado invitados aún. ¡Invita a alguien para comenzar!"}
                 </TableCell>
               </TableRow>
             )}
@@ -155,8 +180,8 @@ export default function GuestList({
 
       {/* Vista de lista para pantallas pequeñas */}
       <div className="md:hidden space-y-4">
-        {guests.length > 0 ? (
-          guests.map((guest) => (
+        {filteredGuests.length > 0 ? (
+          filteredGuests.map((guest) => (
             <div
               key={guest.id}
               className="bg-white rounded-lg shadow-md overflow-hidden"
@@ -175,7 +200,7 @@ export default function GuestList({
                 <div className="flex-grow">
                   <h3 className="font-semibold text-lg">{guest.name}</h3>
                   <p className="text-sm text-gray-600">
-                    {guest.email || "No disponible"}
+                    {guest.type || "No disponible"}
                   </p>
                 </div>
                 <div
@@ -201,16 +226,16 @@ export default function GuestList({
                       <span className="font-semibold">Teléfono:</span>{" "}
                       {guest.phone}
                     </div>
-                    <div>
+                    {/* <div>
                       <span className="font-semibold">Tipo:</span>{" "}
                       {guest.type || "Sin tipo"}
-                    </div>
+                    </div> */}
                     <div>
                       <span className="font-semibold">Acompañantes:</span>{" "}
                       {guest.numberOfGuests !== null ? guest.numberOfGuests : 0}
                     </div>
                   </div>
-                  {/* Agregar botones en la vista móvil */}
+                  {/* Botones en la vista móvil */}
                   <div className="flex space-x-2 mt-3">
                     <Button
                       size="sm"
@@ -244,7 +269,9 @@ export default function GuestList({
         ) : (
           <div className="text-center py-8 bg-white rounded-lg shadow-md">
             <p className="text-gray-500 italic">
-              No se han agregado invitados aún. ¡Invita a alguien para comenzar!
+              {searchTerm
+                ? "No se encontraron invitados que coincidan con la búsqueda"
+                : "No se han agregado invitados aún. ¡Invita a alguien para comenzar!"}
             </p>
           </div>
         )}
