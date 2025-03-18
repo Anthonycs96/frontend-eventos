@@ -36,6 +36,12 @@ export default function GuestList({
     setExpandedGuest(expandedGuest === guestId ? null : guestId);
   };
 
+  const statusTranslations = {
+    confirmed: "Confirmado",
+    pending: "Pendiente",
+    declined: "Rechazado",
+  };
+
   const statusColors = {
     confirmed: "bg-green-500 text-white",
     pending: "bg-yellow-500 text-white",
@@ -58,11 +64,14 @@ export default function GuestList({
 
   const filteredGuests = guests.filter((guest) => {
     const searchLower = searchTerm.toLowerCase();
+    const statusTranslated = statusTranslations[guest.status]?.toLowerCase() || "";
+    
     return (
       guest.name?.toLowerCase().includes(searchLower) ||
       guest.email?.toLowerCase().includes(searchLower) ||
       guest.phone?.toLowerCase().includes(searchLower) ||
-      guest.type?.toLowerCase().includes(searchLower)
+      guest.type?.toLowerCase().includes(searchLower) ||
+      statusTranslated.includes(searchLower)
     );
   });
 
@@ -72,7 +81,7 @@ export default function GuestList({
       <div className="relative">
         <input
           type="text"
-          placeholder="Buscar por nombre, email, teléfono o tipo..."
+          placeholder="Buscar por nombre, email, teléfono, tipo o estado..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -126,10 +135,7 @@ export default function GuestList({
                         "bg-gray-300 text-gray-700"
                       }`}
                     >
-                      {guest.status
-                        ? guest.status.charAt(0).toUpperCase() +
-                          guest.status.slice(1)
-                        : "Desconocido"}
+                      {statusTranslations[guest.status] || "Desconocido"}
                     </span>
                   </TableCell>
                   <TableCell>
@@ -199,80 +205,74 @@ export default function GuestList({
                 </div>
                 <div className="flex-grow">
                   <h3 className="font-semibold text-lg">{guest.name}</h3>
-                  <p className="text-sm text-gray-600">
-                    {guest.type || "No disponible"}
-                  </p>
-                </div>
-                <div
-                  className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                    statusColors[guest.status] || "bg-gray-300 text-gray-700"
-                  }`}
-                >
-                  {guest.status
-                    ? guest.status.charAt(0).toUpperCase() +
-                      guest.status.slice(1)
-                    : "Desconocido"}
+                  <p className="text-sm text-gray-500">{guest.email || "No disponible"}</p>
+                  <div className="flex items-center space-x-2 mt-1">
+                    <span
+                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
+                        statusColors[guest.status] || "bg-gray-300 text-gray-700"
+                      }`}
+                    >
+                      {statusTranslations[guest.status] || "Desconocido"}
+                    </span>
+                    <span className="text-sm text-gray-500">
+                      {guest.numberOfGuests !== null
+                        ? `${guest.numberOfGuests} acompañantes`
+                        : "Sin acompañantes"}
+                    </span>
+                  </div>
                 </div>
                 {expandedGuest === guest.id ? (
-                  <ChevronUp className="h-5 w-5 text-gray-500" />
+                  <ChevronUp className="w-6 h-6 text-gray-400" />
                 ) : (
-                  <ChevronDown className="h-5 w-5 text-gray-500" />
+                  <ChevronDown className="w-6 h-6 text-gray-400" />
                 )}
               </div>
               {expandedGuest === guest.id && (
-                <div className="px-4 pb-4 space-y-3 bg-gray-50">
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div>
+                <div className="p-4 bg-gray-50 border-t">
+                  <div className="space-y-2">
+                    <p>
                       <span className="font-semibold">Teléfono:</span>{" "}
                       {guest.phone}
+                    </p>
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onEdit(guest)}
+                        className="hover:bg-blue-50"
+                      >
+                        <Edit className="h-4 w-4 mr-1" />
+                        Editar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onDelete(guest.id)}
+                        className="hover:bg-red-50"
+                      >
+                        <Trash2 className="h-4 w-4 mr-1" />
+                        Eliminar
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => onSendCustomMessage(guest)}
+                        className="hover:bg-purple-50"
+                      >
+                        <MessageSquare className="h-4 w-4 mr-1" />
+                        Mensaje
+                      </Button>
                     </div>
-                    {/* <div>
-                      <span className="font-semibold">Tipo:</span>{" "}
-                      {guest.type || "Sin tipo"}
-                    </div> */}
-                    <div>
-                      <span className="font-semibold">Acompañantes:</span>{" "}
-                      {guest.numberOfGuests !== null ? guest.numberOfGuests : 0}
-                    </div>
-                  </div>
-                  {/* Botones en la vista móvil */}
-                  <div className="flex space-x-2 mt-3">
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => onEdit(guest)}
-                      className="hover:bg-blue-50"
-                    >
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => onDelete(guest.id)}
-                      className="hover:bg-red-50"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      size="sm"
-                      variant="outline"
-                      onClick={() => onSendCustomMessage(guest)}
-                      className="hover:bg-purple-50"
-                    >
-                      <MessageSquare className="h-4 w-4" />
-                    </Button>
                   </div>
                 </div>
               )}
             </div>
           ))
         ) : (
-          <div className="text-center py-8 bg-white rounded-lg shadow-md">
-            <p className="text-gray-500 italic">
-              {searchTerm
-                ? "No se encontraron invitados que coincidan con la búsqueda"
-                : "No se han agregado invitados aún. ¡Invita a alguien para comenzar!"}
-            </p>
+          <div className="text-center py-8 text-gray-500 italic">
+            {searchTerm
+              ? "No se encontraron invitados que coincidan con la búsqueda"
+              : "No se han agregado invitados aún. ¡Invita a alguien para comenzar!"}
           </div>
         )}
       </div>

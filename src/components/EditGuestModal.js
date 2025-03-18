@@ -4,22 +4,26 @@ import { useState, useEffect } from "react";
 import Button from "@/components/ui/Button";
 import API from "@/utils/api";
 import socket from "@/utils/socket";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function EditGuestModal({ guest, onClose, onSave }) {
-  // Estado inicial basado en el guest proporcionado
   const [guestData, setGuestData] = useState({
     name: guest?.name || "",
     email: guest?.email || "",
-    phone: guest?.phone ? guest.phone.substring(3) : "", // Extraer el número sin el código de país
-    countryCode: guest?.phone?.substring(0, 3) || "+51", // Código de país de Perú por defecto
+    phone: guest?.phone ? guest.phone.substring(3) : "",
+    countryCode: guest?.phone?.substring(0, 3) || "+51",
     type: guest?.type || "",
-    numberOfGuests: guest?.numberOfGuests ?? "", // Evita valores null
+    numberOfGuests: guest?.numberOfGuests ?? "",
   });
 
   const [countries, setCountries] = useState([]);
-  const [includeEmail, setIncludeEmail] = useState(!!guest?.email); // Incluir email si ya existe
+  const [includeEmail, setIncludeEmail] = useState(!!guest?.email);
 
-  // Obtener la lista de países al montar el componente
   useEffect(() => {
     const fetchCountries = async () => {
       try {
@@ -34,7 +38,6 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
           }))
           .filter((country) => country.code);
 
-        // Ordenar los países para que Perú aparezca primero
         const sortedCountries = countryList.sort((a, b) => {
           if (a.code === "+51") return -1;
           if (b.code === "+51") return 1;
@@ -50,7 +53,6 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
     fetchCountries();
   }, []);
 
-  // Manejar cambios en los inputs
   const handleChange = (e) => {
     const { name, value } = e.target;
     setGuestData((prevData) => ({
@@ -59,7 +61,6 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
     }));
   };
 
-  // Manejar el envío del formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -96,15 +97,14 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
   };
 
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
-        <h2 className="text-2xl font-bold mb-4">Editar Invitado</h2>
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Editar Invitado</DialogTitle>
+        </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label
-              htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-1"
-            >
+            <label htmlFor="name" className="block text-gray-700 text-sm font-bold mb-1">
               Nombre *
             </label>
             <input
@@ -126,20 +126,14 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
               onChange={(e) => setIncludeEmail(e.target.checked)}
               className="mr-2"
             />
-            <label
-              htmlFor="includeEmail"
-              className="text-gray-700 text-sm font-bold"
-            >
+            <label htmlFor="includeEmail" className="text-gray-700 text-sm font-bold">
               Incluir correo electrónico
             </label>
           </div>
 
           {includeEmail && (
             <div>
-              <label
-                htmlFor="email"
-                className="block text-gray-700 text-sm font-bold mb-1"
-              >
+              <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-1">
                 Correo Electrónico
               </label>
               <input
@@ -154,10 +148,7 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
           )}
 
           <div>
-            <label
-              htmlFor="phone"
-              className="block text-gray-700 text-sm font-bold mb-1"
-            >
+            <label htmlFor="phone" className="block text-gray-700 text-sm font-bold mb-1">
               Teléfono *
             </label>
             <div className="grid grid-cols-3 gap-2">
@@ -186,10 +177,7 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
           </div>
 
           <div>
-            <label
-              htmlFor="type"
-              className="block text-gray-700 text-sm font-bold mb-1"
-            >
+            <label htmlFor="type" className="block text-gray-700 text-sm font-bold mb-1">
               Tipo de Invitado *
             </label>
             <select
@@ -200,7 +188,7 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-              <option value="">Seleccione un tipo</option>
+              <option value="">Selecciona un tipo</option>
               <option value="principal">Principal</option>
               <option value="familiar">Familiar</option>
               <option value="amigo">Amigo</option>
@@ -209,10 +197,7 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
           </div>
 
           <div>
-            <label
-              htmlFor="numberOfGuests"
-              className="block text-gray-700 text-sm font-bold mb-1"
-            >
+            <label htmlFor="numberOfGuests" className="block text-gray-700 text-sm font-bold mb-1">
               Número de Acompañantes
             </label>
             <input
@@ -226,23 +211,16 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
             />
           </div>
 
-          <div className="flex justify-between">
-            <Button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-            >
-              Guardar cambios
-            </Button>
-            <Button
-              type="button"
-              onClick={onClose}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded"
-            >
+          <div className="flex justify-end space-x-2 pt-4">
+            <Button type="button" onClick={onClose} variant="outline">
               Cancelar
+            </Button>
+            <Button type="submit" variant="default">
+              Guardar Cambios
             </Button>
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }

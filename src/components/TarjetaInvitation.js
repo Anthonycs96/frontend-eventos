@@ -628,24 +628,6 @@ export default function TarjetaInvitation({
         
       )}
 
-      {/* Botones de acción */}
-      <div className="grid grid-cols-2 gap-4 p-6 bg-white">
-        <button
-          onClick={abrirGoogleMaps}
-          className="flex items-center justify-center gap-2 px-4 py-3 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors"
-        >
-          <MapPin className="w-5 h-5" />
-          <span>Ver ubicación</span>
-        </button>
-        
-        <button
-          onClick={abrirModalRegalos}
-          className="flex items-center justify-center gap-2 px-4 py-3 bg-amber-50 text-amber-700 rounded-lg hover:bg-amber-100 transition-colors"
-        >
-          <Gift className="w-5 h-5" />
-          <span>Lista de Regalos</span>
-        </button>
-      </div>
     </>
   );
 }

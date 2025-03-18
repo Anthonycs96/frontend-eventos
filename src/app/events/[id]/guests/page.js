@@ -13,8 +13,9 @@ import CreateInvitationContentModal from "@/components/CreateInvitationContentMo
 import SendCustomMessageModal from "@/components/SendCustomMessageModal";
 import EditGuestModal from "@/components/EditGuestModal";
 import WhatsAppIntegration from "@/components/WhatsAppIntegration";
+import StatsModal from "@/components/StatsModal";
 import socket from "@/utils/socket";
-import { Plus, Send, MessageSquare, FileText } from "lucide-react";
+import { Plus, Send, MessageSquare, FileText, ChartPie } from "lucide-react";
 
 // Componente principal para la gestión de invitados
 export default function GuestManagement() {
@@ -27,8 +28,6 @@ export default function GuestManagement() {
     const [eventName, setEventName] = useState("");
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
-    // Estados para controlar la visibilidad de los diferentes modales
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isReplaceModalOpen, setIsReplaceModalOpen] = useState(false);
@@ -36,17 +35,13 @@ export default function GuestManagement() {
     const [isCreateContentModalOpen, setIsCreateContentModalOpen] = useState(false);
     const [isSendCustomMessageModalOpen, setIsSendCustomMessageModalOpen] = useState(false);
     const [stats, setStats] = useState(null);
-
-    // Estado para gestionar qué invitado está actualmente seleccionado
+    const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
     const [selectedGuest, setSelectedGuest] = useState(null);
-
-    // Estado para almacenar contenido personalizado de invitaciones
     const [invitationContent, setInvitationContent] = useState("");
-
-    // Estados para manejar la conexión de WhatsApp
     const [isWhatsAppConnected, setIsWhatsAppConnected] = useState(false);
     const [showWhatsAppConfig, setShowWhatsAppConfig] = useState(false);
 
+    // Función para obtener estadísticas de invitados
     const fetchGuestStats = async () => {
         try {
             const response = await API.get(`/guest/event/${id}/stats`);
@@ -56,6 +51,61 @@ export default function GuestManagement() {
         }
     };
 
+    // Función para actualizar un invitado en la lista
+    const updateGuestInList = useCallback((updatedGuest) => {
+        setGuests(prevGuests => 
+            prevGuests.map(guest => 
+                guest.id === updatedGuest.id ? { ...guest, ...updatedGuest } : guest
+            )
+        );
+        fetchGuestStats(); // Actualizar estadísticas cuando se actualiza un invitado
+    }, [fetchGuestStats]);
+
+    // Función para agregar un nuevo invitado a la lista
+    const addGuestToList = useCallback((newGuest) => {
+        setGuests(prevGuests => {
+            if (!prevGuests.some(guest => guest.id === newGuest.id)) {
+                return [...prevGuests, newGuest];
+            }
+            return prevGuests;
+        });
+        fetchGuestStats(); // Actualizar estadísticas cuando se agrega un invitado
+    }, [fetchGuestStats]);
+
+    // Función para eliminar un invitado de la lista
+    const removeGuestFromList = useCallback((guestId) => {
+        setGuests(prevGuests => prevGuests.filter(guest => guest.id !== guestId));
+        fetchGuestStats(); // Actualizar estadísticas cuando se elimina un invitado
+    }, [fetchGuestStats]);
+
+    // Configurar los listeners de socket
+    useEffect(() => {
+        // Escuchar nuevos invitados
+        socket.on("new_Guest", (guest) => {
+            console.log("Nuevo invitado recibido:", guest);
+            addGuestToList(guest);
+        });
+
+        // Escuchar actualizaciones de invitados
+        socket.on("update_Guest", (guest) => {
+            console.log("Actualización de invitado recibida:", guest);
+            updateGuestInList(guest);
+        });
+
+        // Escuchar eliminaciones de invitados
+        socket.on("delete_Guest", (guestId) => {
+            console.log("Eliminación de invitado recibida:", guestId);
+            removeGuestFromList(guestId);
+        });
+
+        // Limpiar listeners cuando el componente se desmonte
+        return () => {
+            socket.off("new_Guest");
+            socket.off("update_Guest");
+            socket.off("delete_Guest");
+        };
+    }, [addGuestToList, updateGuestInList, removeGuestFromList]);
+
     // Función para verificar si un invitado ya existe en la lista
     const guestExists = useCallback((guestList, guestId) => {
         return guestList.some((guest) => guest.id === guestId);
@@ -64,15 +114,10 @@ export default function GuestManagement() {
     // Función para agregar un nuevo invitado
     const handleAddGuest = useCallback(
         (newGuest) => {
-            setGuests((prevGuests) => {
-                if (!guestExists(prevGuests, newGuest.id)) {
-                    return [...prevGuests, { ...newGuest, status: "pending" }];
-                }
-                return prevGuests;
-            });
+            addGuestToList({ ...newGuest, status: "pending" });
             setIsModalOpen(false);
         },
-        [guestExists]
+        [addGuestToList]
     );
 
     // Función para editar un invitado
@@ -85,21 +130,17 @@ export default function GuestManagement() {
     const handleDeleteGuest = useCallback(async (guestId) => {
         try {
             await API.delete(`/guest/delete/${guestId}`);
-            setGuests((prevGuests) => prevGuests.filter((guest) => guest.id !== guestId));
+            removeGuestFromList(guestId);
         } catch (error) {
             console.error("Error al eliminar el invitado:", error);
         }
-    }, []);
+    }, [removeGuestFromList]);
 
     // Función para reemplazar un invitado
     const handleReplaceGuest = useCallback((oldGuestId, newGuest) => {
-        setGuests((prevGuests) =>
-            prevGuests.map((guest) =>
-                guest.id === oldGuestId ? { ...newGuest, id: oldGuestId, status: "pending" } : guest
-            )
-        );
+        updateGuestInList({ ...newGuest, id: oldGuestId, status: "pending" });
         setIsReplaceModalOpen(false);
-    }, []);
+    }, [updateGuestInList]);
 
     // Función para guardar el contenido de la invitación
     const handleSaveInvitationContent = useCallback((content) => {
@@ -130,13 +171,9 @@ export default function GuestManagement() {
 
     // Función para actualizar un invitado
     const handleUpdateGuest = useCallback((updatedGuest) => {
-        setGuests((prevGuests) =>
-            prevGuests.map((guest) =>
-                guest.id === updatedGuest.id ? { ...guest, ...updatedGuest } : guest
-            )
-        );
+        updateGuestInList(updatedGuest);
         setIsEditModalOpen(false);
-    }, []);
+    }, [updateGuestInList]);
 
     // useEffect se ejecuta al montar el componente o cuando cambia el ID del evento
     useEffect(() => {
@@ -200,6 +237,10 @@ export default function GuestManagement() {
                     <Plus className="mr-2 h-4 w-4" />
                     Agregar Nuevo Invitado
                 </Button>
+                <Button onClick={() => setIsStatsModalOpen(true)} className="flex items-center bg-blue-500 hover:bg-blue-600">
+                    <ChartPie className="mr-2 h-4 w-4" />
+                    Ver Estadísticas
+                </Button>
                 <Button onClick={() => setIsSendInvitationModalOpen(true)} className=" hidden flex items-center">
                     <Send className="mr-2 h-4 w-4" />
                     Enviar Invitaciones
@@ -209,66 +250,15 @@ export default function GuestManagement() {
                     Crear Contenido de Invitación
                 </Button>
 
-                {/* Botón para conectar/desconectar WhatsApp */}
-                <Button onClick={() => setShowWhatsAppConfig(true)}>
+                <Button 
+                    onClick={() => {}}
+                    className="bg-gray-500 text-white cursor-not-allowed"
+                >
                     {isWhatsAppConnected ? "Desconectar WhatsApp" : "Conectar WhatsApp"}
                 </Button>
+
             </div>
-            {stats && (
-                <Card className="mb-4 bg-white shadow-sm rounded-lg border border-gray-100">
-                    <CardHeader className="bg-white p-3 border-b border-gray-100">
-                        <CardTitle className="text-base font-semibold text-gray-900 flex items-center">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-4 w-4 mr-2 text-gray-700"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                />
-                            </svg>
-                            Estadísticas
-                        </CardTitle>
-                    </CardHeader>
-                    <CardContent className="p-2">
-                        <div className="grid grid-cols-2 gap-2">
-                            <div className="p-2 rounded-md bg-gray-50">
-                                <p className="text-xs font-medium text-gray-500">Total Invitados</p>
-                                <p className="text-base font-bold text-gray-900">{stats.totalGuests}</p>
-                            </div>
-                            <div className="p-2 rounded-md bg-gray-50">
-                                <p className="text-xs font-medium text-gray-500">Confirmados</p>
-                                <p className="text-base font-bold text-gray-900">{stats.totalConfirmedGuests}</p>
-                            </div>
-                            <div className="p-2 rounded-md bg-gray-50">
-                                <p className="text-xs font-medium text-gray-500">Acompañantes Confirmados</p>
-                                <p className="text-base font-bold text-gray-900">{stats.totalConfirmedAccompanying}</p>
-                            </div>
-                            <div className="p-2 rounded-md bg-gray-50">
-                                <p className="text-xs font-medium text-gray-500">Total Confirmados + Acompañantes</p>
-                                <p className="text-base font-bold text-gray-900">{stats.totalConfirmedWithAccompanying}</p>
-                            </div>
-                            <div className="p-2 rounded-md bg-gray-50">
-                                <p className="text-xs font-medium text-gray-500">Pendientes Invitados</p>
-                                <p className="text-base font-bold text-gray-900">{stats.totalPendingGuests}</p>
-                            </div>
-                            <div className="p-2 rounded-md bg-gray-50">
-                                <p className="text-xs font-medium text-gray-500">Acompañantes Pendientes</p>
-                                <p className="text-base font-bold text-gray-900">{stats.totalPendingAccompanying}</p>
-                            </div>
-                            <div className="p-2 rounded-md bg-gray-50 col-span-2">
-                                <p className="text-xs font-medium text-gray-500">Total Pendientes + Acompañantes</p>
-                                <p className="text-base font-bold text-gray-900">{stats.totalPendingWithAccompanying}</p>
-                            </div>
-                        </div>
-                    </CardContent>
-                </Card>
-            )}
+ 
 
 
             {/* Lista de invitados */}
@@ -329,6 +319,14 @@ export default function GuestManagement() {
                     guest={selectedGuest}
                     onClose={() => setIsSendCustomMessageModalOpen(false)}
                     onSend={handleSendCustomMessage}
+                />
+            )}
+
+            {isStatsModalOpen && (
+                <StatsModal 
+                    isOpen={isStatsModalOpen}
+                    onClose={() => setIsStatsModalOpen(false)}
+                    stats={stats}
                 />
             )}
 

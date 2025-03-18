@@ -4,6 +4,12 @@ import { useState, useEffect } from "react";
 import Button from "@/components/ui/Button";
 import API from "@/utils/api";
 import socket from "@/utils/socket";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 
 export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
   const [guestData, setGuestData] = useState({
@@ -16,7 +22,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
   });
 
   const [countries, setCountries] = useState([]);
-  const [includeEmail, setIncludeEmail] = useState(true);
+  const [includeEmail, setIncludeEmail] = useState(false);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -96,12 +102,12 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
     }
   };
 
-
-
   return (
-    <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
-      <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-lg">
-        <h2 className="text-2xl font-bold mb-4">Agregar Invitado</h2>
+    <Dialog open={true} onOpenChange={onClose}>
+      <DialogContent className="sm:max-w-[500px]">
+        <DialogHeader>
+          <DialogTitle>Agregar Invitado</DialogTitle>
+        </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
@@ -226,13 +232,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
             />
           </div>
 
-          <div className="flex justify-between">
-            <Button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
-              Agregar Invitado
-            </Button>
+          <div className="flex justify-end space-x-2 pt-4">
             <Button
               type="button"
               onClick={onClose}
@@ -240,9 +240,15 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
             >
               Cancelar
             </Button>
+            <Button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Agregar Invitado
+            </Button>
           </div>
         </form>
-      </div>
-    </div>
+      </DialogContent>
+    </Dialog>
   );
 }
