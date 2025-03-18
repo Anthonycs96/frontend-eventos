@@ -55,7 +55,7 @@ export default function StatsModal({ isOpen, onClose, stats }) {
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="bg-white w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-custom">
+            <DialogContent className="w-[95vw] max-w-4xl max-h-[90vh] overflow-y-auto scrollbar-custom">
                 <style jsx global>{`
                     .scrollbar-custom {
                         scrollbar-width: thin;
@@ -76,7 +76,7 @@ export default function StatsModal({ isOpen, onClose, stats }) {
                         background-color: rgba(155, 155, 155, 0.7);
                     }
                 `}</style>
-                <DialogHeader className="sticky top-0 rounded-lg z-10 pb-4 border-b bg-white">
+                <DialogHeader className="sticky top-0 rounded-lg z-10 pb-4 border-b">
                     <DialogTitle className="text-xl sm:text-2xl font-bold flex items-center gap-2">
                         <ChartPie className="h-5 w-5 sm:h-6 sm:w-6" />
                         Estadísticas Detalladas

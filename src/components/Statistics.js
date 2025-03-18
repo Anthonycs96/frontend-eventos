@@ -1,6 +1,6 @@
 export default function Statistics({ totalEvents, totalInvitations, confirmedInvitations }) {
     return (
-        <div className="bg-white shadow-md rounded-lg p-6 mb-8">
+        <div className="shadow-md rounded-lg p-6 mb-8">
             <h2 className="text-2xl font-semibold mb-4">Estadísticas Generales</h2>
             <div className="grid grid-cols-3 gap-4">
                 <div>
