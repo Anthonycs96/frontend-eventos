@@ -90,21 +90,21 @@ export default function EventCard({ event, onDelete, stats }) {
                     <div className="grid grid-cols-3 gap-2 pt-2">
                         <div className="flex flex-col items-center p-2 bg-blue-50 rounded-lg">
                             <span className="text-lg font-semibold text-blue-600">
-                                {stats?.totalConfirmedGuests || 0}
+                                {stats?.totalConfirmedWithAccompanying || 0}
                             </span>
-                            <span className="text-xs text-blue-600">Confirmados</span>
+                            <span className="text-xs text-blue-600">Total confirmados</span>
                         </div>
                         <div className="flex flex-col items-center p-2 bg-yellow-50 rounded-lg">
                             <span className="text-lg font-semibold text-yellow-600">
-                                {stats?.totalPendingGuests || 0}
+                                {stats?.totalPendingWithAccompanying || 0}
                             </span>
-                            <span className="text-xs text-yellow-600">Pendientes</span>
+                            <span className="text-xs text-yellow-600">Total pendientes</span>
                         </div>
                         <div className="flex flex-col items-center p-2 bg-red-50 rounded-lg">
                             <span className="text-lg font-semibold text-red-600">
-                                {stats?.totalDeclinedGuests || 0}
+                                {stats?.totalDeclinedWithAccompanying || 0}
                             </span>
-                            <span className="text-xs text-red-600">Rechazados</span>
+                            <span className="text-xs text-red-600">Total rechazados</span>
                         </div>
                     </div>
                 </div>

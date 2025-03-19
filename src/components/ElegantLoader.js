@@ -1,14 +1,37 @@
-"use client"
-
-import { useEffect, useState } from "react"
+import React from 'react';
+import { cn } from '@/lib/utils';
 import { Loader2, Heart, Music, Calendar, Mail } from "lucide-react"
 
-export default function ElegantLoader({ error = null }) {
-    const [loadingPhase, setLoadingPhase] = useState(0)
-    const [dots, setDots] = useState("")
+const sizeClasses = {
+    sm: 'w-4 h-4 border-2',
+    md: 'w-6 h-6 border-2',
+    lg: 'w-8 h-8 border-3',
+    xl: 'w-12 h-12 border-4'
+};
+
+const variantClasses = {
+    primary: 'border-t-slate-800 border-r-slate-800 border-b-slate-800/20 border-l-slate-800/20',
+    elegant: 'border-t-stone-700 border-r-stone-700 border-b-stone-700/20 border-l-stone-700/20',
+    gold: 'border-t-amber-700 border-r-amber-700 border-b-amber-700/20 border-l-amber-700/20',
+    silver: 'border-t-zinc-500 border-r-zinc-500 border-b-zinc-500/20 border-l-zinc-500/20',
+    pearl: 'border-t-neutral-400 border-r-neutral-400 border-b-neutral-400/20 border-l-neutral-400/20',
+    light: 'border-t-white border-r-white border-b-white/20 border-l-white/20'
+};
+
+const ElegantLoader = ({
+    size = 'md',
+    variant = 'primary',
+    className,
+    text,
+    textClassName = 'text-gray-600 dark:text-gray-400',
+    error = null,
+    ...props
+}) => {
+    const [loadingPhase, setLoadingPhase] = React.useState(0)
+    const [dots, setDots] = React.useState("")
 
     // Animated dots
-    useEffect(() => {
+    React.useEffect(() => {
         if (error) return
 
         const interval = setInterval(() => {
@@ -19,7 +42,7 @@ export default function ElegantLoader({ error = null }) {
     }, [error])
 
     // Progress through loading phases
-    useEffect(() => {
+    React.useEffect(() => {
         if (error) return
 
         const interval = setInterval(() => {
@@ -49,15 +72,15 @@ export default function ElegantLoader({ error = null }) {
     const renderIcon = () => {
         switch (loadingPhase) {
             case 0:
-                return <Loader2 className="h-10 w-10 text-pink-500 animate-spin" />
+                return <Loader2 className="h-10 w-10 text-slate-800 animate-spin" />
             case 1:
-                return <Heart className="h-10 w-10 text-pink-500 animate-pulse" />
+                return <Heart className="h-10 w-10 text-slate-800 animate-pulse" />
             case 2:
-                return <Calendar className="h-10 w-10 text-pink-500 animate-bounce" />
+                return <Calendar className="h-10 w-10 text-slate-800 animate-bounce" />
             case 3:
-                return <Music className="h-10 w-10 text-pink-500 animate-pulse" />
+                return <Music className="h-10 w-10 text-slate-800 animate-pulse" />
             default:
-                return <Loader2 className="h-10 w-10 text-pink-500 animate-spin" />
+                return <Loader2 className="h-10 w-10 text-slate-800 animate-spin" />
         }
     }
 
@@ -82,18 +105,18 @@ export default function ElegantLoader({ error = null }) {
             <div className="text-center p-8 max-w-md">
                 <div className="relative mb-6">
                     {/* Decorative elements */}
-                    <div className="absolute -top-10 -left-10 w-20 h-20 border-t-2 border-l-2 border-pink-200 rounded-tl-lg opacity-70"></div>
-                    <div className="absolute -bottom-10 -right-10 w-20 h-20 border-b-2 border-r-2 border-pink-200 rounded-br-lg opacity-70"></div>
+                    <div className="absolute -top-10 -left-10 w-20 h-20 border-t-2 border-l-2 border-slate-200 rounded-tl-lg opacity-70"></div>
+                    <div className="absolute -bottom-10 -right-10 w-20 h-20 border-b-2 border-r-2 border-slate-200 rounded-br-lg opacity-70"></div>
 
                     {/* Icon container with gradient background */}
-                    <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-pink-50 to-purple-50 flex items-center justify-center shadow-md">
+                    <div className="w-24 h-24 mx-auto rounded-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center shadow-md">
                         {renderIcon()}
                     </div>
                 </div>
 
                 <h2 className="text-2xl font-semibold text-gray-800 mb-2">
                     {getMessage()}
-                    <span className="text-pink-500">{dots}</span>
+                    <span className="text-slate-800">{dots}</span>
                 </h2>
 
                 <p className="text-gray-500 italic">Estamos preparando una experiencia especial para ti</p>
@@ -101,7 +124,7 @@ export default function ElegantLoader({ error = null }) {
                 {/* Progress bar */}
                 <div className="mt-6 h-1 w-full bg-gray-100 rounded-full overflow-hidden">
                     <div
-                        className="h-full bg-gradient-to-r from-pink-400 to-purple-500 transition-all duration-300 ease-in-out"
+                        className="h-full bg-gradient-to-r from-slate-400 to-slate-500 transition-all duration-300 ease-in-out"
                         style={{ width: `${(loadingPhase + 1) * 25}%` }}
                     ></div>
                 </div>
@@ -110,3 +133,4 @@ export default function ElegantLoader({ error = null }) {
     )
 }
 
+export default ElegantLoader;

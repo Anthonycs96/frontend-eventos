@@ -226,7 +226,7 @@ export default function GuestManagement() {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="container mx-auto px-4 py-6 max-w-7xl">
+        <div className="container mx-auto px-4 py-6 max-w-8xl">
             {/* Header con breadcrumb y título */}
             <div className="mb-8">
                 <div className="flex items-center text-sm text-gray-500 mb-2">

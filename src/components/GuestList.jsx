@@ -65,8 +65,9 @@ export default function GuestList({
 
   const filteredGuests = guests.filter((guest) => {
     const searchLower = searchTerm.toLowerCase();
-    const statusTranslated = statusTranslations[guest.status]?.toLowerCase() || "";
-    
+    const statusTranslated =
+      statusTranslations[guest.status]?.toLowerCase() || "";
+
     return (
       guest.name?.toLowerCase().includes(searchLower) ||
       guest.email?.toLowerCase().includes(searchLower) ||
@@ -93,28 +94,24 @@ export default function GuestList({
       {/* Tabla para pantallas grandes */}
       <div className="hidden md:block overflow-x-auto rounded-lg shadow-md">
         <Table>
-        <TableHeader>
-  <TableRow className="bg-gray-100">
-    <TableHead className="font-bold">Nombre</TableHead>
-    <TableHead className="font-bold">Email</TableHead>
-    <TableHead className="font-bold">Teléfono</TableHead>
-    <TableHead className="font-bold">Tipo</TableHead>
-    <TableHead className="font-bold whitespace-nowrap">
-      <div className="flex items-center gap-1">
-        <Users className="h-4 w-4" />
-        <span>N° Invitados</span>
-      </div>
-    </TableHead>
-    <TableHead className="font-bold whitespace-nowrap">
-      <div className="flex items-center gap-1">
-        <CheckCircle className="h-4 w-4" />
-        <span>Nombres Invitados</span>
-      </div>
-    </TableHead>
-    <TableHead className="font-bold">Estado</TableHead>
-    <TableHead className="font-bold">Acciones</TableHead>
-  </TableRow>
-</TableHeader>
+          <TableHeader>
+            <TableRow className="bg-gray-100">
+              <TableHead className="font-bold">Nombre</TableHead>
+              <TableHead className="font-bold">Email</TableHead>
+              <TableHead className="font-bold">Teléfono</TableHead>
+              <TableHead className="font-bold">Tipo</TableHead>
+              <TableHead className="font-bold whitespace-nowrap">
+              Invitados
+              </TableHead>
+              <TableHead className="font-bold whitespace-nowrap">
+              Nombres Invitados
+              </TableHead>
+              <TableHead className="font-bold">PlayList</TableHead>
+              <TableHead className="font-bold">Mensaje</TableHead>
+              <TableHead className="font-bold">Estado</TableHead>
+              <TableHead className="font-bold">Acciones</TableHead>
+            </TableRow>
+          </TableHeader>
 
           <TableBody>
             {filteredGuests.length > 0 ? (
@@ -141,21 +138,67 @@ export default function GuestList({
                   <TableCell>
                     {guest.numberOfGuests !== null ? guest.numberOfGuests : 0}
                   </TableCell>
-                  <TableCell>
-                  {Array.isArray(guest.additionalGuestNames) && guest.additionalGuestNames.length > 0 ? (
-                        <div className="flex flex-wrap gap-2">
-                          {guest.additionalGuestNames.map((name, index) => (
-                            <span
-                              key={index}
-                              className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-sm"
-                            >
-                              {name.trim()}
-                            </span>
-                          ))}
-                        </div>
-                      ) : (
-                        <span className="text-gray-500 italic">Ninguno</span>
-                      )}
+                  <TableCell style={{
+                      maxWidth: "200px",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                    }}>
+                    {Array.isArray(guest.additionalGuestNames) &&
+                    guest.additionalGuestNames.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {guest.additionalGuestNames.map((name, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-sm"
+                          >
+                            {name.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-500 italic">Ninguno</span>
+                    )}
+                  </TableCell>
+
+                  <TableCell style={{
+                      maxWidth: "200px",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                    }}>
+                    {Array.isArray(guest.suggestedSongs) &&
+                    guest.suggestedSongs.length > 0 ? (
+                      <div className="flex flex-wrap gap-2">
+                        {guest.suggestedSongs.map((song, index) => (
+                          <span
+                            key={index}
+                            className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-sm"
+                          >
+                            {song.trim()}
+                          </span>
+                        ))}
+                      </div>
+                    ) : (
+                      <span className="text-gray-500 italic">Ninguno</span>
+                    )}
+                  </TableCell>
+                  <TableCell
+                    style={{
+                      maxWidth: "200px",
+                      overflow: "hidden",
+                      whiteSpace: "nowrap",
+                      textOverflow: "ellipsis",
+                    }}
+                    title={
+                      guest.personalMessage !== null
+                        ? guest.personalMessage
+                        : "Ninguno"
+                    }
+                  >
+                    {guest.personalMessage !== null
+                      ? guest.personalMessage
+                      : "Ninguno"}
                   </TableCell>
                   <TableCell>
                     <span
@@ -235,40 +278,65 @@ export default function GuestList({
                   </div>
                   <div className="flex-grow min-w-0">
                     <div className="flex items-center justify-between gap-2">
-                      <h3 className="font-medium text-gray-900 truncate">{guest.name}</h3>
+                      <h3 className="font-medium text-gray-900 truncate">
+                        {guest.name}
+                      </h3>
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          statusColors[guest.status] || "bg-gray-300 text-gray-700"
+                          statusColors[guest.status] ||
+                          "bg-gray-300 text-gray-700"
                         }`}
                       >
                         {statusTranslations[guest.status] || "Desconocido"}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
-                      <span>{guest.type ? guest.type.charAt(0).toUpperCase() + guest.type.slice(1) : "Sin tipo"}</span>
+                      <span>
+                        {guest.type
+                          ? guest.type.charAt(0).toUpperCase() +
+                            guest.type.slice(1)
+                          : "Sin tipo"}
+                      </span>
                       <span>•</span>
-                      <span>{guest.numberOfGuests !== null ? `N° Invitados ${guest.numberOfGuests}` : "Sin acompañantes"}</span>
+                      <span>
+                        {guest.numberOfGuests !== null
+                          ? `N° Invitados ${guest.numberOfGuests}`
+                          : "Sin acompañantes"}
+                      </span>
                     </div>
                   </div>
-                  <div className="transition-transform duration-200" style={{ transform: expandedGuest === guest.id ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                  <div
+                    className="transition-transform duration-200"
+                    style={{
+                      transform:
+                        expandedGuest === guest.id
+                          ? "rotate(180deg)"
+                          : "rotate(0deg)",
+                    }}
+                  >
                     <ChevronDown className="w-5 h-5 text-gray-400" />
                   </div>
                 </div>
               </div>
               <div
                 className={`overflow-hidden transition-all duration-200 ${
-                  expandedGuest === guest.id ? 'max-h-96' : 'max-h-0'
+                  expandedGuest === guest.id ? "max-h-96" : "max-h-0"
                 }`}
               >
                 <div className="p-4 bg-gray-50 border-t border-gray-100 space-y-3">
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-medium text-gray-700">Teléfono:</span>
-                    <span className="text-gray-600">{guest.phone || "No disponible"}</span>
+                    <span className="text-gray-600">
+                      {guest.phone || "No disponible"}
+                    </span>
                   </div>
                   <div className="text-sm">
-                    <span className="font-medium text-gray-700">Acompañantes confirmados:</span>
+                    <span className="font-medium text-gray-700">
+                      Acompañantes confirmados:
+                    </span>
                     <div className="mt-1">
-                      {Array.isArray(guest.additionalGuestNames) && guest.additionalGuestNames.length > 0 ? (
+                      {Array.isArray(guest.additionalGuestNames) &&
+                      guest.additionalGuestNames.length > 0 ? (
                         <div className="flex flex-wrap gap-2">
                           {guest.additionalGuestNames.map((name, index) => (
                             <span
@@ -283,6 +351,34 @@ export default function GuestList({
                         <span className="text-gray-500 italic">Ninguno</span>
                       )}
                     </div>
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium text-gray-700">
+                    PlayList:
+                    </span>
+                    <div className="mt-1">
+                      {Array.isArray(guest.suggestedSongs) &&
+                      guest.suggestedSongs.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {guest.suggestedSongs.map((song, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-sm"
+                            >
+                              {song.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-gray-500 italic">Ninguno</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-medium text-gray-700">Mensaje personal:</span>
+                    <span className="text-gray-600">
+                      {guest.personalMessage || "Ninguno"}
+                    </span>
                   </div>
                   <div className="flex flex-wrap gap-2 pt-2">
                     <Button
