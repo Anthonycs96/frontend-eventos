@@ -15,7 +15,8 @@ import EditGuestModal from "@/components/EditGuestModal";
 import WhatsAppIntegration from "@/components/WhatsAppIntegration";
 import StatsModal from "@/components/StatsModal";
 import socket from "@/utils/socket";
-import { Plus, Send, MessageSquare, FileText, ChartPie } from "lucide-react";
+import { Plus, Send, MessageSquare, FileText, ChartPie, ChevronRight, Users, CheckCircle, Clock, XCircle, MessageCircle } from "lucide-react";
+import Link from "next/link";
 
 // Componente principal para la gestión de invitados
 export default function GuestManagement() {
@@ -225,63 +226,77 @@ export default function GuestManagement() {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="container mx-auto px-4">
-            {/* Encabezado de la página */}
-            <h1 className="text-3xl font-bold mb-8">
-                Gestión de Invitados - <span className="text-blue-500">{eventName || "Cargando..."}</span>
-            </h1>
-
-            {/* Botones para abrir los diferentes modales */}
-            <div className="mb-6 flex flex-wrap gap-4">
-                <Button onClick={() => setIsModalOpen(true)} className="flex items-center">
-                    <Plus className="mr-2 h-4 w-4" />
-                    Agregar Nuevo Invitado
-                </Button>
-                <Button onClick={() => setIsStatsModalOpen(true)} className="flex items-center bg-blue-500 hover:bg-blue-600">
-                    <ChartPie className="mr-2 h-4 w-4" />
-                    Ver Estadísticas
-                </Button>
-                <Button onClick={() => setIsSendInvitationModalOpen(true)} className=" hidden flex items-center">
-                    <Send className="mr-2 h-4 w-4" />
-                    Enviar Invitaciones
-                </Button>
-                <Button onClick={() => setIsCreateContentModalOpen(true)} className="hidden  flex items-center">
-                    <FileText className="mr-2 h-4 w-4" />
-                    Crear Contenido de Invitación
-                </Button>
-
-                <Button 
-                    onClick={() => {}}
-                    className="bg-gray-500 text-white cursor-not-allowed"
-                >
-                    {isWhatsAppConnected ? "Desconectar WhatsApp" : "Conectar WhatsApp"}
-                </Button>
-
+        <div className="container mx-auto px-4 py-6 max-w-7xl">
+            {/* Header con breadcrumb y título */}
+            <div className="mb-8">
+                <div className="flex items-center text-sm text-gray-500 mb-2">
+                    <Link href="/dashboard" className="hover:text-blue-600">
+                        Eventos
+                    </Link>
+                    <ChevronRight className="h-4 w-4 mx-2" />
+                    <span className="text-gray-900">{eventName || "Cargando..."}</span>
+                </div>
+                <h1 className="text-3xl font-bold text-gray-900">
+                    Gestión de Invitados
+                </h1>
             </div>
- 
 
+    
+            {/* Barra de acciones principales */}
+            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-8">
+            <div className="flex flex-col sm:flex-row lg:flex-wrap gap-3 sm:gap-4">
+
+                    <Button 
+                        onClick={() => setIsModalOpen(true)} 
+                        className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                    >
+                        <Plus className="mr-2 h-4 w-4" />
+                        Agregar Nuevo Invitado
+                    </Button>
+                    <Button 
+                        onClick={() => setIsStatsModalOpen(true)} 
+                        className="flex items-center bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg transition-colors"
+                    >
+                        <ChartPie className="mr-2 h-4 w-4" />
+                        Estadísticas Detalladas
+                    </Button>
+                    <div className="flex-grow"></div>
+                    <Button 
+                        onClick={() => {}}
+                        className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
+                            isWhatsAppConnected 
+                                ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                        }`}
+                    >
+                        <MessageCircle className="mr-2 h-4 w-4" />
+                        {isWhatsAppConnected ? "WhatsApp Conectado" : "Conectar WhatsApp"}
+                    </Button>
+                </div>
+            </div>
 
             {/* Lista de invitados */}
-            <GuestList
-                guests={guests}
-                onEdit={handleEditGuest}
-                onDelete={handleDeleteGuest}
-                onReplace={(guest) => {
-                    setSelectedGuest(guest);
-                    setIsReplaceModalOpen(true);
-                }}
-                onSendInvitation={(guest) => {
-                    setSelectedGuest(guest);
-                    setIsSendInvitationModalOpen(true);
-                }}
-                onSendCustomMessage={(guest) => {
-                    setSelectedGuest(guest);
-                    setIsSendCustomMessageModalOpen(true);
-                }}
-            />
+            <div className="bg-stone-50 rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                <GuestList
+                    guests={guests}
+                    onEdit={handleEditGuest}
+                    onDelete={handleDeleteGuest}
+                    onReplace={(guest) => {
+                        setSelectedGuest(guest);
+                        setIsReplaceModalOpen(true);
+                    }}
+                    onSendInvitation={(guest) => {
+                        setSelectedGuest(guest);
+                        setIsSendInvitationModalOpen(true);
+                    }}
+                    onSendCustomMessage={(guest) => {
+                        setSelectedGuest(guest);
+                        setIsSendCustomMessageModalOpen(true);
+                    }}
+                />
+            </div>
 
-
-            {/* Modales para agregar, editar y gestionar invitados */}
+            {/* Modales */}
             {isModalOpen && (
                 <AddGuestModal
                     onClose={() => setIsModalOpen(false)}

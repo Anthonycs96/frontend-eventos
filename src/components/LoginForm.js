@@ -71,73 +71,113 @@ export default function Login() {
             setShowErrorModal(true);
         }
     };
-
     if (isLoading) {
         return <div className="min-h-screen flex items-center justify-center">Cargando...</div>;
     }
 
     return (
-        <div className="min-h-screen flex items-center justify-center bg-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-            <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
-                <div className="text-center">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">Bienvenido</h2>
-                    <p className="text-gray-600">Inicia sesión para continuar</p>
-                </div>
-                <form className="mt-6 space-y-6" onSubmit={onSubmit}>
-                    <div className="space-y-4">
-                        {/* Código de país y número de teléfono */}
-                        <div className="flex items-center space-x-4">
-                            <div className="flex-1">
-                                <label htmlFor="countryCode" className="block text-sm font-medium text-gray-700">Código de País</label>
+        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 lg:p-8">
+            <div className="w-full max-w-[420px] space-y-6">
+                {/* Logo o Imagen */}
+                             
+                <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-100">
+                    <div className="text-center mb-6 sm:mb-8">
+                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">¡Bienvenido!</h2>
+                        <p className="text-sm sm:text-base text-gray-600">Ingresa a tu cuenta para continuar</p>
+                    </div>
+                    
+                    <form className="space-y-5 sm:space-y-6" onSubmit={onSubmit}>
+                        <div className="space-y-4 sm:space-y-5">
+                            {/* País */}
+                            <div>
+                                <label htmlFor="countryCode" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    País
+                                </label>
                                 <select
                                     id="countryCode"
                                     value={countryCode}
                                     onChange={(e) => setCountryCode(e.target.value)}
-                                    className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="w-full p-2.5 sm:p-3 rounded-xl border border-gray-300 bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
                                 >
                                     {countries.map((country) => (
                                         <option key={`${country.code}-${country.name}`} value={country.code}>
-                                            {country.code} - {country.name}
+                                            {country.name} ({country.code})
                                         </option>
                                     ))}
                                 </select>
                             </div>
 
-                            <div className="flex-1">
-                                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">Número de Teléfono</label>
+                            {/* Teléfono */}
+                            <div>
+                                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    Número de Teléfono
+                                </label>
+                                <div className="relative">
+                                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm sm:text-base">
+                                        {countryCode}
+                                    </span>
+                                    <input
+                                        id="phoneNumber"
+                                        name="phoneNumber"
+                                        type="text"
+                                        required
+                                        className="block w-full pl-[4.5rem] pr-3 py-2.5 sm:py-3 border border-gray-300 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                                        placeholder="987654321"
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Contraseña */}
+                            <div>
+                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                    Contraseña
+                                </label>
                                 <input
-                                    id="phoneNumber"
-                                    name="phoneNumber"
-                                    type="text"
+                                    id="password"
+                                    name="password"
+                                    type="password"
                                     required
-                                    className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                                    placeholder="987654321"
+                                    className="block w-full px-3 py-2.5 sm:py-3 border border-gray-300 rounded-xl bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 text-sm sm:text-base"
+                                    placeholder="••••••••"
                                 />
                             </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="password" className="block text-sm font-medium text-gray-700">Contraseña</label>
-                            <input
-                                id="password"
-                                name="password"
-                                type="password"
-                                required
-                                className="block w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                            />
-                        </div>
-                    </div>
-                    <div className="flex flex-col space-y-4">
-                        <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-3 px-4 rounded-lg font-semibold w-full">
-                            Iniciar sesión
-                        </Button>
-                        <Link href="/register">
-                            <Button type="button" variant="outline" className="border border-blue-600 text-blue-600 hover:bg-blue-50 py-3 px-4 rounded-lg font-semibold w-full">
-                                Registrarse
+                        <div className="pt-2 space-y-4">
+                            <Button 
+                                type="submit" 
+                                className="bg-blue-600 hover:bg-blue-700 text-white py-2.5 sm:py-3 px-4 rounded-xl font-medium w-full transition-colors duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
+                            >
+                                Iniciar sesión
                             </Button>
-                        </Link>
-                    </div>
-                </form>
+                            
+                            <div className="relative">
+                                <div className="absolute inset-0 flex items-center">
+                                    <div className="w-full border-t border-gray-200"></div>
+                                </div>
+                                <div className="relative flex justify-center text-sm">
+                                    <span className="px-2 bg-white text-gray-500">o</span>
+                                </div>
+                            </div>
+                            
+                            <Link href="/register" className="block w-full">
+                                <Button 
+                                    type="button" 
+                                    variant="outline" 
+                                    className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 py-2.5 sm:py-3 px-4 rounded-xl font-medium w-full transition-colors duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
+                                >
+                                    Crear cuenta nueva
+                                </Button>
+                            </Link>
+                        </div>
+                    </form>
+                </div>
+                
+                <div className="text-center">
+                    <p className="text-sm text-gray-600 mt-4">
+                        ¿Necesitas ayuda? <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">Contáctanos</a>
+                    </p>
+                </div>
             </div>
             <ErrorModal isOpen={showErrorModal} onClose={() => setShowErrorModal(false)} errors={validationErrors} />
         </div>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Clipboard } from "lucide-react";
+import { Clipboard, MessageCircle, Check, Send, X } from "lucide-react";
 import Button from "@/components/ui/Button";
 import { Textarea } from "@/components/ui/Textarea";
 import {
@@ -18,63 +18,99 @@ export default function SendCustomMessageModal({ guest, onClose, onSend }) {
         onSend(guest, message);
         onClose();
     };
-
+    const [isCopied, setIsCopied] = useState(false);
     const handleCopy = () => {
         navigator.clipboard.writeText(message)
-            .then(() => alert("Mensaje copiado al portapapeles"))
+            .then(() => {
+                setIsCopied(true);
+                setTimeout(() => setIsCopied(false), 3000);
+            })
             .catch(err => console.error('Error al copiar:', err));
     };
 
     return (
         <Dialog open={true} onOpenChange={onClose}>
-            <DialogContent className="sm:max-w-[500px]">
-                <DialogHeader>
-                    <DialogTitle>Enviar mensaje personalizado</DialogTitle>
+            <DialogContent className="sm:max-w-[600px] p-0 overflow-hidden bg-gradient-to-br from-white to-gray-50">
+                <DialogHeader className="px-6 py-4 border-b bg-white">
+                    <DialogTitle className="flex items-center gap-2 text-xl font-semibold">
+                        <MessageCircle className="h-5 w-5 text-blue-500" />
+                        Mensaje Personalizado
+                    </DialogTitle>
                 </DialogHeader>
                 
-                <div className="space-y-4">
-                    <p className="text-gray-700">
-                        Enviando mensaje a: <span className="font-semibold">{guest.name}</span>
-                    </p>
+                <div className="px-6 py-4 space-y-4">
+                    <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                        <span className="text-sm text-blue-700">
+                            Destinatario: <span className="font-semibold">{guest.name}</span>
+                        </span>
+                    </div>
                     
-                    <Textarea
-                        value={message}
-                        onChange={(e) => setMessage(e.target.value)}
-                        placeholder="Escribe tu mensaje personalizado aquí..."
-                        rows={6}
-                        className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    />
+                    <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">Mensaje:</label>
+                        <Textarea
+                            value={message}
+                            onChange={(e) => setMessage(e.target.value)}
+                            placeholder="Escribe tu mensaje personalizado aquí..."
+                            rows={6}
+                            className="w-full min-h-[150px] border border-gray-200 rounded-lg p-3 text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200 resize-none"
+                        />
+                    </div>
                     
-                    <p className="text-sm text-gray-600">
-                        Confirmación de asistencia:{" "}
+                    <div className="p-3 bg-gray-50 rounded-lg border border-gray-100">
+                        <p className="text-sm text-gray-600 mb-2 font-medium">
+                            Link de confirmación:
+                        </p>
                         <a
                             href={guest.invitationUrl}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-blue-500 underline hover:text-blue-700"
+                            className="text-sm text-blue-600 hover:text-blue-700 break-all bg-white p-2 rounded border border-gray-200 block hover:bg-blue-50 transition-colors duration-200"
                         >
                             {guest.invitationUrl}
                         </a>
-                    </p>
-                    
-                    <div className="flex justify-end gap-2">
-                        <Button
-                            onClick={handleCopy}
-                            variant="outline"
-                            className="flex items-center gap-1"
-                        >
-                            <Clipboard className="h-4 w-4" />
-                            Copiar mensaje
-                        </Button>
-                        <Button onClick={onClose} variant="outline">
-                            Cancelar
-                        </Button>
-                        <Button onClick={handleSend} variant="default">
-                            Enviar
-                        </Button>
                     </div>
+                </div>
+                
+                <div className="px-6 py-4 bg-gray-50 border-t flex justify-end items-center gap-3">
+                    <Button
+                        onClick={handleCopy}
+                        variant="outline"
+                        className={`
+                            flex items-center gap-2 min-w-[140px] justify-center
+                            ${isCopied ? 'bg-green-50 text-green-600 border-green-200 hover:bg-green-100' : 'hover:bg-gray-100'}
+                        `}
+                    >
+                        {isCopied ? (
+                            <>
+                                <Check className="h-4 w-4" />
+                                Copiado
+                            </>
+                        ) : (
+                            <>
+                                <Clipboard className="h-4 w-4" />
+                                Copiar mensaje
+                            </>
+                        )}
+                    </Button>
+                    <Button 
+                        onClick={onClose} 
+                        variant="outline"
+                        className="flex items-center gap-2"
+                    >
+                        <X className="h-4 w-4" />
+                        Cancelar
+                    </Button>
+                    <Button 
+                        onClick={() => {}} 
+                        variant="default"
+                        className="flex items-center gap-2 bg-blue-600 hover:bg-blue-700"
+                    >
+                        <Send className="h-4 w-4" />
+                        Enviar mensaje
+                    </Button>
                 </div>
             </DialogContent>
         </Dialog>
     );
 }
+

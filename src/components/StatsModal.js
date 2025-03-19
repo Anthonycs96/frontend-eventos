@@ -5,7 +5,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Card, CardContent } from "@/components/ui/card";
-import { ChartPie, Users, UserCheck, UserPlus, Clock } from "lucide-react";
+import { ChartPie, Users, UserCheck, UserPlus, Clock, UserX } from "lucide-react";
 
 export default function StatsModal({ isOpen, onClose, stats }) {
     if (!stats) return null;
@@ -16,41 +16,66 @@ export default function StatsModal({ isOpen, onClose, stats }) {
             value: stats.totalGuests,
             icon: <Users className="h-5 w-5 sm:h-6 sm:w-6 text-blue-500" />,
             description: "Número total de invitados registrados",
-            color: "bg-blue-50",
-            textColor: "text-blue-700"
+            color: "bg-gradient-to-br from-blue-50 to-blue-100",
+            textColor: "text-blue-700",
+            borderColor: "border-blue-200"
         },
         {
             title: "Confirmados",
             value: stats.totalConfirmedGuests,
             icon: <UserCheck className="h-5 w-5 sm:h-6 sm:w-6 text-green-500" />,
             description: "Invitados que han confirmado su asistencia",
-            color: "bg-green-50",
-            textColor: "text-green-700"
+            color: "bg-gradient-to-br from-emerald-50 to-emerald-100",
+            textColor: "text-emerald-700",
+            borderColor: "border-emerald-200"
         },
         {
             title: "Acompañantes Confirmados",
             value: stats.totalConfirmedAccompanying,
             icon: <UserPlus className="h-5 w-5 sm:h-6 sm:w-6 text-purple-500" />,
             description: "Total de acompañantes confirmados",
-            color: "bg-purple-50",
-            textColor: "text-purple-700"
+            color: "bg-gradient-to-br from-purple-50 to-purple-100",
+            textColor: "text-purple-700",
+            borderColor: "border-purple-200"
         },
+
+        
         {
             title: "Total Confirmados + Acompañantes",
             value: stats.totalConfirmedWithAccompanying,
             icon: <ChartPie className="h-5 w-5 sm:h-6 sm:w-6 text-indigo-500" />,
             description: "Suma total de invitados y acompañantes confirmados",
-            color: "bg-indigo-50",
-            textColor: "text-indigo-700"
+            color: "bg-gradient-to-br from-indigo-50 to-indigo-100",
+            textColor: "text-indigo-700",
+            borderColor: "border-indigo-200"
         },
         {
             title: "Pendientes",
             value: stats.totalPendingGuests,
             icon: <Clock className="h-5 w-5 sm:h-6 sm:w-6 text-yellow-500" />,
             description: "Invitados que aún no han confirmado",
-            color: "bg-yellow-50",
-            textColor: "text-yellow-700"
-        }
+            color: "bg-gradient-to-br from-yellow-50 to-yellow-100",
+            textColor: "text-yellow-700",
+            borderColor: "border-yellow-200"
+        },
+        {
+            title: "Total de rechazados",
+            value: stats.totalDeclinedGuests,
+            icon: <UserX className="h-5 w-5 sm:h-6 sm:w-6 text-red-500" />,
+            description: "Número total de invitados rechazados",
+            color: "bg-gradient-to-br from-red-50 to-red-100",
+            textColor: "text-red-700",
+            borderColor: "border-red-200"
+        },
+        {
+            title: "Total de rechazados + acompañantes",
+            value: stats.totalDeclinedWithAccompanying,
+            icon: <UserX className="h-5 w-5 sm:h-6 sm:w-6 text-red-500" />,
+            description: "Total de personas rechazadas (invitados + acompañantes)",
+            color: "bg-gradient-to-br from-red-50 to-red-100",
+            textColor: "text-red-700",
+            borderColor: "border-red-200"
+        },
     ];
 
     return (
@@ -82,13 +107,13 @@ export default function StatsModal({ isOpen, onClose, stats }) {
                         Estadísticas Detalladas
                     </DialogTitle>
                 </DialogHeader>
-                
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4 p-2 sm:p-4">
                     {statCards.map((stat, index) => (
                         <Card key={index} className={`${stat.color} border-none shadow-sm hover:shadow-md transition-shadow duration-200`}>
                             <CardContent className="p-3 sm:p-6">
                                 <div className="flex items-center justify-between mb-2 sm:mb-4">
-                                    {stat.icon}
+                                        {stat.icon}
                                     <span className={`text-2xl sm:text-3xl font-bold ${stat.textColor}`}>
                                         {stat.value}
                                     </span>

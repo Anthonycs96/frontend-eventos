@@ -17,9 +17,43 @@ export default function Dashboard() {
     const [editEvent, setEditEvent] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [stats, setStats] = useState({});
     const [isAuthenticating, setIsAuthenticating] = useState(true);
 
     const router = useRouter();
+
+    // Función para obtener estadísticas de invitados
+    const fetchGuestStats = async (eventId) => {
+        try {
+            const token = localStorage.getItem("token");
+            const response = await API.get(`/guest/event/${eventId}/stats`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            setStats(prevStats => ({
+                ...prevStats,
+                [eventId]: response.data
+            }));
+        } catch (error) {
+            console.error("Error al obtener estadísticas de invitados:", error);
+        }
+    };
+
+    // Función para actualizar un invitado en la lista
+    const updateGuestInList = useCallback((updatedGuest) => {
+        setGuests(prevGuests => 
+            prevGuests.map(guest => 
+                guest.id === updatedGuest.id ? { ...guest, ...updatedGuest } : guest
+            )
+        );
+        fetchGuestStats(); // Actualizar estadísticas cuando se actualiza un invitado
+    }, [fetchGuestStats]);
+
+    // Función para cerrar sesión
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        localStorage.removeItem("userId");
+        router.push("/");
+    };
 
     // Verifica autenticación
     useEffect(() => {
@@ -55,10 +89,18 @@ export default function Dashboard() {
                 headers: { Authorization: `Bearer ${token}` },
             });
             console.log('Eventos obtenidos:', response.data);
-            setEvents(response.data.map((event, index) => ({
+            const eventsList = response.data.map((event, index) => ({
                 ...event,
                 uniqueKey: event.id || index,
-            })));
+            }));
+            setEvents(eventsList);
+            
+            // Obtener estadísticas para cada evento
+            eventsList.forEach(event => {
+                if (event.id) {
+                    fetchGuestStats(event.id);
+                }
+            });
         } catch (err) {
             console.error("Error al obtener eventos:", err.response?.data || err.message);
 
@@ -160,6 +202,12 @@ export default function Dashboard() {
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-800">Dashboard de Eventos</h1>
+                <Button 
+                    onClick={handleLogout}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
+                >
+                    Cerrar Sesión
+                </Button>
             </div>
 
             {loading && <p className="text-gray-500">Cargando eventos...</p>}
@@ -172,7 +220,13 @@ export default function Dashboard() {
                     {events.length > 0 ? (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                             {events.map((event) => (
-                                <EventCard key={event.uniqueKey} event={event} onDelete={() => deleteEvent(event.id)} onEdit={handleEditEvent} />
+                                <EventCard 
+                                    key={event.uniqueKey} 
+                                    event={event} 
+                                    stats={stats?.[event.id]}
+                                    onDelete={() => deleteEvent(event.id)} 
+                                    onEdit={handleEditEvent} 
+                                />
                             ))}
                         </div>
                     ) : (

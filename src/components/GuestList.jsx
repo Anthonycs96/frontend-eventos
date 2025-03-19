@@ -21,6 +21,7 @@ import {
   Home,
   Briefcase,
   Search,
+  CheckCircle,
 } from "lucide-react";
 
 export default function GuestList({
@@ -92,17 +93,29 @@ export default function GuestList({
       {/* Tabla para pantallas grandes */}
       <div className="hidden md:block overflow-x-auto rounded-lg shadow-md">
         <Table>
-          <TableHeader>
-            <TableRow className="bg-gray-100">
-              <TableHead className="font-bold">Nombre</TableHead>
-              <TableHead className="font-bold">Email</TableHead>
-              <TableHead className="font-bold">Teléfono</TableHead>
-              <TableHead className="font-bold">Tipo</TableHead>
-              <TableHead className="font-bold">Acompañantes</TableHead>
-              <TableHead className="font-bold">Estado</TableHead>
-              <TableHead className="font-bold">Acciones</TableHead>
-            </TableRow>
-          </TableHeader>
+        <TableHeader>
+  <TableRow className="bg-gray-100">
+    <TableHead className="font-bold">Nombre</TableHead>
+    <TableHead className="font-bold">Email</TableHead>
+    <TableHead className="font-bold">Teléfono</TableHead>
+    <TableHead className="font-bold">Tipo</TableHead>
+    <TableHead className="font-bold whitespace-nowrap">
+      <div className="flex items-center gap-1">
+        <Users className="h-4 w-4" />
+        <span>N° Invitados</span>
+      </div>
+    </TableHead>
+    <TableHead className="font-bold whitespace-nowrap">
+      <div className="flex items-center gap-1">
+        <CheckCircle className="h-4 w-4" />
+        <span>Nombres Invitados</span>
+      </div>
+    </TableHead>
+    <TableHead className="font-bold">Estado</TableHead>
+    <TableHead className="font-bold">Acciones</TableHead>
+  </TableRow>
+</TableHeader>
+
           <TableBody>
             {filteredGuests.length > 0 ? (
               filteredGuests.map((guest) => (
@@ -127,6 +140,22 @@ export default function GuestList({
                   </TableCell>
                   <TableCell>
                     {guest.numberOfGuests !== null ? guest.numberOfGuests : 0}
+                  </TableCell>
+                  <TableCell>
+                  {Array.isArray(guest.additionalGuestNames) && guest.additionalGuestNames.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {guest.additionalGuestNames.map((name, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-sm"
+                            >
+                              {name.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-gray-500 italic">Ninguno</span>
+                      )}
                   </TableCell>
                   <TableCell>
                     <span
@@ -185,94 +214,116 @@ export default function GuestList({
       </div>
 
       {/* Vista de lista para pantallas pequeñas */}
-      <div className="md:hidden space-y-4">
+      <div className="md:hidden space-y-3">
         {filteredGuests.length > 0 ? (
           filteredGuests.map((guest) => (
             <div
               key={guest.id}
-              className="bg-white rounded-lg shadow-md overflow-hidden"
+              className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-200 hover:shadow-md"
             >
               <div
-                className="p-4 cursor-pointer flex items-center space-x-4"
+                className="p-4 cursor-pointer"
                 onClick={() => toggleExpand(guest.id)}
               >
-                <div
-                  className={`w-12 h-12 rounded-full flex items-center justify-center ${
-                    typeColors[guest.type] || "bg-gray-100 text-gray-800"
-                  }`}
-                >
-                  {typeIcons[guest.type] || <User className="w-6 h-6" />}
-                </div>
-                <div className="flex-grow">
-                  <h3 className="font-semibold text-lg">{guest.name}</h3>
-                  <p className="text-sm text-gray-500">{guest.email || "No disponible"}</p>
-                  <div className="flex items-center space-x-2 mt-1">
-                    <span
-                      className={`px-2 py-1 rounded-full text-xs font-semibold ${
-                        statusColors[guest.status] || "bg-gray-300 text-gray-700"
-                      }`}
-                    >
-                      {statusTranslations[guest.status] || "Desconocido"}
-                    </span>
-                    <span className="text-sm text-gray-500">
-                      {guest.numberOfGuests !== null
-                        ? `${guest.numberOfGuests} acompañantes`
-                        : "Sin acompañantes"}
-                    </span>
+                <div className="flex items-center gap-3">
+                  <div
+                    className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${
+                      typeColors[guest.type] || "bg-gray-100 text-gray-800"
+                    }`}
+                  >
+                    {typeIcons[guest.type] || <User className="w-5 h-5" />}
                   </div>
-                </div>
-                {expandedGuest === guest.id ? (
-                  <ChevronUp className="w-6 h-6 text-gray-400" />
-                ) : (
-                  <ChevronDown className="w-6 h-6 text-gray-400" />
-                )}
-              </div>
-              {expandedGuest === guest.id && (
-                <div className="p-4 bg-gray-50 border-t">
-                  <div className="space-y-2">
-                    <p>
-                      <span className="font-semibold">Teléfono:</span>{" "}
-                      {guest.phone}
-                    </p>
-                    <div className="flex space-x-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onEdit(guest)}
-                        className="hover:bg-blue-50"
+                  <div className="flex-grow min-w-0">
+                    <div className="flex items-center justify-between gap-2">
+                      <h3 className="font-medium text-gray-900 truncate">{guest.name}</h3>
+                      <span
+                        className={`px-2 py-1 rounded-full text-xs font-medium ${
+                          statusColors[guest.status] || "bg-gray-300 text-gray-700"
+                        }`}
                       >
-                        <Edit className="h-4 w-4 mr-1" />
-                        Editar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onDelete(guest.id)}
-                        className="hover:bg-red-50"
-                      >
-                        <Trash2 className="h-4 w-4 mr-1" />
-                        Eliminar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => onSendCustomMessage(guest)}
-                        className="hover:bg-purple-50"
-                      >
-                        <MessageSquare className="h-4 w-4 mr-1" />
-                        Mensaje
-                      </Button>
+                        {statusTranslations[guest.status] || "Desconocido"}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1 text-sm text-gray-600">
+                      <span>{guest.type ? guest.type.charAt(0).toUpperCase() + guest.type.slice(1) : "Sin tipo"}</span>
+                      <span>•</span>
+                      <span>{guest.numberOfGuests !== null ? `N° Invitados ${guest.numberOfGuests}` : "Sin acompañantes"}</span>
                     </div>
                   </div>
+                  <div className="transition-transform duration-200" style={{ transform: expandedGuest === guest.id ? 'rotate(180deg)' : 'rotate(0deg)' }}>
+                    <ChevronDown className="w-5 h-5 text-gray-400" />
+                  </div>
                 </div>
-              )}
+              </div>
+              <div
+                className={`overflow-hidden transition-all duration-200 ${
+                  expandedGuest === guest.id ? 'max-h-96' : 'max-h-0'
+                }`}
+              >
+                <div className="p-4 bg-gray-50 border-t border-gray-100 space-y-3">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-medium text-gray-700">Teléfono:</span>
+                    <span className="text-gray-600">{guest.phone || "No disponible"}</span>
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium text-gray-700">Acompañantes confirmados:</span>
+                    <div className="mt-1">
+                      {Array.isArray(guest.additionalGuestNames) && guest.additionalGuestNames.length > 0 ? (
+                        <div className="flex flex-wrap gap-2">
+                          {guest.additionalGuestNames.map((name, index) => (
+                            <span
+                              key={index}
+                              className="inline-flex items-center px-2.5 py-1 rounded-md bg-blue-50 text-blue-700 text-sm"
+                            >
+                              {name.trim()}
+                            </span>
+                          ))}
+                        </div>
+                      ) : (
+                        <span className="text-gray-500 italic">Ninguno</span>
+                      )}
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 pt-2">
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onEdit(guest)}
+                      className="flex-1 justify-center hover:bg-blue-50 min-w-[100px]"
+                    >
+                      <Edit className="h-4 w-4 mr-1.5" />
+                      Editar
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onDelete(guest.id)}
+                      className="flex-1 justify-center hover:bg-red-50 min-w-[100px]"
+                    >
+                      <Trash2 className="h-4 w-4 mr-1.5" />
+                      Eliminar
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      onClick={() => onSendCustomMessage(guest)}
+                      className="flex-1 justify-center hover:bg-purple-50 min-w-[100px]"
+                    >
+                      <MessageSquare className="h-4 w-4 mr-1.5" />
+                      Mensaje
+                    </Button>
+                  </div>
+                </div>
+              </div>
             </div>
           ))
         ) : (
-          <div className="text-center py-8 text-gray-500 italic">
-            {searchTerm
-              ? "No se encontraron invitados que coincidan con la búsqueda"
-              : "No se han agregado invitados aún. ¡Invita a alguien para comenzar!"}
+          <div className="text-center py-8 px-4 rounded-lg bg-gray-50 border border-gray-100">
+            <div className="text-gray-500 italic">
+              {searchTerm
+                ? "No se encontraron invitados que coincidan con la búsqueda"
+                : "No se han agregado invitados aún. ¡Invita a alguien para comenzar!"}
+            </div>
           </div>
         )}
       </div>
