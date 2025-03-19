@@ -226,135 +226,132 @@ export default function GuestManagement() {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="container mx-auto px-4 py-6 max-w-8xl">
-            {/* Header con breadcrumb y título */}
-            <div className="mb-8">
-                <div className="flex items-center text-sm text-gray-500 mb-2">
-                    <Link href="/dashboard" className="hover:text-blue-600">
-                        Eventos
-                    </Link>
-                    <ChevronRight className="h-4 w-4 mx-2" />
-                    <span className="text-gray-900">{eventName || "Cargando..."}</span>
+        <div className="min-h-screen bg-gray-50">
+            <div className="container mx-auto px-4 py-4 max-w-[100vw] overflow-x-hidden">
+                {/* Header con breadcrumb y título */}
+                <div className="mb-6">
+                    <div className="flex items-center text-sm text-gray-500 mb-2 overflow-x-auto whitespace-nowrap pb-2">
+                        <Link href="/dashboard" className="hover:text-blue-600 flex-shrink-0">
+                            Dashboard
+                        </Link>
+                        <ChevronRight className="h-4 w-4 mx-2 flex-shrink-0" />
+                        <Link href="/events" className="hover:text-blue-600 flex-shrink-0">
+                            Eventos
+                        </Link>
+                        <ChevronRight className="h-4 w-4 mx-2 flex-shrink-0" />
+                        <span className="text-gray-900 truncate">
+                            {eventName || "Cargando..."}
+                        </span>
+                    </div>
+                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                        Gestión de Invitados
+                    </h1>
                 </div>
-                <h1 className="text-3xl font-bold text-gray-900">
-                    Gestión de Invitados
-                </h1>
-            </div>
 
-    
-            {/* Barra de acciones principales */}
-            <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 mb-8">
-            <div className="flex flex-col sm:flex-row lg:flex-wrap gap-3 sm:gap-4">
-
-                    <Button 
-                        onClick={() => setIsModalOpen(true)} 
-                        className="flex items-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
-                    >
-                        <Plus className="mr-2 h-4 w-4" />
-                        Agregar Nuevo Invitado
-                    </Button>
-                    <Button 
-                        onClick={() => setIsStatsModalOpen(true)} 
-                        className="flex items-center bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg transition-colors"
-                    >
-                        <ChartPie className="mr-2 h-4 w-4" />
-                        Estadísticas Detalladas
-                    </Button>
-                    <div className="flex-grow"></div>
-                    <Button 
-                        onClick={() => {}}
-                        className={`flex items-center px-4 py-2 rounded-lg transition-colors ${
-                            isWhatsAppConnected 
-                                ? 'bg-green-50 text-green-700 hover:bg-green-100'
-                                : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
-                        }`}
-                    >
-                        <MessageCircle className="mr-2 h-4 w-4" />
-                        {isWhatsAppConnected ? "WhatsApp Conectado" : "Conectar WhatsApp"}
-                    </Button>
+                {/* Barra de acciones principales */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                        <Button 
+                            onClick={() => setIsModalOpen(true)} 
+                            className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                        >
+                            <Plus className="mr-2 h-4 w-4" />
+                            Agregar Invitado
+                        </Button>
+                        <Button 
+                            onClick={() => setIsStatsModalOpen(true)} 
+                            className="w-full flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg transition-colors"
+                        >
+                            <ChartPie className="mr-2 h-4 w-4" />
+                            Estadísticas
+                        </Button>
+                        <Button 
+                            onClick={() => {}}
+                            className={`w-full flex items-center justify-center px-4 py-2 rounded-lg transition-colors ${
+                                isWhatsAppConnected 
+                                    ? 'bg-green-50 text-green-700 hover:bg-green-100'
+                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                            }`}
+                        >
+                            <MessageCircle className="mr-2 h-4 w-4" />
+                            {isWhatsAppConnected ? "WhatsApp" : "Conectar"}
+                        </Button>
+                    </div>
                 </div>
+
+                {/* Lista de invitados */}
+                <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+                    <GuestList
+                        guests={guests}
+                        onEdit={handleEditGuest}
+                        onDelete={handleDeleteGuest}
+                        onSendCustomMessage={(guest) => {
+                            setSelectedGuest(guest);
+                            setIsSendCustomMessageModalOpen(true);
+                        }}
+                    />
+                </div>
+
+                {/* Modales */}
+                {isModalOpen && (
+                    <AddGuestModal
+                        onClose={() => setIsModalOpen(false)}
+                        onAddGuest={handleAddGuest}
+                        eventId={id}
+                        guest={selectedGuest}
+                    />
+                )}
+
+                {isEditModalOpen && selectedGuest && (
+                    <EditGuestModal
+                        guest={selectedGuest}
+                        onClose={() => setIsEditModalOpen(false)}
+                        onSave={handleUpdateGuest}
+                    />
+                )}
+
+                {isReplaceModalOpen && selectedGuest && (
+                    <ReplaceGuestModal
+                        guest={selectedGuest}
+                        onClose={() => setIsReplaceModalOpen(false)}
+                        onReplaceGuest={handleReplaceGuest}
+                    />
+                )}
+
+                {isCreateContentModalOpen && (
+                    <CreateInvitationContentModal
+                        onClose={() => setIsCreateContentModalOpen(false)}
+                        onSave={handleSaveInvitationContent}
+                    />
+                )}
+
+                {isSendCustomMessageModalOpen && selectedGuest && (
+                    <SendCustomMessageModal
+                        guest={selectedGuest}
+                        onClose={() => setIsSendCustomMessageModalOpen(false)}
+                        onSend={handleSendCustomMessage}
+                    />
+                )}
+
+                {isStatsModalOpen && (
+                    <StatsModal 
+                        isOpen={isStatsModalOpen}
+                        onClose={() => setIsStatsModalOpen(false)}
+                        stats={stats}
+                    />
+                )}
+
+                {/* Modal de integración de WhatsApp */}
+                {showWhatsAppConfig && (
+                    <WhatsAppIntegration
+                        isOpen={showWhatsAppConfig}
+                        onClose={() => setShowWhatsAppConfig(false)}
+                        isConnected={isWhatsAppConnected}
+                        onConnectionChange={setIsWhatsAppConnected}
+                        userId={localStorage.getItem("userId")}
+                    />
+                )}
             </div>
-
-            {/* Lista de invitados */}
-            <div className="bg-stone-50 rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <GuestList
-                    guests={guests}
-                    onEdit={handleEditGuest}
-                    onDelete={handleDeleteGuest}
-                    onReplace={(guest) => {
-                        setSelectedGuest(guest);
-                        setIsReplaceModalOpen(true);
-                    }}
-                    onSendInvitation={(guest) => {
-                        setSelectedGuest(guest);
-                        setIsSendInvitationModalOpen(true);
-                    }}
-                    onSendCustomMessage={(guest) => {
-                        setSelectedGuest(guest);
-                        setIsSendCustomMessageModalOpen(true);
-                    }}
-                />
-            </div>
-
-            {/* Modales */}
-            {isModalOpen && (
-                <AddGuestModal
-                    onClose={() => setIsModalOpen(false)}
-                    onAddGuest={handleAddGuest}
-                    eventId={id}
-                    guest={selectedGuest}
-                />
-            )}
-
-            {isEditModalOpen && selectedGuest && (
-                <EditGuestModal
-                    guest={selectedGuest}
-                    onClose={() => setIsEditModalOpen(false)}
-                    onSave={handleUpdateGuest}
-                />
-            )}
-
-            {isReplaceModalOpen && selectedGuest && (
-                <ReplaceGuestModal
-                    guest={selectedGuest}
-                    onClose={() => setIsReplaceModalOpen(false)}
-                    onReplaceGuest={handleReplaceGuest}
-                />
-            )}
-
-            {isCreateContentModalOpen && (
-                <CreateInvitationContentModal
-                    onClose={() => setIsCreateContentModalOpen(false)}
-                    onSave={handleSaveInvitationContent}
-                />
-            )}
-
-            {isSendCustomMessageModalOpen && selectedGuest && (
-                <SendCustomMessageModal
-                    guest={selectedGuest}
-                    onClose={() => setIsSendCustomMessageModalOpen(false)}
-                    onSend={handleSendCustomMessage}
-                />
-            )}
-
-            {isStatsModalOpen && (
-                <StatsModal 
-                    isOpen={isStatsModalOpen}
-                    onClose={() => setIsStatsModalOpen(false)}
-                    stats={stats}
-                />
-            )}
-
-            {/* Modal de integración de WhatsApp */}
-            {showWhatsAppConfig && (
-                <WhatsAppIntegration
-                    isOpen={showWhatsAppConfig}
-                    onClose={() => setShowWhatsAppConfig(false)}
-                    isConnected={isWhatsAppConnected}
-                    onConnectionChange={setIsWhatsAppConnected}
-                    userId={localStorage.getItem("userId")}
-                />
-            )}
         </div>
     );
 }
