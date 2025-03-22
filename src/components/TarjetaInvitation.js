@@ -199,7 +199,9 @@ export default function TarjetaInvitation({
 
   console.log("hey aca:", invitado.status);
 
-  const abrirModal = () => setModalAbierto(true);
+  const abrirModal = () => {
+    setModalAbierto(!modalAbierto);
+  };
   const abrirModalRegalos = () => setModalAbiertoRegalos(true);
   const cerrarModal = () => setModalAbierto(false);
   const cerrarModalRegalos = () => setModalAbiertoRegalos(false);
@@ -288,11 +290,10 @@ export default function TarjetaInvitation({
             }}
             disabled={playerState.isLoading || playerState.error}
             className={`music-control-button w-10 h-10 rounded-full bg-white/80 flex items-center justify-center shadow-md 
-                            ${
-                              playerState.isLoading || playerState.error
-                                ? "opacity-50 cursor-not-allowed"
-                                : "hover:bg-white/90"
-                            }`}
+                            ${playerState.isLoading || playerState.error
+                ? "opacity-50 cursor-not-allowed"
+                : "hover:bg-white/90"
+              }`}
           >
             {playerState.isLoading ? (
               <div className="w-5 h-5 border-2 border-gold border-t-transparent rounded-full animate-spin"></div>
@@ -429,9 +430,8 @@ export default function TarjetaInvitation({
           <div className="{`bg-white/90 backdrop-blur-sm`}">
             <p className="text-2xl font-medium leading-relaxed text-gray-800 text-center">
               {numberOfGuests > 0
-                ? `¡Puedes asistir con ${numberOfGuests} acompañante${
-                    numberOfGuests > 1 ? "s" : ""
-                  }!`
+                ? `¡Puedes asistir con ${numberOfGuests} acompañante${numberOfGuests > 1 ? "s" : ""
+                }!`
                 : "Te esperamos con mucha alegría, disfruta este gran día con nosotros 💖"}
             </p>
           </div>
@@ -473,7 +473,7 @@ export default function TarjetaInvitation({
 
                 {/* Botón de Regalos */}
                 <button
-                onClick={abrirModalRegalos}
+                  onClick={abrirModalRegalos}
                   className="flex flex-col items-center p-4 bg-gradient-to-b from-amber-50 to-amber-100/50 rounded-lg border border-amber-200/30 hover:shadow-md transition-all duration-300"
                 >
                   <div className="w-12 h-12 rounded-full bg-amber-500 flex items-center justify-center mb-2">
@@ -608,24 +608,24 @@ export default function TarjetaInvitation({
       {/* Modal de Lista de Regalos */}
       {modalAbiertoRegalos && (
         <div
-        className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]"
-        onClick={cerrarModalRegalos} // Cierra el modal al hacer clic fuera
-      >
-          
-       
-            <div
+          className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-[9999]"
+          onClick={cerrarModalRegalos} // Cierra el modal al hacer clic fuera
+        >
+
+
+          <div
             className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full max-h-[80vh] overflow-y-auto relative"
             onClick={(e) => e.stopPropagation()} // Evita que el modal se cierre al hacer clic dentro
           >
 
-              <ListaRegalos
-                eventDetails={evento}
-                fontClass={fontClass}
-              />
+            <ListaRegalos
+              eventDetails={evento}
+              fontClass={fontClass}
+            />
           </div>
         </div>
 
-        
+
       )}
 
     </>

@@ -40,8 +40,8 @@ export default function Dashboard() {
 
     // Función para actualizar un invitado en la lista
     const updateGuestInList = useCallback((updatedGuest) => {
-        setGuests(prevGuests => 
-            prevGuests.map(guest => 
+        setGuests(prevGuests =>
+            prevGuests.map(guest =>
                 guest.id === updatedGuest.id ? { ...guest, ...updatedGuest } : guest
             )
         );
@@ -94,7 +94,7 @@ export default function Dashboard() {
                 uniqueKey: event.id || index,
             }));
             setEvents(eventsList);
-            
+
             // Obtener estadísticas para cada evento
             eventsList.forEach(event => {
                 if (event.id) {
@@ -125,7 +125,7 @@ export default function Dashboard() {
     useEffect(() => {
         if (!isAuthenticating) {
             fetchEvents();
-    
+
             // Manejar evento nuevo
             const handleNewEvent = (newEvent) => {
                 setEvents((prevEvents) => {
@@ -135,7 +135,7 @@ export default function Dashboard() {
                         : [...prevEvents, { ...newEvent, uniqueKey: newEvent.id || prevEvents.length }];
                 });
             };
-    
+
             // Manejar actualización de evento
             const handleEventUpdate = (updatedEvent) => {
                 setEvents((prevEvents) =>
@@ -146,11 +146,11 @@ export default function Dashboard() {
                     )
                 );
             };
-    
+
             // Configurar listeners del socket
             socket.on("new_event", handleNewEvent);
             socket.on("update_Guest", handleEventUpdate);
-    
+
             // Verificar conexión del socket
             console.log("Socket connected:", socket.connected);
             socket.on("connect", () => {
@@ -159,7 +159,7 @@ export default function Dashboard() {
             socket.on("disconnect", () => {
                 console.log("Socket disconnected");
             });
-    
+
             return () => {
                 socket.off("new_event", handleNewEvent);
                 socket.off("update_Guest", handleEventUpdate);
@@ -202,9 +202,9 @@ export default function Dashboard() {
         <div className="container mx-auto px-4 py-8">
             <div className="flex justify-between items-center mb-8">
                 <h1 className="text-3xl font-bold text-gray-800">Dashboard de Eventos</h1>
-                <Button 
+                <Button
                     onClick={handleLogout}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 flex items-center gap-2"
+
                 >
                     Cerrar Sesión
                 </Button>
@@ -220,12 +220,12 @@ export default function Dashboard() {
                     {events.length > 0 ? (
                         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
                             {events.map((event) => (
-                                <EventCard 
-                                    key={event.uniqueKey} 
-                                    event={event} 
+                                <EventCard
+                                    key={event.uniqueKey}
+                                    event={event}
                                     stats={stats?.[event.id]}
-                                    onDelete={() => deleteEvent(event.id)} 
-                                    onEdit={handleEditEvent} 
+                                    onDelete={() => deleteEvent(event.id)}
+                                    onEdit={handleEditEvent}
                                 />
                             ))}
                         </div>
@@ -235,9 +235,11 @@ export default function Dashboard() {
                 </>
             )}
 
-            <Button onClick={() => setIsModalOpen(true)} className="fixed bottom-8 right-8 bg-blue-500 text-white rounded-full">
-                Crear Evento
-            </Button>
+            <div className="fixed bottom-6 right-6 z-50">
+                <Button onClick={() => setIsModalOpen(true)} className="rounded-full p-4 shadow-lg">
+                    Crear Evento
+                </Button>
+            </div>
 
             {isModalOpen && <CreateEventModal onClose={() => setIsModalOpen(false)} onCreateEvent={fetchEvents} />}
             {editEvent && <EditEventModal event={editEvent} onClose={() => setEditEvent(null)} />}

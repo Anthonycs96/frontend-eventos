@@ -3,30 +3,110 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 253, 248, 245;
-  --background-end-rgb: 253, 248, 245;
+  --background: #f1f5f9;
+  --background-secondary: #ffffff;
+  /* Botón primario */
+  --button: #3b82f6;
+  --button-hover: #2563eb;
+  --button-text: #ffffff;
 
-  /* Colores personalizados */
-  --gold: 212, 175, 55;
-  --champagne: 247, 231, 206;
-  --light-champagne: 253, 248, 245;
-  --olive-accent: 138, 154, 91;
+  /* Botón secundario */
+  --button-secondary: #e5e7eb;
+  --button-secondary-hover: #1f2937;
+  --button-secondary-text: #374151;
+
+  /* Botón de éxito */
+  --button-success: #10b981;
+  --button-success-hover: #059669;
+  --button-success-text: #ffffff;
+
+  /* Botón de advertencia */
+  --button-warning: #f59e0b;
+  --button-warning-hover: #d97706;
+  --button-warning-text: #ffffff;
+
+  /* Botón de error/destructivo */
+  --button-danger: #ef4444;
+  --button-danger-hover: #dc2626;
+  --button-danger-text: #ffffff;
+  --foreground: #171717;
+  --primary: #2563eb;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f4f6;
+  --secondary-foreground: #111827;
+  --muted: #f3f4f6;
+  --muted-foreground: #6b7280;
+  --accent: #f3f4f6;
+  --accent-foreground: #111827;
+  --destructive: #ef4444;
+  --destructive-foreground: #ffffff;
+  --border: #e5e7eb;
+  --input: #e5e7eb;
+  --ring: #2563eb;
+  --radius: 0.5rem;
+    /* Colores personalizados */
+    --gold: 212, 175, 55;
+    --champagne: 247, 231, 206;
+    --light-champagne: 253, 248, 245;
+    --olive-accent: 138, 154, 91;
+}
+
+.dark {
+  --background: #1e1e1e;
+  --background-secondary: #111111;
+   /* Botón primario en dark */
+   --button: #111111;
+   --button-hover: #60a5fa;
+   --button-text: #ffffff;
+ 
+   /* Botón secundario en dark */
+   --button-secondary: #374151;
+   --button-secondary-hover: #f3f4f6;
+   --button-secondary-text: #d1d5db;
+ 
+   /* Botón de éxito en dark */
+   --button-success: #22c55e;
+   --button-success-hover: #16a34a;
+   --button-success-text: #ffffff;
+ 
+   /* Botón de advertencia en dark */
+   --button-warning: #facc15;
+   --button-warning-hover: #eab308;
+   --button-warning-text: #111827;
+ 
+   /* Botón de error/destructivo en dark */
+   --button-danger: #ef4444;
+   --button-danger-hover: #dc2626;
+   --button-danger-text: #ffffff;
+  --foreground: #f3f4f6;
+  --primary: #3b82f6;
+  --primary-foreground: #ffffff;
+  --secondary: #1f2937;
+  --secondary-foreground: #f3f4f6;
+  --muted: #1f2937;
+  --muted-foreground: #9ca3af;
+  --accent: #1f2937;
+  --accent-foreground: #f3f4f6;
+  --destructive: #dc2626;
+  --destructive-foreground: #ffffff;
+  --border: #374151;
+  --input: #374151;
+  --ring: #3b82f6;
+    /* Colores personalizados */
+    --gold: 212, 175, 55;
+    --champagne: 247, 231, 206;
+    --light-champagne: 253, 248, 245;
+    --olive-accent: 138, 154, 91;
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(to bottom, transparent, rgb(var(--background-end-rgb))) rgb(var(--background-start-rgb));
+  background: var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-/* Animaciones para elementos */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+* {
+  border-color: var(--border);
 }
 
 .animate-fadeIn {
@@ -53,4 +133,3 @@ body {
 .bg-light-champagne {
   background-color: rgb(var(--light-champagne));
 }
-

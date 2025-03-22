@@ -17,6 +17,7 @@ import StatsModal from "@/components/StatsModal";
 import socket from "@/utils/socket";
 import { Plus, Send, MessageSquare, FileText, ChartPie, ChevronRight, Users, CheckCircle, Clock, XCircle, MessageCircle } from "lucide-react";
 import Link from "next/link";
+import IndividualGuestCard from "@/components/IndividualGuestCard";
 
 // Componente principal para la gestión de invitados
 export default function GuestManagement() {
@@ -32,15 +33,15 @@ export default function GuestManagement() {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [isReplaceModalOpen, setIsReplaceModalOpen] = useState(false);
-    const [isSendInvitationModalOpen, setIsSendInvitationModalOpen] = useState(false);
     const [isCreateContentModalOpen, setIsCreateContentModalOpen] = useState(false);
     const [isSendCustomMessageModalOpen, setIsSendCustomMessageModalOpen] = useState(false);
     const [stats, setStats] = useState(null);
     const [isStatsModalOpen, setIsStatsModalOpen] = useState(false);
     const [selectedGuest, setSelectedGuest] = useState(null);
-    const [invitationContent, setInvitationContent] = useState("");
+    const [invitationContent, setInvitationContent] = useState(null);
     const [isWhatsAppConnected, setIsWhatsAppConnected] = useState(false);
     const [showWhatsAppConfig, setShowWhatsAppConfig] = useState(false);
+    const [isIndividualGuestCardOpen, setIsIndividualGuestCardOpen] = useState(false);
 
     // Función para obtener estadísticas de invitados
     const fetchGuestStats = async () => {
@@ -54,8 +55,8 @@ export default function GuestManagement() {
 
     // Función para actualizar un invitado en la lista
     const updateGuestInList = useCallback((updatedGuest) => {
-        setGuests(prevGuests => 
-            prevGuests.map(guest => 
+        setGuests(prevGuests =>
+            prevGuests.map(guest =>
                 guest.id === updatedGuest.id ? { ...guest, ...updatedGuest } : guest
             )
         );
@@ -220,6 +221,11 @@ export default function GuestManagement() {
         // Resto del código...
     }, [id, router, guestExists]);
 
+    const handleOpenIndividualGuestCard = useCallback((guest) => {
+        setSelectedGuest(guest);
+        setIsIndividualGuestCardOpen(true);
+    }, []);
+
     // Muestra un indicador de carga mientras se obtienen los datos
     if (loading) return <div>Cargando...</div>;
     // Muestra un mensaje de error si ocurre algún problema al cargar los datos
@@ -234,10 +240,7 @@ export default function GuestManagement() {
                         <Link href="/dashboard" className="hover:text-blue-600 flex-shrink-0">
                             Dashboard
                         </Link>
-                        <ChevronRight className="h-4 w-4 mx-2 flex-shrink-0" />
-                        <Link href="/events" className="hover:text-blue-600 flex-shrink-0">
-                            Eventos
-                        </Link>
+
                         <ChevronRight className="h-4 w-4 mx-2 flex-shrink-0" />
                         <span className="text-gray-900 truncate">
                             {eventName || "Cargando..."}
@@ -249,32 +252,31 @@ export default function GuestManagement() {
                 </div>
 
                 {/* Barra de acciones principales */}
-                <div className="bg-white rounded-lg shadow-sm border border-gray-100 p-4 mb-6">
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-                        <Button 
-                            onClick={() => setIsModalOpen(true)} 
-                            className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors"
+                <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 mb-8">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                        <Button
+                            onClick={() => setIsModalOpen(true)}
+                            className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-blue-600 text-white hover:from-blue-600 hover:to-blue-700 px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
                         >
-                            <Plus className="mr-2 h-4 w-4" />
-                            Agregar Invitado
+                            <Plus className="h-5 w-5" />
+                            <span className="font-medium">Agregar Invitado</span>
                         </Button>
-                        <Button 
-                            onClick={() => setIsStatsModalOpen(true)} 
-                            className="w-full flex items-center justify-center bg-gray-50 hover:bg-gray-100 text-gray-700 px-4 py-2 rounded-lg transition-colors"
+                        <Button
+                            onClick={() => setIsStatsModalOpen(true)}
+                            className="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-500 to-purple-600 text-white hover:from-purple-600 hover:to-purple-700 px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg"
                         >
-                            <ChartPie className="mr-2 h-4 w-4" />
-                            Estadísticas
+                            <ChartPie className="h-5 w-5" />
+                            <span className="font-medium">Estadísticas</span>
                         </Button>
-                        <Button 
-                            onClick={() => {}}
-                            className={`w-full flex items-center justify-center px-4 py-2 rounded-lg transition-colors ${
-                                isWhatsAppConnected 
-                                    ? 'bg-green-50 text-green-700 hover:bg-green-100'
-                                    : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                        <Button
+                            onClick={() => { }}
+                            className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg ${isWhatsAppConnected
+                                ? 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700'
+                                : 'bg-gradient-to-r from-gray-500 to-gray-600 text-white hover:from-gray-600 hover:to-gray-700'
                             }`}
                         >
-                            <MessageCircle className="mr-2 h-4 w-4" />
-                            {isWhatsAppConnected ? "WhatsApp" : "Conectar"}
+                            <MessageCircle className="h-5 w-5" />
+                            <span className="font-medium">{isWhatsAppConnected ? "WhatsApp" : "Conectar"}</span>
                         </Button>
                     </div>
                 </div>
@@ -285,6 +287,7 @@ export default function GuestManagement() {
                         guests={guests}
                         onEdit={handleEditGuest}
                         onDelete={handleDeleteGuest}
+                        onViewGuest={handleOpenIndividualGuestCard}
                         onSendCustomMessage={(guest) => {
                             setSelectedGuest(guest);
                             setIsSendCustomMessageModalOpen(true);
@@ -334,7 +337,7 @@ export default function GuestManagement() {
                 )}
 
                 {isStatsModalOpen && (
-                    <StatsModal 
+                    <StatsModal
                         isOpen={isStatsModalOpen}
                         onClose={() => setIsStatsModalOpen(false)}
                         stats={stats}
@@ -349,6 +352,13 @@ export default function GuestManagement() {
                         isConnected={isWhatsAppConnected}
                         onConnectionChange={setIsWhatsAppConnected}
                         userId={localStorage.getItem("userId")}
+                    />
+                )}
+                {isIndividualGuestCardOpen && selectedGuest && (
+                    <IndividualGuestCard
+                        isOpen={isIndividualGuestCardOpen}
+                        guest={selectedGuest}
+                        onClose={() => setIsIndividualGuestCardOpen(false)}
                     />
                 )}
             </div>

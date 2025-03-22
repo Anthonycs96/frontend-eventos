@@ -2,8 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import Button from "@/components/ui/Button";
 import ErrorModal from "@/components/ErrorModal";
+import Label from "@/components/ui/label";
+import Input from "@/components/ui/Input";
+import Button from "@/components/ui/Button";
+import { Heading } from "@/components/ui/Heading";
 import API from "@/utils/api";
 import Link from "next/link";
 
@@ -76,23 +79,30 @@ export default function Login() {
     }
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-50 p-4 sm:p-6 lg:p-8">
+        <div className="bg-transparent min-h-screen flex flex-col items-center justify-center bg-[var(--background)] dark:bg-[var(--background-secondary)] p-4 sm:p-6 lg:p-8">
             <div className="w-full max-w-[420px] space-y-6">
                 {/* Logo o Imagen */}
-                             
-                <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg border border-gray-100">
+
+                <div className="bg-[var(--background)] dark:bg-[var(--background-secondary)] p-6 sm:p-8 rounded-2xl shadow-lg ">
                     <div className="text-center mb-6 sm:mb-8">
-                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-2 sm:mb-3">¡Bienvenido!</h2>
-                        <p className="text-sm sm:text-base text-gray-600">Ingresa a tu cuenta para continuar</p>
+                        <Heading
+                            level="h2"
+                            className="text-2xl sm:text-3xl font-bold mb-2 sm:mb-3"
+                        >
+                            ¡Bienvenido!
+                        </Heading>
+                        <p className="text-sm sm:text-base text-[var(--foreground)] transition-colors duration-300">
+                            Ingresa a tu cuenta para continuar
+                        </p>
                     </div>
-                    
+
                     <form className="space-y-5 sm:space-y-6" onSubmit={onSubmit}>
                         <div className="space-y-4 sm:space-y-5">
                             {/* País */}
                             <div>
-                                <label htmlFor="countryCode" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                <Label htmlFor="countryCode" className="block text-sm font-medium text-gray-700 mb-1.5">
                                     País
-                                </label>
+                                </Label>
                                 <select
                                     id="countryCode"
                                     value={countryCode}
@@ -109,9 +119,9 @@ export default function Login() {
 
                             {/* Teléfono */}
                             <div>
-                                <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                <Label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700 mb-1.5">
                                     Número de Teléfono
-                                </label>
+                                </Label>
                                 <div className="relative">
                                     <span className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 text-sm sm:text-base">
                                         {countryCode}
@@ -129,10 +139,10 @@ export default function Login() {
 
                             {/* Contraseña */}
                             <div>
-                                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
+                                <Label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-1.5">
                                     Contraseña
-                                </label>
-                                <input
+                                </Label>
+                                <Input
                                     id="password"
                                     name="password"
                                     type="password"
@@ -144,13 +154,13 @@ export default function Login() {
                         </div>
 
                         <div className="pt-2 space-y-4">
-                            <Button 
-                                type="submit" 
-                                className="bg-blue-600 hover:bg-blue-700 text-white py-2.5 sm:py-3 px-4 rounded-xl font-medium w-full transition-colors duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
+                            <Button
+                                type="submit"
+                                className="w-full"
                             >
                                 Iniciar sesión
                             </Button>
-                            
+
                             <div className="relative">
                                 <div className="absolute inset-0 flex items-center">
                                     <div className="w-full border-t border-gray-200"></div>
@@ -159,12 +169,12 @@ export default function Login() {
                                     <span className="px-2 bg-white text-gray-500">o</span>
                                 </div>
                             </div>
-                            
+
                             <Link href="/register" className="block w-full">
-                                <Button 
-                                    type="button" 
-                                    variant="outline" 
-                                    className="border-2 border-gray-200 text-gray-700 hover:bg-gray-50 py-2.5 sm:py-3 px-4 rounded-xl font-medium w-full transition-colors duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
+                                <Button
+                                    type="button"
+                                    variant="outline"
+                                    className="w-full"
                                 >
                                     Crear cuenta nueva
                                 </Button>
@@ -172,7 +182,7 @@ export default function Login() {
                         </div>
                     </form>
                 </div>
-                
+
                 <div className="text-center">
                     <p className="text-sm text-gray-600 mt-4">
                         ¿Necesitas ayuda? <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">Contáctanos</a>

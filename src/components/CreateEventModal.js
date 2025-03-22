@@ -283,10 +283,10 @@ export default function CreateEventModal({ onClose, onCreateEvent }) {
 
                     {/* Botones */}
                     <div className="flex justify-end space-x-2">
-                        <Button type="button" onClick={onClose} className="bg-gray-300 text-gray-700">
+                        <Button type="button" onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button type="submit" className="bg-blue-500 hover:bg-blue-600 text-white">
+                        <Button type="submit">
                             Crear
                         </Button>
                     </div>

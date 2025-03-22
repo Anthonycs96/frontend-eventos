@@ -8,10 +8,12 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import EditEventModal from "@/components/EditEventModal";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from "@/components/ui/dialog";
 
 export default function EventCard({ event, onDelete, stats }) {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isNavigating, setIsNavigating] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
     const router = useRouter();
     const defaultImageUrl = "https://i.pinimg.com/736x/a9/8f/22/a98f22e917cbea994ca3d1e143d39a20.jpg";
 
@@ -31,9 +33,18 @@ export default function EventCard({ event, onDelete, stats }) {
         router.push(path);
     };
 
+    const handleDeleteClick = () => {
+        setIsDeleteDialogOpen(true);
+    };
+
+    const handleConfirmDelete = () => {
+        onDelete();
+        setIsDeleteDialogOpen(false);
+    };
+
     return (
         <>
-            <Card className="w-full mb-10 md:mb-10 md:max-w lg:max-w mx-auto bg-white shadow-md hover:shadow-xl rounded-2xl overflow-hidden border border-gray-100 transition-all duration-300 relative group">
+            <Card className="w-full mb-10 md:mb-10 md:max-w lg:max-w mx-auto shadow-md hover:shadow-xl rounded-2xl overflow-hidden transition-all duration-300 relative group">
                 {/* Imagen de fondo con gradiente */}
                 <div className="relative h-16 sm:h-16 overflow-hidden">
                     <Image
@@ -55,7 +66,7 @@ export default function EventCard({ event, onDelete, stats }) {
                             <span className="sr-only">Editar evento</span>
                         </Button>
                         <Button
-                            onClick={onDelete}
+                            onClick={handleDeleteClick}
                             variant="ghost"
                             size="icon"
                             className="bg-white/80 hover:bg-white text-gray-700 hover:text-red-600 rounded-full transition-all duration-200 p-2"
@@ -87,7 +98,7 @@ export default function EventCard({ event, onDelete, stats }) {
                     </div>
 
                     {/* Estadísticas */}
-                    <div className="grid grid-cols-3 gap-2 pt-2">
+                    <div className="grid grid-cols-4 gap-1 pt-2">
                         <div className="flex flex-col items-center p-2 bg-blue-50 rounded-lg">
                             <span className="text-lg font-semibold text-blue-600">
                                 {stats?.totalConfirmedWithAccompanying || 0}
@@ -106,6 +117,12 @@ export default function EventCard({ event, onDelete, stats }) {
                             </span>
                             <span className="text-xs text-red-600">Total rechazados</span>
                         </div>
+                        <div className="flex flex-col items-center p-2 bg-green-50 rounded-lg">
+                            <span className="text-lg font-semibold text-green-600">
+                                {stats?.totalGuests || 0}
+                            </span>
+                            <span className="text-xs text-green-600">Total invitados</span>
+                        </div>
                     </div>
                 </div>
 
@@ -113,9 +130,8 @@ export default function EventCard({ event, onDelete, stats }) {
                 <div className="p-4 bg-gray-50 flex gap-2">
                     <Button
                         variant="ghost"
-                        className={`flex-1 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-600 rounded-xl transition-all duration-200 ${
-                            isNavigating ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
-                        }`}
+                        className={`flex-1 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-600 rounded-xl transition-all duration-200 ${isNavigating ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+                            }`}
                         onClick={() => handleNavigation(`/events/${event.id}/guests`)}
                         disabled={isNavigating}
                     >
@@ -127,15 +143,13 @@ export default function EventCard({ event, onDelete, stats }) {
 
                     <Button
                         variant="ghost"
-                        className={`flex-1 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-600 rounded-xl transition-all duration-200 ${
-                            isNavigating ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
-                        }`}
-                        onClick={() => handleNavigation(`/events/${event.id}/confirmations`)}
-                        disabled={isNavigating}
+                        className={`flex-1 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-600 rounded-xl transition-all duration-200 opacity-50 cursor-not-allowed`}
+                        onClick={() => { }}
+                        disabled={true}
                     >
                         <CheckCircle className="mr-2 h-4 w-4" />
                         <span className="text-sm">
-                            {isNavigating ? 'Cargando...' : 'Confirmaciones'}
+                            Confirmaciones
                         </span>
                     </Button>
                 </div>
@@ -144,6 +158,33 @@ export default function EventCard({ event, onDelete, stats }) {
             {isModalOpen && (
                 <EditEventModal event={event} onClose={handleCloseModal} />
             )}
+
+            <Dialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle className="text-xl font-semibold">
+                            ¿Estás seguro de eliminar este evento?
+                        </DialogTitle>
+                    </DialogHeader>
+                    <p className="text-gray-600">
+                        Esta acción no se puede deshacer. El evento será eliminado permanentemente.
+                    </p>
+                    <DialogFooter>
+                        <Button
+                            variant="secondary"
+                            onClick={() => setIsDeleteDialogOpen(false)}
+                        >
+                            Cancelar
+                        </Button>
+                        <Button
+                            variant="destructive"
+                            onClick={handleConfirmDelete}
+                        >
+                            Eliminar
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
         </>
     );
 }

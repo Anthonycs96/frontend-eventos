@@ -21,6 +21,7 @@ import {
   Home,
   Briefcase,
   Search,
+  Share2,
   CheckCircle,
 } from "lucide-react";
 
@@ -29,6 +30,8 @@ export default function GuestList({
   onEdit,
   onDelete,
   onSendCustomMessage,
+  onViewGuest,
+  onShare,
 }) {
   const [expandedGuest, setExpandedGuest] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
@@ -374,39 +377,46 @@ export default function GuestList({
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 text-sm">
-                    <span className="font-medium text-gray-700">Mensaje personal:</span>
-                    <span className="text-gray-600">
-                      {guest.personalMessage || "Ninguno"}
-                    </span>
+                  <div className="text-sm">
+                    <span className="font-medium text-gray-700">Mensaje Personal:</span>
+                    <div className="mt-1 bg-gray-50 rounded-md p-2 max-h-24 overflow-y-auto">
+                      <p className="text-gray-600 text-sm break-words">
+                        {guest.personalMessage ? guest.personalMessage : <span className="text-gray-500 italic">Ninguno</span>}
+                      </p>
+                    </div>
                   </div>
-                  <div className="flex flex-wrap gap-2 pt-2">
+                  <div className="flex justify-end gap-2 mt-4 border-t pt-3">
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => onEdit(guest)}
-                      className="flex-1 justify-center hover:bg-blue-50 min-w-[100px]"
+                      className="hover:bg-blue-50"
                     >
-                      <Edit className="h-4 w-4 mr-1.5" />
-                      Editar
+                      <Edit className="h-4 w-4" />
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => onDelete(guest.id)}
-                      className="flex-1 justify-center hover:bg-red-50 min-w-[100px]"
+                      className="hover:bg-red-50"
                     >
-                      <Trash2 className="h-4 w-4 mr-1.5" />
-                      Eliminar
+                      <Trash2 className="h-4 w-4" />
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => onSendCustomMessage(guest)}
-                      className="flex-1 justify-center hover:bg-purple-50 min-w-[100px]"
+                      className="hover:bg-purple-50"
                     >
-                      <MessageSquare className="h-4 w-4 mr-1.5" />
-                      Mensaje
+                      <MessageSquare className="h-4 w-4" />
+                    </Button>
+                    <Button
+                      size="sm"
+                      variant="outline"
+                      className="hover:bg-purple-50"
+                      onClick={() => onViewGuest(guest)}
+                    >
+                      <Share2 className="h-4 w-4" />
                     </Button>
                   </div>
                 </div>

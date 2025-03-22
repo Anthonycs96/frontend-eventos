@@ -65,7 +65,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Datos antes de envío:", guestData); // 📌 Verificar qué hay en guestData antes de enviarlo
+    console.log("Datos antes de envío:", guestData); // Verificar qué hay en guestData antes de enviarlo
 
     if (!guestData.name || !guestData.phone || !guestData.type) {
       alert("Por favor, completa todos los campos obligatorios.");
@@ -89,7 +89,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
         delete guestDataToSubmit.email;
       }
 
-      console.log("Enviando datos:", guestDataToSubmit); // 📌 Agregar esto para depuración
+      console.log("Enviando datos:", guestDataToSubmit); // Agregar esto para depuración
 
       const response = await API.post("/guest", guestDataToSubmit);
 
@@ -104,15 +104,17 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[500px]">
-        <DialogHeader>
-          <DialogTitle>Agregar Invitado</DialogTitle>
+      <DialogContent className="sm:max-w-[500px] rounded-lg">
+        <DialogHeader className="pb-4">
+          <DialogTitle className="text-xl font-semibold text-gray-800">
+            Agregar Invitado
+          </DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label
               htmlFor="name"
-              className="block text-gray-700 text-sm font-bold mb-1"
+              className="block text-sm font-medium text-gray-700 mb-2"
             >
               Nombre *
             </label>
@@ -122,7 +124,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
               name="name"
               value={guestData.name}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               required
             />
           </div>
@@ -144,7 +146,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
             <div>
               <label
                 htmlFor="email"
-                className="block text-gray-700 text-sm font-bold mb-1"
+                className="block text-sm font-medium text-gray-700 mb-2"
               >
                 Correo Electrónico
               </label>
@@ -154,7 +156,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
                 name="email"
                 value={guestData.email}
                 onChange={handleChange}
-                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               />
             </div>
           )}
@@ -162,7 +164,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
           <div>
             <label
               htmlFor="phone"
-              className="block text-gray-700 text-sm font-bold mb-1"
+              className="block text-sm font-medium text-gray-700 mb-2"
             >
               Teléfono *
             </label>
@@ -171,7 +173,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
                 name="countryCode"
                 value={guestData.countryCode}
                 onChange={handleChange}
-                className="col-span-1 border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="col-span-1 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               >
                 {countries.map((country, index) => (
                   <option key={index} value={country.code}>
@@ -185,7 +187,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
                 name="phone"
                 value={guestData.phone}
                 onChange={handleChange}
-                className="col-span-2 shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                className="col-span-2 w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
                 required
               />
             </div>
@@ -194,7 +196,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
           <div>
             <label
               htmlFor="type"
-              className="block text-gray-700 text-sm font-bold mb-1"
+              className="block text-sm font-medium text-gray-700 mb-2"
             >
               Tipo de Invitado *
             </label>
@@ -203,7 +205,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
               name="type"
               value={guestData.type}
               onChange={handleChange}
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
               required
             >
               <option value="">Seleccione un tipo</option>
@@ -217,7 +219,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
           <div>
             <label
               htmlFor="numberOfGuests"
-              className="block text-gray-700 text-sm font-bold mb-1"
+              className="block text-sm font-medium text-gray-700 mb-2"
             >
               Número de Acompañantes
             </label>
@@ -228,22 +230,18 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
               value={guestData.numberOfGuests}
               onChange={handleChange}
               min="0"
-              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
             />
           </div>
 
           <div className="flex justify-end space-x-2 pt-4">
             <Button
               type="button"
-              onClick={onClose}
-              className="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
+              onClick={onClose} >
               Cancelar
             </Button>
             <Button
-              type="submit"
-              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            >
+              type="submit">
               Agregar Invitado
             </Button>
           </div>
