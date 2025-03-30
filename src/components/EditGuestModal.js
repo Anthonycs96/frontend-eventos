@@ -18,7 +18,7 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
     phone: guest?.phone ? guest.phone.substring(3) : "",
     countryCode: guest?.phone?.substring(0, 3) || "+51",
     type: guest?.type || "",
-    typeId: guest?.typeId || "",
+    invitadoDe: guest?.invitadoDe || "",
     numberOfGuests: guest?.numberOfGuests ?? "",
   });
 
@@ -192,10 +192,26 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
               <option value="">Selecciona un tipo</option>
               <option value="principal">Principal</option>
               <option value="familiar">Familiar</option>
-              <option value="familia novio">Familia Novio</option>
-              <option value="familia novia">Familia Novia</option>
-              <option value="amigo novio">Amigo Novio</option>
-              <option value="amigo novia">Amigo Novia</option>
+              <option value="amigo">Amigo</option>
+              <option value="proveedor">Proveedor</option>
+            </select>
+          </div>
+
+          <div>
+            <label htmlFor="invitadoDe" className="block text-gray-700 text-sm font-bold mb-1">
+              Invitado de: *
+            </label>
+            <select
+              id="invitadoDe"
+              name="invitadoDe"
+              value={guestData.invitadoDe}
+              onChange={handleChange}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+              required
+            >
+              <option value="">Selecciona un tipo</option>
+              <option value="principal">Principal</option>
+              <option value="familiar">Familiar</option>
               <option value="amigo">Amigo</option>
               <option value="proveedor">Proveedor</option>
             </select>

@@ -18,6 +18,7 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
     phone: "",
     countryCode: "+51", // Código de país de Perú
     type: "",
+    invitadoDe: "",
     numberOfGuests: "",
   });
 
@@ -211,12 +212,29 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
               <option value="">Seleccione un tipo</option>
               <option value="principal">Principal</option>
               <option value="familiar">Familiar</option>
-              <option value="familia novio">Familia Novio</option>
-              <option value="familia novia">Familia Novia</option>
-              <option value="amigo novio">Amigo Novio</option>
-              <option value="amigo novia">Amigo Novia</option>
               <option value="amigo">Amigo</option>
               <option value="proveedor">Proveedor</option>
+            </select>
+          </div>
+
+          <div>
+            <label
+              htmlFor="invitadoDe"
+              className="block text-sm font-medium text-gray-700 mb-2"
+            >
+              Invitado de: *
+            </label>
+            <select
+              id="invitadoDe"
+              name="invitadoDe"
+              value={guestData.invitadoDe}
+              onChange={handleChange}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all duration-200"
+              required
+            >
+              <option value="">Seleccione un tipo</option>
+              <option value="novio">Novio</option>
+              <option value="novia">Novia</option>
             </select>
           </div>
 
