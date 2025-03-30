@@ -209,11 +209,9 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
               required
             >
-              <option value="">Selecciona un tipo</option>
-              <option value="principal">Principal</option>
-              <option value="familiar">Familiar</option>
-              <option value="amigo">Amigo</option>
-              <option value="proveedor">Proveedor</option>
+              <option value="">Seleccione un tipo</option>
+              <option value="novio">Novio</option>
+              <option value="novia">Novia</option>
             </select>
           </div>
 
