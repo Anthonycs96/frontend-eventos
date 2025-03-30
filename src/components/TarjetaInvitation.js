@@ -443,10 +443,10 @@ export default function TarjetaInvitation({
             </h3>
             <div className="flex flex-col items-center space-y-6 max-w-md mx-auto">
               {/* Botón de Confirmación - Destacado */}
-              <div className="w-full">
+              <div className="w-full  block sm:hidden">
                 <button
                   onClick={abrirModal}
-                  className="w-full flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
+                  className=" w-full flex items-center justify-center gap-4 p-4 bg-gradient-to-r from-emerald-500 to-emerald-600 text-white rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 animate-pulse"
                 >
                   <Calendar className="w-6 h-6" />
                   <div className="text-left">
@@ -509,8 +509,7 @@ export default function TarjetaInvitation({
                     <p className="text-amber-900 font-semibold">Damas 💃</p>
                     <ul className="text-gray-700 space-y-1">
                       <li>
-                        <span className="text-amber-700">•</span>Vestido largo
-                        que grite *realeza*.
+                        <span className="text-amber-700">•</span>Vestido largo o corto, tú decides. Lo importante es que te sientas como una reina.
                       </li>
                       <li>
                         <span className="text-amber-700">•</span>Colores

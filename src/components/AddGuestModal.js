@@ -211,6 +211,10 @@ export default function AddGuestModal({ onClose, onAddGuest, eventId }) {
               <option value="">Seleccione un tipo</option>
               <option value="principal">Principal</option>
               <option value="familiar">Familiar</option>
+              <option value="familia novio">Familia Novio</option>
+              <option value="familia novia">Familia Novia</option>
+              <option value="amigo novio">Amigo Novio</option>
+              <option value="amigo novia">Amigo Novia</option>
               <option value="amigo">Amigo</option>
               <option value="proveedor">Proveedor</option>
             </select>

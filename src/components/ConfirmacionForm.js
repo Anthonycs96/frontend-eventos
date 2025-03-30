@@ -166,7 +166,7 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
         } catch (err) {
             setIsSubmitted(false)
             let mensaje = "Hubo un error al confirmar tu asistencia."
-            
+
             if (err.response) {
                 switch (err.response.status) {
                     case 400:
@@ -190,7 +190,7 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                         setErrorType("server")
                 }
             }
-            
+
             setErrorMessage(mensaje)
             console.error("Error al enviar el formulario:", err)
         } finally {
@@ -236,20 +236,18 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
 
             {/* Mensaje de estado o error */}
             {(errorMessage || isDeadlinePassed) && (
-                <div className={`p-4 rounded-lg ${
-                    errorType === "validation" ? "bg-amber-50 border border-amber-200" :
+                <div className={`p-4 rounded-lg ${errorType === "validation" ? "bg-amber-50 border border-amber-200" :
                     errorType === "server" ? "bg-red-50 border border-red-200" :
-                    "bg-amber-50 border border-amber-200"
-                }`}>
+                        "bg-amber-50 border border-amber-200"
+                    }`}>
                     <div className="flex items-center gap-2">
                         {errorType === "server" ? (
                             <XCircle className="text-red-500 w-5 h-5" />
                         ) : (
                             <AlertCircle className="text-amber-500 w-5 h-5" />
                         )}
-                        <p className={`text-sm ${
-                            errorType === "server" ? "text-red-700" : "text-amber-700"
-                        }`}>
+                        <p className={`text-sm ${errorType === "server" ? "text-red-700" : "text-amber-700"
+                            }`}>
                             {errorMessage || `La fecha límite para confirmar era: ${deadlineDate}`}
                         </p>
                     </div>
@@ -266,19 +264,16 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                         <button
                             type="button"
                             onClick={() => setValue("willAttend", "true")}
-                            className={`p-4 rounded-lg border-2 transition-all duration-300 ${
-                                willAttend === "true"
-                                    ? "border-emerald-500 bg-emerald-50"
-                                    : "border-gray-200 hover:border-emerald-200"
-                            }`}
+                            className={`p-4 rounded-lg border-2 transition-all duration-300 ${willAttend === "true"
+                                ? "border-emerald-500 bg-emerald-50"
+                                : "border-gray-200 hover:border-emerald-200"
+                                }`}
                         >
                             <div className="flex flex-col items-center gap-2">
-                                <Check className={`w-8 h-8 ${
-                                    willAttend === "true" ? "text-emerald-500" : "text-gray-400"
-                                }`} />
-                                <span className={`font-medium ${
-                                    willAttend === "true" ? "text-emerald-700" : "text-gray-600"
-                                }`}>
+                                <Check className={`w-8 h-8 ${willAttend === "true" ? "text-emerald-500" : "text-gray-400"
+                                    }`} />
+                                <span className={`font-medium ${willAttend === "true" ? "text-emerald-700" : "text-gray-600"
+                                    }`}>
                                     ¡Sí, asistiré!
                                 </span>
                             </div>
@@ -287,19 +282,16 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                         <button
                             type="button"
                             onClick={() => setValue("willAttend", "false")}
-                            className={`p-4 rounded-lg border-2 transition-all duration-300 ${
-                                willAttend === "false"
-                                    ? "border-red-500 bg-red-50"
-                                    : "border-gray-200 hover:border-red-200"
-                            }`}
+                            className={`p-4 rounded-lg border-2 transition-all duration-300 ${willAttend === "false"
+                                ? "border-red-500 bg-red-50"
+                                : "border-gray-200 hover:border-red-200"
+                                }`}
                         >
                             <div className="flex flex-col items-center gap-2">
-                                <X className={`w-8 h-8 ${
-                                    willAttend === "false" ? "text-red-500" : "text-gray-400"
-                                }`} />
-                                <span className={`font-medium ${
-                                    willAttend === "false" ? "text-red-700" : "text-gray-600"
-                                }`}>
+                                <X className={`w-8 h-8 ${willAttend === "false" ? "text-red-500" : "text-gray-400"
+                                    }`} />
+                                <span className={`font-medium ${willAttend === "false" ? "text-red-700" : "text-gray-600"
+                                    }`}>
                                     No podré asistir
                                 </span>
                             </div>
@@ -318,7 +310,7 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                                 <p className="text-sm text-amber-700">
                                     Puedes traer hasta {numberOfGuests} acompañante{numberOfGuests > 1 ? 's' : ''}
                                 </p>
-                                
+
                                 <div className="space-y-4">
                                     {companionFields.map((field, index) => (
                                         <div key={field.id} className="flex items-center gap-2">
@@ -336,7 +328,7 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                                             </button>
                                         </div>
                                     ))}
-                                    
+
                                     {companionFields.length < numberOfGuests && (
                                         <button
                                             type="button"
@@ -358,7 +350,7 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                             <p className="text-sm text-amber-700">
                                 Ayúdanos a crear la mejor playlist para la fiesta
                             </p>
-                            
+
                             <div className="space-y-4">
                                 {songFields.map((field, index) => (
                                     <div key={field.id} className="flex items-center gap-2">
@@ -376,7 +368,7 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                                         </button>
                                     </div>
                                 ))}
-                                
+
                                 <button
                                     type="button"
                                     onClick={() => appendSong({ song: "" })}
@@ -406,27 +398,39 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
                 <div className="pt-4">
                     <Button
                         type="submit"
-                        disabled={isSubmitting || isDeadlinePassed || !willAttend || isSubmitted}
-                        className={`w-full p-4 rounded-lg font-medium text-white transition-all duration-300
-                            ${isSubmitting ? 'bg-gray-400' : 
-                              isDeadlinePassed ? 'bg-gray-400' :
-                              isSubmitted ? 'bg-emerald-500' :
-                              'bg-amber-500 hover:bg-amber-600'}`}
+                        disabled={isSubmitting || isDeadlinePassed || !willAttend}
+                        className={`w-full p-4 rounded-lg border-2 transition-all duration-300
+                            ${isSubmitting ? 'border-gray-400 bg-gray-50' :
+                                isDeadlinePassed ? 'border-gray-400 bg-gray-50' :
+                                    willAttend === "true" ? 'border-emerald-500 bg-emerald-50 hover:bg-emerald-100' :
+                                        willAttend === "false" ? 'border-red-500 bg-red-50 hover:bg-red-100' :
+                                            'border-amber-200 bg-amber-50 hover:bg-amber-100'}`}
                     >
                         {isSubmitting ? (
                             <div className="flex items-center justify-center gap-2">
-                                <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                                <span>Enviando...</span>
+                                <div className="w-5 h-5 border-2 border-gray-400 border-t-transparent rounded-full animate-spin"></div>
+                                <span className="text-gray-600 font-medium">Enviando...</span>
                             </div>
                         ) : isDeadlinePassed ? (
-                            'Fecha límite expirada'
-                        ) : isSubmitted ? (
                             <div className="flex items-center justify-center gap-2">
-                                <Check className="w-5 h-5" />
-                                <span>¡Confirmación enviada!</span>
+                                <Clock className="w-6 h-6 text-gray-400" />
+                                <span className="text-gray-600 font-medium">Fecha límite expirada</span>
+                            </div>
+                        ) : willAttend === "true" ? (
+                            <div className="flex items-center justify-center gap-2">
+                                <Check className="w-6 h-6 text-emerald-500" />
+                                <span className="text-emerald-700 font-medium">Confirmar asistencia</span>
+                            </div>
+                        ) : willAttend === "false" ? (
+                            <div className="flex items-center justify-center gap-2">
+                                <X className="w-6 h-6 text-red-500" />
+                                <span className="text-red-700 font-medium">Confirmar inasistencia</span>
                             </div>
                         ) : (
-                            'Enviar confirmación'
+                            <div className="flex items-center justify-center gap-2">
+                                <AlertCircle className="w-6 h-6 text-amber-500" />
+                                <span className="text-amber-700 font-medium">Selecciona una opción</span>
+                            </div>
                         )}
                     </Button>
                 </div>
