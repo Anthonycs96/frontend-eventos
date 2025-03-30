@@ -18,6 +18,7 @@ export default function EditGuestModal({ guest, onClose, onSave }) {
     phone: guest?.phone ? guest.phone.substring(3) : "",
     countryCode: guest?.phone?.substring(0, 3) || "+51",
     type: guest?.type || "",
+    typeId: guest?.typeId || "",
     numberOfGuests: guest?.numberOfGuests ?? "",
   });
 
