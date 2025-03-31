@@ -76,6 +76,7 @@ export default function GuestList({
       guest.email?.toLowerCase().includes(searchLower) ||
       guest.phone?.toLowerCase().includes(searchLower) ||
       guest.type?.toLowerCase().includes(searchLower) ||
+      guest.invitadoDe?.toLowerCase().includes(searchLower) ||
       statusTranslated.includes(searchLower)
     );
   });
@@ -104,10 +105,10 @@ export default function GuestList({
               <TableHead className="font-bold">Teléfono</TableHead>
               <TableHead className="font-bold">Tipo</TableHead>
               <TableHead className="font-bold whitespace-nowrap">
-              Invitados
+                Invitados
               </TableHead>
               <TableHead className="font-bold whitespace-nowrap">
-              Nombres Invitados
+                Nombres Invitados
               </TableHead>
               <TableHead className="font-bold">PlayList</TableHead>
               <TableHead className="font-bold">Mensaje</TableHead>
@@ -141,12 +142,14 @@ export default function GuestList({
                   <TableCell>
                     {guest.numberOfGuests !== null ? guest.numberOfGuests : 0}
                   </TableCell>
-                  <TableCell style={{
+                  <TableCell
+                    style={{
                       maxWidth: "200px",
                       overflow: "hidden",
                       whiteSpace: "nowrap",
                       textOverflow: "ellipsis",
-                    }}>
+                    }}
+                  >
                     {Array.isArray(guest.additionalGuestNames) &&
                     guest.additionalGuestNames.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
@@ -164,12 +167,14 @@ export default function GuestList({
                     )}
                   </TableCell>
 
-                  <TableCell style={{
+                  <TableCell
+                    style={{
                       maxWidth: "200px",
                       overflow: "hidden",
                       whiteSpace: "nowrap",
                       textOverflow: "ellipsis",
-                    }}>
+                    }}
+                  >
                     {Array.isArray(guest.suggestedSongs) &&
                     guest.suggestedSongs.length > 0 ? (
                       <div className="flex flex-wrap gap-2">
@@ -356,9 +361,7 @@ export default function GuestList({
                     </div>
                   </div>
                   <div className="text-sm">
-                    <span className="font-medium text-gray-700">
-                    PlayList:
-                    </span>
+                    <span className="font-medium text-gray-700">PlayList:</span>
                     <div className="mt-1">
                       {Array.isArray(guest.suggestedSongs) &&
                       guest.suggestedSongs.length > 0 ? (
@@ -378,10 +381,16 @@ export default function GuestList({
                     </div>
                   </div>
                   <div className="text-sm">
-                    <span className="font-medium text-gray-700">Mensaje Personal:</span>
+                    <span className="font-medium text-gray-700">
+                      Mensaje Personal:
+                    </span>
                     <div className="mt-1 bg-gray-50 rounded-md p-2 max-h-24 overflow-y-auto">
                       <p className="text-gray-600 text-sm break-words">
-                        {guest.personalMessage ? guest.personalMessage : <span className="text-gray-500 italic">Ninguno</span>}
+                        {guest.personalMessage ? (
+                          guest.personalMessage
+                        ) : (
+                          <span className="text-gray-500 italic">Ninguno</span>
+                        )}
                       </p>
                     </div>
                   </div>
