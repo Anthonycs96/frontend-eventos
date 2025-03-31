@@ -130,6 +130,17 @@ export default function StatsModal({ isOpen, onClose, stats }) {
                     <h4 className="text-sm sm:text-base font-semibold text-gray-700 mb-2">Resumen de Acompañantes</h4>
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
                         <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm">
+                            <p className="text-xs sm:text-sm text-gray-600">total invitados + acompañantes</p>
+                            <p className="text-lg sm:text-xl font-bold text-gray-800">{stats.totalInvited}</p>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div className="mt-2 sm:mt-4 p-2 sm:p-4 bg-gray-50 rounded-lg">
+                    <h4 className="text-sm sm:text-base font-semibold text-gray-700 mb-2">Resumen de Acompañantes</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+                        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm">
                             <p className="text-xs sm:text-sm text-gray-600">Acompañantes Pendientes</p>
                             <p className="text-lg sm:text-xl font-bold text-gray-800">{stats.totalPendingAccompanying}</p>
                         </div>
@@ -137,6 +148,21 @@ export default function StatsModal({ isOpen, onClose, stats }) {
                             <p className="text-xs sm:text-sm text-gray-600">Total Pendientes + Acompañantes</p>
                             <p className="text-lg sm:text-xl font-bold text-gray-800">{stats.totalPendingWithAccompanying}</p>
                         </div>
+
+                    </div>
+                </div>
+                <div className="mt-2 sm:mt-4 p-2 sm:p-4 bg-gray-50 rounded-lg">
+                    <h4 className="text-sm sm:text-base font-semibold text-gray-700 mb-2">Resumen de confirmados</h4>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-4">
+                        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm">
+                            <p className="text-xs sm:text-sm text-gray-600">Acompañantes Confirmados</p>
+                            <p className="text-lg sm:text-xl font-bold text-gray-800">{stats.totalConfirmedAccompanying}</p>
+                        </div>
+                        <div className="bg-white p-3 sm:p-4 rounded-lg shadow-sm">
+                            <p className="text-xs sm:text-sm text-gray-600">Total Confirmados + Acompañantes</p>
+                            <p className="text-lg sm:text-xl font-bold text-gray-800">{stats.totalConfirmedWithAccompanying}</p>
+                        </div>
+
                     </div>
                 </div>
             </DialogContent>
