@@ -133,3 +133,16 @@ body {
 .bg-light-champagne {
   background-color: rgb(var(--light-champagne));
 }
+
+/* Agregar estas clases */
+.form-input-transition {
+  @apply transition-all duration-300 ease-in-out;
+}
+
+.form-section-hover {
+  @apply hover:shadow-md transition-shadow duration-300;
+}
+
+.form-helper-text {
+  @apply text-sm text-amber-600 mt-1;
+}
