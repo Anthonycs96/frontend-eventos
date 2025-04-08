@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo, memo } from "react";
+import { exportToExcel } from "@/utils/excelExport";
 import {
   Table,
   TableBody,
@@ -25,7 +26,6 @@ import {
   CheckCircle,
   Download,
 } from "lucide-react";
-import { exportToExcel } from "@/utils/excelExport";
 
 export default function GuestList({
   guests,
@@ -37,25 +37,9 @@ export default function GuestList({
 }) {
   const [expandedGuest, setExpandedGuest] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [isExporting, setIsExporting] = useState(false);
 
   const toggleExpand = (guestId) => {
     setExpandedGuest(expandedGuest === guestId ? null : guestId);
-  };
-
-  const handleExportToExcel = async () => {
-    try {
-      setIsExporting(true);
-      await exportToExcel(
-        guests,
-        `lista-invitados-${new Date().toISOString().split("T")[0]}`
-      );
-    } catch (error) {
-      console.error("Error al exportar:", error);
-      // Aquí podrías mostrar un toast o notificación de error
-    } finally {
-      setIsExporting(false);
-    }
   };
 
   const statusTranslations = {
@@ -65,9 +49,9 @@ export default function GuestList({
   };
 
   const statusColors = {
-    confirmed: "bg-[rgb(var(--success))] text-white",
-    pending: "bg-[rgb(var(--warning))] text-black",
-    declined: "bg-[rgb(var(--error))] text-white",
+    confirmed: "bg-green-500 text-white",
+    pending: "bg-yellow-500 text-white",
+    declined: "bg-red-500 text-white",
   };
 
   const typeIcons = {
@@ -78,10 +62,10 @@ export default function GuestList({
   };
 
   const typeColors = {
-    amigos: "bg-[rgb(var(--info))/0.1] text-[rgb(var(--info))]",
-    principal: "bg-[rgb(var(--gold))/0.1] text-[rgb(var(--gold))]",
-    familia: "bg-[rgb(var(--success))/0.1] text-[rgb(var(--success))]",
-    proveedores: "bg-[rgb(var(--warning))/0.1] text-[rgb(var(--warning))]",
+    amigos: "bg-blue-100 text-blue-800",
+    principal: "bg-purple-100 text-purple-800",
+    familia: "bg-pink-100 text-pink-800",
+    proveedores: "bg-orange-100 text-orange-800",
   };
 
   const memoizedFilteredGuests = useMemo(() => {
@@ -100,6 +84,13 @@ export default function GuestList({
       );
     });
   }, [guests, searchTerm]);
+
+  const handleExportToExcel = () => {
+    exportToExcel(
+      guests,
+      `lista-invitados-${new Date().toISOString().split("T")[0]}`
+    );
+  };
 
   const GuestTableRow = memo(
     ({ guest, onEdit, onDelete, onSendCustomMessage }) => {
@@ -350,7 +341,7 @@ export default function GuestList({
                     {guest.personalMessage ? (
                       guest.personalMessage
                     ) : (
-                      <span className="text-gray-500 italic">Ninguno</span>
+                      <span className="text-gray-500 italic">Ningunos</span>
                     )}
                   </p>
                 </div>
@@ -398,57 +389,36 @@ export default function GuestList({
 
   return (
     <div className="space-y-6">
-      {/* Buscador */}
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="Buscar..."
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full pl-10 pr-4 py-2 rounded-lg
-           bg-[rgb(var(--card-background))]
-           border border-[rgb(var(--card-border))]
-           text-[rgb(var(--foreground))]
-           placeholder-[rgb(var(--foreground))/50]
-           focus:ring-2 focus:ring-[rgb(var(--info))]
-           focus:border-transparent"
-        />
-        <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
-      </div>
+      {/* Barra superior con buscador y botón de exportar */}
+      <div className="flex flex-col sm:flex-row gap-4 items-center">
+        {/* Buscador */}
+        <div className="relative flex-1 w-full">
+          <input
+            type="text"
+            placeholder="Buscar por nombre, email, teléfono, tipo o estado..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full pl-10 pr-4 py-2 rounded-lg border border-gray-200 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          />
+          <Search className="h-5 w-5 text-gray-400 absolute left-3 top-1/2 transform -translate-y-1/2" />
+        </div>
 
-      {/* Botón de exportar */}
-      <div className="flex justify-end">
+        {/* Botón de exportar */}
         <Button
           onClick={handleExportToExcel}
-          disabled={isExporting || guests.length === 0}
-          className={`flex items-center gap-2 ${
-            isExporting
-              ? "bg-gray-400 cursor-not-allowed"
-              : "bg-green-600 hover:bg-green-700"
-          } text-white px-4 py-2 rounded-lg transition-colors duration-200`}
+          className="flex items-center gap-2 bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors duration-200"
         >
-          {isExporting ? (
-            <>
-              <div className="animate-spin rounded-full h-5 w-5 border-2 border-white border-t-transparent" />
-              <span>Exportando...</span>
-            </>
-          ) : (
-            <>
-              <Download className="h-5 w-5" />
-              <span>Exportar a Excel</span>
-            </>
-          )}
+          <Download className="h-5 w-5" />
+          <span>Exportar a Excel</span>
         </Button>
       </div>
 
       {/* Tabla para pantallas grandes */}
-      <div className="hidden md:block overflow-x-auto rounded-lg border border-[rgb(var(--card-border))]">
+      <div className="hidden md:block overflow-x-auto rounded-lg shadow-md">
         <Table>
           <TableHeader>
-            <TableRow className="bg-[rgb(var(--table-header))]">
-              <TableHead className="font-bold text-[rgb(var(--foreground))]">
-                Nombre
-              </TableHead>
+            <TableRow className="bg-gray-100">
+              <TableHead className="font-bold">Nombre</TableHead>
               <TableHead className="font-bold">Email</TableHead>
               <TableHead className="font-bold">Teléfono</TableHead>
               <TableHead className="font-bold">Tipo</TableHead>
@@ -496,24 +466,20 @@ export default function GuestList({
       <div className="md:hidden space-y-3">
         {memoizedFilteredGuests.length > 0 ? (
           memoizedFilteredGuests.map((guest) => (
-            <div
+            <GuestCard
               key={guest.id}
-              className="bg-[rgb(var(--card-background))] border border-[rgb(var(--card-border))] rounded-xl shadow-sm"
-            >
-              <GuestCard
-                guest={guest}
-                isExpanded={expandedGuest === guest.id}
-                onToggle={toggleExpand}
-                onEdit={onEdit}
-                onDelete={onDelete}
-                onSendCustomMessage={onSendCustomMessage}
-                onViewGuest={onViewGuest}
-              />
-            </div>
+              guest={guest}
+              isExpanded={expandedGuest === guest.id}
+              onToggle={toggleExpand}
+              onEdit={onEdit}
+              onDelete={onDelete}
+              onSendCustomMessage={onSendCustomMessage}
+              onViewGuest={onViewGuest}
+            />
           ))
         ) : (
-          <div className="text-center py-8 px-4 bg-[rgb(var(--card-background))] border border-[rgb(var(--card-border))] rounded-lg">
-            <div className="text-[rgb(var(--foreground))] italic">
+          <div className="text-center py-8 px-4 rounded-lg bg-gray-50 border border-gray-100">
+            <div className="text-gray-500 italic">
               {searchTerm
                 ? "No se encontraron invitados que coincidan con la búsqueda"
                 : "No se han agregado invitados aún. ¡Invita a alguien para comenzar!"}
