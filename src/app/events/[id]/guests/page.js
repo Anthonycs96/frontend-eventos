@@ -232,21 +232,21 @@ export default function GuestManagement() {
     if (error) return <div>Error: {error}</div>;
 
     return (
-        <div className="min-h-screen bg-gray-50">
+        <div className="min-h-screen bg-[var(--background)]">
             <div className="container mx-auto px-4 py-4 max-w-[100vw] overflow-x-hidden">
                 {/* Header con breadcrumb y título */}
                 <div className="mb-6">
                     <div className="flex items-center text-sm text-gray-500 mb-2 overflow-x-auto whitespace-nowrap pb-2">
-                        <Link href="/dashboard" className="hover:text-blue-600 flex-shrink-0">
+                        <Link href="/dashboard" className="hover:text-[var(--text-primary)] flex-shrink-0">
                             Dashboard
                         </Link>
 
                         <ChevronRight className="h-4 w-4 mx-2 flex-shrink-0" />
-                        <span className="text-gray-900 truncate">
+                        <span className="text-[var(--text-primary)] truncate">
                             {eventName || "Cargando..."}
                         </span>
                     </div>
-                    <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+                    <h1 className="text-2xl sm:text-3xl font-bold text-[var(--text-primary)]">
                         Gestión de Invitados
                     </h1>
                 </div>
@@ -273,7 +273,7 @@ export default function GuestManagement() {
                             className={`flex items-center justify-center gap-2 px-6 py-3 rounded-lg transition-all duration-200 shadow-md hover:shadow-lg ${isWhatsAppConnected
                                 ? 'bg-gradient-to-r from-green-500 to-green-600 text-white hover:from-green-600 hover:to-green-700'
                                 : 'bg-gradient-to-r from-gray-500 to-gray-600 text-white hover:from-gray-600 hover:to-gray-700'
-                            }`}
+                                }`}
                         >
                             <MessageCircle className="h-5 w-5" />
                             <span className="font-medium">{isWhatsAppConnected ? "WhatsApp" : "Conectar"}</span>

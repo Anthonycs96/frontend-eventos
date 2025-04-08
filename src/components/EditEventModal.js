@@ -27,6 +27,28 @@ export default function EditEventModal({ event, onClose }) {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [loadingImages, setLoadingImages] = useState({});
 
+    const [isDarkMode, setIsDarkMode] = useState(() => {
+        return window.matchMedia('(prefers-color-scheme: dark)').matches;
+    });
+
+    useEffect(() => {
+        const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+        const listener = (e) => {
+            setIsDarkMode(e.matches);
+        };
+        mediaQuery.addListener(listener);
+        return () => mediaQuery.removeListener(listener);
+    }, []);
+
+    const toggleDarkMode = () => {
+        const html = document.documentElement;
+        if (html.classList.contains('dark')) {
+            html.classList.remove('dark');
+        } else {
+            html.classList.add('dark');
+        }
+    };
+
     useEffect(() => {
         if (event) {
             setFormData({
@@ -183,10 +205,9 @@ export default function EditEventModal({ event, onClose }) {
             const response = await API.put(`/events/${event.id}`, formData, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-            
+
             // Emitir evento de actualización
             socket.emit("update_Guest", response.data);
-
 
             toast.success("Evento actualizado exitosamente");
             onClose();
@@ -204,13 +225,23 @@ export default function EditEventModal({ event, onClose }) {
             <DialogContent className="sm:max-w-[90%] md:max-w-[700px] max-h-[90vh] bg-white overflow-y-auto">
                 <DialogHeader>
                     <DialogTitle>Editar Evento</DialogTitle>
+                    <div className="flex justify-end mb-4">
+                        <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={toggleDarkMode}
+                            className="text-sm"
+                        >
+                            {isDarkMode ? 'Modo Claro' : 'Modo Oscuro'}
+                        </Button>
+                    </div>
                 </DialogHeader>
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Sección de campos de texto */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Nombre</label>
+                                <label className="block text-sm font-medium text-[var(--text-primary)]">Nombre</label>
                                 <input
                                     type="text"
                                     name="name"
@@ -227,13 +258,13 @@ export default function EditEventModal({ event, onClose }) {
                                     name="description"
                                     value={formData.description}
                                     onChange={handleChange}
-                                    className={errors.description ? 'border-red-500' : ''}
+                                    className={`w-full mt-1 p-2 border rounded-lg ${errors.description ? 'border-red-500' : ''}`}
                                 />
                                 {errors.description && <p className="text-red-500 text-xs mt-1">{errors.description}</p>}
                             </div>
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Fecha</label>
+                                    <label className="block text-sm font-medium text-[var(--text-primary)]">Fecha</label>
                                     <input
                                         type="date"
                                         name="date"
@@ -245,7 +276,7 @@ export default function EditEventModal({ event, onClose }) {
                                     {errors.date && <p className="text-red-500 text-xs mt-1">{errors.date}</p>}
                                 </div>
                                 <div>
-                                    <label className="block text-sm font-medium text-gray-700">Hora</label>
+                                    <label className="block text-sm font-medium text-[var(--text-primary)]">Hora</label>
                                     <input
                                         type="time"
                                         name="time"
@@ -259,7 +290,7 @@ export default function EditEventModal({ event, onClose }) {
                         </div>
                         <div className="space-y-4">
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Ubicación</label>
+                                <label className="block text-sm font-medium text-[var(--text-primary)]">Ubicación</label>
                                 <input
                                     type="text"
                                     name="location"
@@ -270,7 +301,7 @@ export default function EditEventModal({ event, onClose }) {
                                 {errors.location && <p className="text-red-500 text-xs mt-1">{errors.location}</p>}
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Capacidad</label>
+                                <label className="block text-sm font-medium text-[var(--text-primary)]">Capacidad</label>
                                 <input
                                     type="number"
                                     name="capacity"
@@ -282,7 +313,7 @@ export default function EditEventModal({ event, onClose }) {
                                 {errors.capacity && <p className="text-red-500 text-xs mt-1">{errors.capacity}</p>}
                             </div>
                             <div>
-                                <label className="block text-sm font-medium text-gray-700">Tipo</label>
+                                <label className="block text-sm font-medium text-[var(--text-primary)]">Tipo</label>
                                 <select
                                     name="type"
                                     className="w-full mt-1 p-2 border rounded-lg"
@@ -361,9 +392,8 @@ export default function EditEventModal({ event, onClose }) {
                                 <div key={index} className="flex space-x-2">
                                     <input
                                         type="text"
-                                        className={`flex-1 p-2 border rounded-lg ${
-                                            errors[`secondaryImage${index}`] ? 'border-red-500' : ''
-                                        }`}
+                                        className={`flex-1 p-2 border rounded-lg ${errors[`secondaryImage${index}`] ? 'border-red-500' : ''
+                                            }`}
                                         value={url}
                                         onChange={(e) => handleSecondaryImagesChange(index, e.target.value)}
                                     />
@@ -393,8 +423,8 @@ export default function EditEventModal({ event, onClose }) {
                     {formData.secondaryImages.length > 0 && (
                         <div className="mt-4">
                             <Label>Vista previa de imágenes secundarias</Label>
-                            <ImprovedCarousel 
-                                images={formData.secondaryImages} 
+                            <ImprovedCarousel
+                                images={formData.secondaryImages}
                                 onImageLoad={(index) => handleImageLoad(`secondary${index}`)}
                                 onImageError={(index) => handleImageError(`secondary${index}`)}
                             />
@@ -405,8 +435,8 @@ export default function EditEventModal({ event, onClose }) {
                         <Button type="button" variant="outline" onClick={onClose}>
                             Cancelar
                         </Button>
-                        <Button 
-                            type="submit" 
+                        <Button
+                            type="submit"
                             disabled={isSubmitting}
                             className={`${isSubmitting ? 'opacity-50 cursor-not-allowed' : ''}`}
                         >

@@ -46,14 +46,8 @@ export default function EventCard({ event, onDelete, stats }) {
         <>
             <Card className="w-full mb-10 md:mb-10 md:max-w lg:max-w mx-auto shadow-md hover:shadow-xl rounded-2xl overflow-hidden transition-all duration-300 relative group">
                 {/* Imagen de fondo con gradiente */}
-                <div className="relative h-16 sm:h-16 overflow-hidden">
-                    <Image
-                        src={event.imageUrl || defaultImageUrl}
-                        alt={event.name}
-                        layout="fill"
-                        objectFit="cover"
-                        className="transition-transform duration-300 group-hover:scale-110"
-                    />
+                <div className="relative h-16 sm:h-16 overflow-hidden rounded-lg bg-[var(--background)]">
+
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 to-black/10"></div>
                     <div className="absolute top-4 right-4 flex space-x-2">
                         <Button
@@ -81,56 +75,56 @@ export default function EventCard({ event, onDelete, stats }) {
                 <div className="p-5 space-y-4">
                     {/* Título y fecha */}
                     <div>
-                        <h3 className="text-xl font-semibold text-gray-800 mb-2 flex items-center gap-2">
+                        <h3 className="text-xl font-semibold text-[var(--text-primary)] mb-2 flex items-center gap-2">
                             <span role="img" aria-label="Celebration emoji">🎉</span>
                             {event.name}
                         </h3>
-                        <div className="flex items-center text-sm text-gray-600">
+                        <div className="flex items-center text-sm text-[var(--text-secondary)]">
                             <Calendar className="mr-2 h-4 w-4 text-blue-500" />
                             {new Date(event.date).toLocaleDateString("es-ES", { year: "numeric", month: "long", day: "numeric" })}
                         </div>
                     </div>
 
                     {/* Ubicación */}
-                    <div className="flex items-center text-sm text-gray-600 bg-gray-50 rounded-lg p-2">
+                    <div className="flex items-center text-sm text-[var(--text-secondary)] bg-[var(--background)] rounded-lg p-2">
                         <MapPin className="mr-2 h-4 w-4 text-green-500" />
                         <span className="truncate">{event.location}</span>
                     </div>
 
                     {/* Estadísticas */}
                     <div className="grid grid-cols-4 gap-1 pt-2">
-                        <div className="flex flex-col items-center p-2 bg-blue-50 rounded-lg">
-                            <span className="text-lg font-semibold text-blue-600">
+                        <div className="flex flex-col items-center p-2 bg-[var(--card-background)] rounded-lg border border-[var(--card-border)]">
+                            <span className="text-lg font-semibold text-[var(--text-primary)]">
                                 {stats?.totalConfirmedWithAccompanying || 0}
                             </span>
-                            <span className="text-xs text-blue-600">Total confirmados</span>
+                            <span className="text-xs text-[var(--text-primary)]">Total confirmados</span>
                         </div>
-                        <div className="flex flex-col items-center p-2 bg-yellow-50 rounded-lg">
-                            <span className="text-lg font-semibold text-yellow-600">
+                        <div className="flex flex-col items-center p-2 bg-[var(--card-background)] rounded-lg border border-[var(--card-border)]">
+                            <span className="text-lg font-semibold text-[var(--text-primary)]">
                                 {stats?.totalPendingWithAccompanying || 0}
                             </span>
-                            <span className="text-xs text-yellow-600">Total pendientes</span>
+                            <span className="text-xs text-[var(--text-primary)]">Total pendientes</span>
                         </div>
-                        <div className="flex flex-col items-center p-2 bg-red-50 rounded-lg">
-                            <span className="text-lg font-semibold text-red-600">
+                        <div className="flex flex-col items-center p-2 bg-[var(--card-background)] rounded-lg border border-[var(--card-border)]">
+                            <span className="text-lg font-semibold text-[var(--text-primary)]">
                                 {stats?.totalDeclinedWithAccompanying || 0}
                             </span>
-                            <span className="text-xs text-red-600">Total rechazados</span>
+                            <span className="text-xs text-[var(--text-primary)]">Total rechazados</span>
                         </div>
-                        <div className="flex flex-col items-center p-2 bg-green-50 rounded-lg">
-                            <span className="text-lg font-semibold text-green-600">
+                        <div className="flex flex-col items-center p-2 bg-[var(--card-background)] rounded-lg border border-[var(--card-border)]">
+                            <span className="text-lg font-semibold text-[var(--text-primary)]">
                                 {stats?.totalGuests || 0}
                             </span>
-                            <span className="text-xs text-green-600">Total invitados</span>
+                            <span className="text-xs text-[var(--text-primary)]">Total invitados</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Botones de acción */}
-                <div className="p-4 bg-gray-50 flex gap-2">
+                <div className="p-4 bg-[var(--background)] rounded-lg flex gap-2">
                     <Button
                         variant="ghost"
-                        className={`flex-1 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-600 rounded-xl transition-all duration-200 ${isNavigating ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
+                        className={`flex-1 rounded-xl transition-all duration-200 ${isNavigating ? 'opacity-50 cursor-not-allowed' : 'hover:scale-105'
                             }`}
                         onClick={() => handleNavigation(`/events/${event.id}/guests`)}
                         disabled={isNavigating}
@@ -143,7 +137,7 @@ export default function EventCard({ event, onDelete, stats }) {
 
                     <Button
                         variant="ghost"
-                        className={`flex-1 bg-white hover:bg-blue-50 text-gray-700 hover:text-blue-600 rounded-xl transition-all duration-200 opacity-50 cursor-not-allowed`}
+                        className={`flex-1 rounded-xl transition-all duration-200 opacity-50 cursor-not-allowed`}
                         onClick={() => { }}
                         disabled={true}
                     >

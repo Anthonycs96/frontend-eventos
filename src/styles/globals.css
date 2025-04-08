@@ -1,10 +1,22 @@
-@tailwind base; 
+@tailwind base;
 @tailwind components;
 @tailwind utilities;
 
+/* Tema claro (default) */
 :root {
   --background: #f1f5f9;
+  --foreground: #111827;
   --background-secondary: #ffffff;
+
+  /* Tonos de texto */
+  --text-muted: #6b7280;
+  --text-primary: #000000;
+  --text-secondary: #4b5563;
+  --text-success: #10b981;
+  --text-warning: #f59e0b;
+  --text-error: #ef4444;
+  --text-inverted: #ffffff;
+
   /* Botón primario */
   --button: #3b82f6;
   --button-hover: #2563eb;
@@ -29,7 +41,7 @@
   --button-danger: #ef4444;
   --button-danger-hover: #dc2626;
   --button-danger-text: #ffffff;
-  --foreground: #171717;
+
   --primary: #2563eb;
   --primary-foreground: #ffffff;
   --secondary: #f3f4f6;
@@ -44,71 +56,175 @@
   --input: #e5e7eb;
   --ring: #2563eb;
   --radius: 0.5rem;
+
+  /* Colores personalizados */
+  --gold: 212, 175, 55;
+  --champagne: 247, 231, 206;
+  --light-champagne: 253, 248, 245;
+  --olive-accent: 138, 154, 91;
+}
+
+/* Tema oscuro */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #000000;
+    --foreground: #ffffff;
+    --background-secondary: #000000;
+
+    /* Estilos específicos para cards */
+    --card-background: #1a1a1a;
+    --card-border: #333333;
+    --card-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+    --card-hover: #262626;
+    --card-header: #262626;
+    --card-footer: #262626;
+    --card-text: #ffffff;
+    --card-text-muted: #999999;
+    --card-interactive: #333333;
+    --card-interactive-hover: #4d4d4d;
+
+    /* Tonos de texto */
+    --text-muted: #999999;
+    --text-primary: #ffffff;
+    --text-secondary: #cccccc;
+    --text-success: #00ff00;
+    --text-warning: #ffff00;
+    --text-error: #ff0000;
+    --text-inverted: #ffffff;
+
+    /* Botón primario */
+    --button: #333333;
+    --button-hover: #4d4d4d;
+    --button-text: #ffffff;
+
+    /* Botón secundario */
+    --button-secondary: #262626;
+    --button-secondary-hover: #333333;
+    --button-secondary-text: #ffffff;
+
+    /* Botón de éxito */
+    --button-success: #00ff00;
+    --button-success-hover: #00cc00;
+    --button-success-text: #000000;
+
+    /* Botón de advertencia */
+    --button-warning: #ffff00;
+    --button-warning-hover: #cccc00;
+    --button-warning-text: #000000;
+
+    /* Botón de error/destructivo */
+    --button-danger: #ff0000;
+    --button-danger-hover: #cc0000;
+    --button-danger-text: #000000;
+
+    --primary: #333333;
+    --primary-foreground: #ffffff;
+    --secondary: #262626;
+    --secondary-foreground: #ffffff;
+    --muted: #262626;
+    --muted-foreground: #999999;
+    --accent: #333333;
+    --accent-foreground: #ffffff;
+    --destructive: #ff0000;
+    --destructive-foreground: #000000;
+    --border: #333333;
+    --input: #262626;
+    --ring: #333333;
+
     /* Colores personalizados */
-    --gold: 212, 175, 55;
-    --champagne: 247, 231, 206;
-    --light-champagne: 253, 248, 245;
-    --olive-accent: 138, 154, 91;
+    --gold: 255, 215, 0;
+    --champagne: 255, 248, 220;
+    --light-champagne: 255, 250, 240;
+    --olive-accent: 128, 128, 0;
+  }
 }
 
-.dark {
-  --background: #1e1e1e;
-  --background-secondary: #111111;
-   /* Botón primario en dark */
-   --button: #111111;
-   --button-hover: #60a5fa;
-   --button-text: #ffffff;
- 
-   /* Botón secundario en dark */
-   --button-secondary: #374151;
-   --button-secondary-hover: #f3f4f6;
-   --button-secondary-text: #d1d5db;
- 
-   /* Botón de éxito en dark */
-   --button-success: #22c55e;
-   --button-success-hover: #16a34a;
-   --button-success-text: #ffffff;
- 
-   /* Botón de advertencia en dark */
-   --button-warning: #facc15;
-   --button-warning-hover: #eab308;
-   --button-warning-text: #111827;
- 
-   /* Botón de error/destructivo en dark */
-   --button-danger: #ef4444;
-   --button-danger-hover: #dc2626;
-   --button-danger-text: #ffffff;
-  --foreground: #f3f4f6;
-  --primary: #3b82f6;
-  --primary-foreground: #ffffff;
-  --secondary: #1f2937;
-  --secondary-foreground: #f3f4f6;
-  --muted: #1f2937;
-  --muted-foreground: #9ca3af;
-  --accent: #1f2937;
-  --accent-foreground: #f3f4f6;
-  --destructive: #dc2626;
-  --destructive-foreground: #ffffff;
-  --border: #374151;
-  --input: #374151;
-  --ring: #3b82f6;
-    /* Colores personalizados */
-    --gold: 212, 175, 55;
-    --champagne: 247, 231, 206;
-    --light-champagne: 253, 248, 245;
-    --olive-accent: 138, 154, 91;
+/* Estilos específicos para cards */
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: var(--card-background);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    color: var(--card-text);
+    transition: all 0.2s ease;
+  }
+
+  .card:hover {
+    background-color: var(--card-hover);
+    transform: translateY(-2px);
+  }
+
+  .card-header {
+    background-color: var(--card-header);
+    border-bottom: 1px solid var(--card-border);
+    padding: 1rem;
+  }
+
+  .card-footer {
+    background-color: var(--card-footer);
+    border-top: 1px solid var(--card-border);
+    padding: 1rem;
+  }
+
+  .card-text {
+    color: var(--card-text);
+  }
+
+  .card-text-muted {
+    color: var(--card-text-muted);
+  }
+
+  .card-interactive {
+    background-color: var(--card-interactive);
+    color: var(--card-text);
+    transition: background-color 0.2s ease;
+  }
+
+  .card-interactive:hover {
+    background-color: var(--card-interactive-hover);
+  }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* Mantener el contraste en elementos específicos */
+@media (prefers-color-scheme: dark) {
+  .text-primary {
+    color: var(--text-primary);
+  }
+  .text-secondary {
+    color: var(--text-secondary);
+  }
+  .text-muted {
+    color: var(--text-muted);
+  }
+  
+  .bg-primary {
+    background-color: var(--primary);
+  }
+  .bg-secondary {
+    background-color: var(--secondary);
+  }
+  
+  .border-primary {
+    border-color: var(--primary);
+  }
+  .border-secondary {
+    border-color: var(--secondary);
+  }
 }
 
+/* Aplicar colores base */
+@layer base {
+  body {
+    @apply bg-[rgb(var(--background))] text-[rgb(var(--foreground))];
+  }
+}
+
+/* Transiciones suaves */
 * {
-  border-color: var(--border);
+  @apply transition-colors duration-200;
 }
 
+/* Animaciones */
 .animate-fadeIn {
   animation: fadeIn 1.5s ease-in-out;
 }
@@ -134,7 +250,36 @@ body {
   background-color: rgb(var(--light-champagne));
 }
 
-/* Agregar estas clases */
+/* Clases de texto por tono */
+.text-muted {
+  color: var(--text-muted);
+}
+
+.text-primary {
+  color: var(--text-primary);
+}
+
+.text-secondary {
+  color: var(--text-secondary);
+}
+
+.text-success {
+  color: var(--text-success);
+}
+
+.text-warning {
+  color: var(--text-warning);
+}
+
+.text-error {
+  color: var(--text-error);
+}
+
+.text-inverted {
+  color: var(--text-inverted);
+}
+
+/* Clases utilitarias */
 .form-input-transition {
   @apply transition-all duration-300 ease-in-out;
 }
@@ -145,4 +290,4 @@ body {
 
 .form-helper-text {
   @apply text-sm text-amber-600 mt-1;
-} 
+}

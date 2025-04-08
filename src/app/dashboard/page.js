@@ -202,12 +202,12 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="min-h-screen bg-[rgb(var(--background))] text-[rgb(var(--foreground))]">
+        <div className="min-h-screen bg-[var(--background)] text-[var(--text-primary)]">
             <div className="container mx-auto px-4 py-8">
                 {/* Header con tema toggle */}
                 <div className="flex justify-between items-center mb-8">
                     <div className="flex items-center gap-4">
-                        <h1 className="text-3xl font-bold text-[rgb(var(--foreground))]">
+                        <h1 className="text-3xl font-bold text-[var(--text-primary)]">
                             Dashboard de Eventos
                         </h1>
                     </div>
