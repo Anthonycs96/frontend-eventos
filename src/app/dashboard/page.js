@@ -2,6 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
+import { Sun, Moon } from "lucide-react";
 import EventCard from "@/components/EventCard";
 import Statistics from "@/components/Statistics";
 import CreateEventModal from "@/components/CreateEventModal";
@@ -19,6 +21,7 @@ export default function Dashboard() {
     const [error, setError] = useState(null);
     const [stats, setStats] = useState({});
     const [isAuthenticating, setIsAuthenticating] = useState(true);
+    const { theme, setTheme } = useTheme();
 
     const router = useRouter();
 
@@ -199,50 +202,94 @@ export default function Dashboard() {
     };
 
     return (
-        <div className="container mx-auto px-4 py-8">
-            <div className="flex justify-between items-center mb-8">
-                <h1 className="text-3xl font-bold text-gray-800">Dashboard de Eventos</h1>
-                <Button
-                    onClick={handleLogout}
+        <div className="min-h-screen bg-[rgb(var(--background))] text-[rgb(var(--foreground))]">
+            <div className="container mx-auto px-4 py-8">
+                {/* Header con tema toggle */}
+                <div className="flex justify-between items-center mb-8">
+                    <div className="flex items-center gap-4">
+                        <h1 className="text-3xl font-bold text-[rgb(var(--foreground))]">
+                            Dashboard de Eventos
+                        </h1>
+                    </div>
+                    <Button
+                        onClick={handleLogout}
+                        className="bg-[rgb(var(--card-background))] 
+                                 text-[rgb(var(--foreground))]
+                                 border border-[rgb(var(--card-border))]
+                                 hover:bg-[rgb(var(--card-background))/80]"
+                    >
+                        Cerrar Sesión
+                    </Button>
+                </div>
 
-                >
-                    Cerrar Sesión
-                </Button>
+                {/* Estados de carga y error */}
+                {loading && (
+                    <p className="text-[rgb(var(--foreground))/60]">
+                        Cargando eventos...
+                    </p>
+                )}
+                {error && !loading && (
+                    <p className="text-[rgb(var(--error))] text-center">
+                        {error}
+                    </p>
+                )}
+
+                {/* Contenido principal */}
+                {!loading && !error && (
+                    <>
+                        <Statistics
+                            totalEvents={events.length}
+                            totalInvitations={totalInvitations}
+                            confirmedInvitations={confirmedInvitations}
+                        />
+
+                        {events.length > 0 ? (
+                            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
+                                {events.map((event) => (
+                                    <EventCard
+                                        key={event.uniqueKey}
+                                        event={event}
+                                        stats={stats?.[event.id]}
+                                        onDelete={() => deleteEvent(event.id)}
+                                        onEdit={handleEditEvent}
+                                    />
+                                ))}
+                            </div>
+                        ) : (
+                            <p className="text-center text-[rgb(var(--foreground))/60] mt-8">
+                                No hay eventos creados o compartidos contigo.
+                            </p>
+                        )}
+                    </>
+                )}
+
+                {/* Botón flotante de crear evento */}
+                <div className="fixed bottom-6 right-6 z-50">
+                    <Button
+                        onClick={() => setIsModalOpen(true)}
+                        className="rounded-full p-4 shadow-lg
+                                 bg-[rgb(var(--info))]
+                                 hover:bg-[rgb(var(--info))]/90
+                                 text-white"
+                    >
+                        Crear Evento
+                    </Button>
+                </div>
+
+                {/* Modales */}
+                {isModalOpen && (
+                    <CreateEventModal
+                        onClose={() => setIsModalOpen(false)}
+                        onCreateEvent={fetchEvents}
+                    />
+                )}
+                {editEvent && (
+                    <EditEventModal
+                        event={editEvent}
+                        onClose={() => setEditEvent(null)}
+                    />
+                )}
             </div>
-
-            {loading && <p className="text-gray-500">Cargando eventos...</p>}
-            {error && !loading && <p className="text-red-500 text-center">{error}</p>}
-
-            {!loading && !error && (
-                <>
-                    <Statistics totalEvents={events.length} totalInvitations={totalInvitations} confirmedInvitations={confirmedInvitations} />
-
-                    {events.length > 0 ? (
-                        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mt-8">
-                            {events.map((event) => (
-                                <EventCard
-                                    key={event.uniqueKey}
-                                    event={event}
-                                    stats={stats?.[event.id]}
-                                    onDelete={() => deleteEvent(event.id)}
-                                    onEdit={handleEditEvent}
-                                />
-                            ))}
-                        </div>
-                    ) : (
-                        <p className="text-center text-gray-500 mt-8">No hay eventos creados o compartidos contigo.</p>
-                    )}
-                </>
-            )}
-
-            <div className="fixed bottom-6 right-6 z-50">
-                <Button onClick={() => setIsModalOpen(true)} className="rounded-full p-4 shadow-lg">
-                    Crear Evento
-                </Button>
-            </div>
-
-            {isModalOpen && <CreateEventModal onClose={() => setIsModalOpen(false)} onCreateEvent={fetchEvents} />}
-            {editEvent && <EditEventModal event={editEvent} onClose={() => setEditEvent(null)} />}
         </div>
     );
 }

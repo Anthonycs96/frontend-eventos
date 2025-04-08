@@ -1,4 +1,4 @@
-@tailwind base;
+@tailwind base; 
 @tailwind components;
 @tailwind utilities;
 
@@ -145,4 +145,4 @@ body {
 
 .form-helper-text {
   @apply text-sm text-amber-600 mt-1;
-}
+} 
