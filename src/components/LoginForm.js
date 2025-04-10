@@ -80,7 +80,8 @@ export default function Login() {
 
     return (
         <div className="bg-transparent min-h-screen flex flex-col items-center justify-center bg-[var(--background)] dark:bg-[var(--background-secondary)] p-4 sm:p-6 lg:p-8">
-            <div className="w-full max-w-[420px] space-y-6">
+            <div className="w-full max-w-[420px] space-y-6 border-0 sm:border border-gray-300 rounded-lg shadow-lg p-6 sm:p-8">
+
                 {/* Logo o Imagen */}
 
                 <div className="bg-[var(--background)] dark:bg-[var(--background-secondary)] p-6 sm:p-8 rounded-2xl shadow-lg ">
@@ -166,7 +167,7 @@ export default function Login() {
                                     <div className="w-full border-t border-gray-200"></div>
                                 </div>
                                 <div className="relative flex justify-center text-sm">
-                                    <span className="px-2 bg-white text-gray-500">o</span>
+                                    <span className="px-2 bg-[var(--background)] text-gray-500">o</span>
                                 </div>
                             </div>
 

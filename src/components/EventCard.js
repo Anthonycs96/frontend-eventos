@@ -93,31 +93,39 @@ export default function EventCard({ event, onDelete, stats }) {
 
                     {/* Estadísticas */}
                     <div className="grid grid-cols-4 gap-1 pt-2">
+                        {/* Total Confirmados con acompañantes */}
                         <div className="flex flex-col items-center p-2 bg-[var(--card-background)] rounded-lg border border-[var(--card-border)]">
                             <span className="text-lg font-semibold text-[var(--text-primary)]">
                                 {stats?.totalConfirmedWithAccompanying || 0}
                             </span>
                             <span className="text-xs text-[var(--text-primary)]">Total confirmados</span>
                         </div>
+
+                        {/* Total Pendientes con acompañantes */}
                         <div className="flex flex-col items-center p-2 bg-[var(--card-background)] rounded-lg border border-[var(--card-border)]">
                             <span className="text-lg font-semibold text-[var(--text-primary)]">
                                 {stats?.totalPendingWithAccompanying || 0}
                             </span>
                             <span className="text-xs text-[var(--text-primary)]">Total pendientes</span>
                         </div>
+
+                        {/* Total Rechazados con acompañantes */}
                         <div className="flex flex-col items-center p-2 bg-[var(--card-background)] rounded-lg border border-[var(--card-border)]">
                             <span className="text-lg font-semibold text-[var(--text-primary)]">
                                 {stats?.totalDeclinedWithAccompanying || 0}
                             </span>
                             <span className="text-xs text-[var(--text-primary)]">Total rechazados</span>
                         </div>
+
+                        {/* Total Posibles Asistentes (Confirmados + Pendientes + Acompañantes) */}
                         <div className="flex flex-col items-center p-2 bg-[var(--card-background)] rounded-lg border border-[var(--card-border)]">
                             <span className="text-lg font-semibold text-[var(--text-primary)]">
-                                {stats?.totalGuests || 0}
+                                {stats?.totalGeneralWithAccompanying || 0}
                             </span>
-                            <span className="text-xs text-[var(--text-primary)]">Total invitados</span>
+                            <span className="text-xs text-[var(--text-primary)]">Total posibles asistentes</span>
                         </div>
                     </div>
+
                 </div>
 
                 {/* Botones de acción */}

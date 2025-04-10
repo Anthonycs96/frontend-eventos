@@ -143,85 +143,88 @@ export default function ConfirmacionForm({ invitationUrl, defaultValues, eventDe
 
     const handleFormSubmit = async (data) => {
         try {
-            // Validar que se haya seleccionado una opción
             if (!data.willAttend) {
-                setErrorMessage("Por favor, selecciona si asistirás o no al evento")
-                setErrorType("validation")
-                return
+                setErrorMessage("Por favor, selecciona si asistirás o no al evento");
+                setErrorType("validation");
+                return;
             }
 
             if (!guestId) {
-                setErrorMessage("No se pudo identificar tu invitación. Por favor, verifica el enlace.")
-                setErrorType("validation")
-                return
+                setErrorMessage("No se pudo identificar tu invitación. Por favor, verifica el enlace.");
+                setErrorType("validation");
+                return;
             }
 
-            setIsSubmitting(true)
-            setErrorMessage("")
-            setErrorType("")
+            setIsSubmitting(true);
+            setErrorMessage("");
+            setErrorType("");
 
-            // Verificar que no exceda el límite total
-            if (data.additionalGuestNames.length > numberOfGuests) {
+            // Contar acompañantes válidos
+            const processedGuests = data.additionalGuestNames.filter(name => name && name.trim());
+            const totalAccompanying = processedGuests.length;
+
+            // ⚠️ Validación extra si tienes un límite superior original
+            if (totalAccompanying > numberOfGuests) {
                 setErrorMessage(`Has excedido el número máximo de acompañantes permitidos (${numberOfGuests})`);
                 setErrorType("validation");
                 return;
             }
 
-            // Procesar los nombres de acompañantes (ahora cada campo es un nombre individual)
-            const processedGuests = data.additionalGuestNames.filter(name => name && name.trim());
-
+            // ✅ Actualizamos numberOfGuests con la cantidad real de acompañantes
             const payload = {
                 ...data,
+                numberOfGuests: totalAccompanying, // Aquí lo actualizas antes de enviar
                 additionalGuestNames: processedGuests,
                 suggestedSongs: data.suggestedSongs.map(song => song.song),
                 personalMessage: data.personalMessage || "",
                 status: data.willAttend === "true" ? "confirmed" : "declined",
             };
 
-            const confirmResponse = await API.post(`/guest/confirm/${guestId}`, payload)
+            const confirmResponse = await API.post(`/guest/confirm/${guestId}`, payload);
 
             if (confirmResponse.status === 200) {
-                // Update the status immediately without waiting for the next poll
-                setIsSubmitted(true)
-                setWillAttendStatus(data.willAttend === "true" ? "confirmed" : "declined")
-                setErrorMessage("")
-                setErrorType("")
-                setInvitadoStatus(data.willAttend === "true" ? "confirmed" : "declined")
+                setIsSubmitted(true);
+                setWillAttendStatus(data.willAttend === "true" ? "confirmed" : "declined");
+                setErrorMessage("");
+                setErrorType("");
+                setInvitadoStatus(data.willAttend === "true" ? "confirmed" : "declined");
             }
+
         } catch (err) {
-            setIsSubmitted(false)
-            let mensaje = "Hubo un error al confirmar tu asistencia."
+            setIsSubmitted(false);
+            let mensaje = "Hubo un error al confirmar tu asistencia.";
 
             if (err.response) {
                 switch (err.response.status) {
                     case 400:
-                        mensaje = "Los datos ingresados no son válidos. Por favor revisa la información."
-                        setErrorType("validation")
-                        break
+                        mensaje = "Los datos ingresados no son válidos.";
+                        setErrorType("validation");
+                        break;
                     case 404:
-                        mensaje = "No se encontró tu invitación. Por favor, verifica el enlace."
-                        setErrorType("notFound")
-                        break
+                        mensaje = "No se encontró tu invitación.";
+                        setErrorType("notFound");
+                        break;
                     case 409:
-                        mensaje = "Ya has confirmado tu asistencia anteriormente."
-                        setErrorType("duplicate")
-                        break
+                        mensaje = "Ya has confirmado tu asistencia.";
+                        setErrorType("duplicate");
+                        break;
                     case 429:
-                        mensaje = "Has realizado demasiados intentos. Por favor, espera unos minutos."
-                        setErrorType("rateLimit")
-                        break
+                        mensaje = "Demasiados intentos. Espera unos minutos.";
+                        setErrorType("rateLimit");
+                        break;
                     default:
-                        mensaje = "Hubo un problema con el servidor. Por favor, intenta más tarde."
-                        setErrorType("server")
+                        mensaje = "Problema en el servidor. Intenta más tarde.";
+                        setErrorType("server");
                 }
             }
 
-            setErrorMessage(mensaje)
-            console.error("Error al enviar el formulario:", err)
+            setErrorMessage(mensaje);
+            console.error("Error al enviar el formulario:", err);
         } finally {
-            setIsSubmitting(false)
+            setIsSubmitting(false);
         }
-    }
+    };
+
 
     // Mensajes de estado
     if (invitadoStatus === "confirmed") {
